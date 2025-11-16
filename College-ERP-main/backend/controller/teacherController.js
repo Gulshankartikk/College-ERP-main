@@ -20,6 +20,25 @@ const teacherLogin = async (req, res) => {
   try {
     const { username, password } = req.body;
     
+    // Check if admin is trying to access teacher view
+    if (username === 'admin' && password === 'admin123') {
+      const token = jwt.sign({ id: 'admin', role: 'teacher' }, process.env.JWT_SECRET, { expiresIn: '24h' });
+      res.cookie('token', token);
+      
+      return res.json({ 
+        success: true, 
+        token, 
+        teacher: { 
+          id: 'admin', 
+          name: 'Administrator (Teacher View)', 
+          email: 'admin@college.edu',
+          assignedCourse: [],
+          assignedSubjects: [],
+          role: 'teacher' 
+        } 
+      });
+    }
+    
     // Find teacher by email
     const teacher = await Teacher.findOne({
       email: username,
@@ -61,6 +80,26 @@ const teacherLogin = async (req, res) => {
 const getTeacherDashboard = async (req, res) => {
   try {
     const { teacherId } = req.params;
+    
+    // Handle admin access
+    if (teacherId === 'admin') {
+      const courses = await Course.find({ isActive: true }).limit(2);
+      const subjects = await Subject.find({ isActive: true }).limit(3);
+      
+      return res.json({ 
+        success: true, 
+        teacher: {
+          _id: 'admin',
+          name: 'Administrator (Teacher View)',
+          email: 'admin@college.edu',
+          assignedCourse: courses,
+          assignedSubjects: subjects,
+          department: 'Administration',
+          designation: 'System Administrator'
+        }, 
+        assignments: [] 
+      });
+    }
     
     const teacher = await Teacher.findById(teacherId)
       .populate('assignedCourse', 'courseName courseCode')

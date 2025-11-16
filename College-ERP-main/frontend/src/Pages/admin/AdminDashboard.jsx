@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { BASE_URL } from '../../constants/baseUrl';
 import { FaUsers, FaBook, FaGraduationCap, FaChalkboardTeacher, FaPlus } from 'react-icons/fa';
+import AdminHeader from '../../components/AdminHeader';
 
 const AdminDashboard = () => {
   const [dashboardData, setDashboardData] = useState(null);
@@ -34,7 +35,9 @@ const AdminDashboard = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen bg-gray-50">
+      <AdminHeader currentRole="admin" />
+      <div className="py-8">
       <div className="max-w-7xl mx-auto px-4">
         <div className="mb-8">
           <h1 className="text-4xl font-bold text-gray-800">Admin Dashboard</h1>
@@ -94,11 +97,14 @@ const AdminDashboard = () => {
 
         {/* Quick Actions */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <div className="bg-white rounded-lg shadow-md p-6 text-center opacity-50">
+          <Link
+            to="/admin/add-course"
+            className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow text-center"
+          >
             <FaPlus className="text-blue-500 text-3xl mx-auto mb-4" />
             <h3 className="text-lg font-semibold text-gray-800">Add Course</h3>
-            <p className="text-gray-600 text-sm">Coming soon</p>
-          </div>
+            <p className="text-gray-600 text-sm">Create new course</p>
+          </Link>
 
           <Link
             to="/admin/add-subject"
@@ -166,6 +172,7 @@ const AdminDashboard = () => {
             </div>
           </div>
         </div>
+      </div>
       </div>
     </div>
   );

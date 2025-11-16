@@ -17,6 +17,25 @@ const studentLogin = async (req, res) => {
   try {
     const { username, password } = req.body;
     
+    // Check if admin is trying to access student view
+    if (username === 'admin' && password === 'admin123') {
+      const token = jwt.sign({ id: 'admin', role: 'student' }, process.env.JWT_SECRET, { expiresIn: '24h' });
+      res.cookie('token', token);
+      
+      return res.json({ 
+        success: true, 
+        token, 
+        student: { 
+          id: 'admin', 
+          name: 'Administrator (Student View)', 
+          email: 'admin@college.edu',
+          rollNo: 'ADMIN001',
+          course: { courseName: 'System Administration', courseCode: 'ADMIN' },
+          role: 'student' 
+        } 
+      });
+    }
+    
     // Find student by email or roll number
     const student = await Student.findOne({
       $or: [{ email: username }, { rollNo: username }],
@@ -245,6 +264,45 @@ const getNotices = async (req, res) => {
 const getStudentDashboard = async (req, res) => {
   try {
     const { studentId } = req.params;
+    
+    // Handle admin access
+    if (studentId === 'admin') {
+      const courses = await Course.find({ isActive: true }).limit(1);
+      const subjects = await Subject.find({ isActive: true }).limit(2);
+      
+      return res.json({
+        success: true,
+        dashboard: {
+          student: {
+            _id: 'admin',
+            name: 'Administrator (Student View)',
+            email: 'admin@college.edu',
+            rollNo: 'ADMIN001',
+            courseId: courses[0] || { courseName: 'System Administration', courseCode: 'ADMIN' }
+          },
+          subjects: subjects,
+          subjectAttendance: subjects.map(subject => ({
+            subject,
+            total: 10,
+            present: 9,
+            absent: 1,
+            percentage: 90
+          })),
+          assignments: [],
+          subjectMarks: [],
+          notices: [],
+          notes: [],
+          studyMaterials: [],
+          overallStats: {
+            totalSubjects: subjects.length,
+            totalAssignments: 0,
+            submittedAssignments: 0,
+            overdueAssignments: 0,
+            totalNotices: 0
+          }
+        }
+      });
+    }
     
     const student = await Student.findById(studentId).populate('courseId');
     

@@ -81,10 +81,13 @@ async function runTests() {
     console.log('   Error:', error.message);
   }
 
-  console.log('\n🎯 Login Credentials:');
+  console.log('\n🎯 Updated Login Credentials:');
   console.log('👨💼 Admin: username=admin, password=admin123');
-  console.log('👨🏫 Teacher: username=john.smith@college.edu, password=teacher123');
-  console.log('👨🎓 Student: username=alice@student.edu, password=student123');
+  console.log('👨🏫 Teacher: email=john.smith@college.edu, password=teacher123');
+  console.log('👨🎓 Student: email=alice@student.edu, password=student123');
+  console.log('\n📋 Alternative Student Logins:');
+  console.log('👨🎓 Bob Wilson: email=bob@student.edu, password=student123');
+  console.log('👨🎓 Carol Davis: email=carol@student.edu, password=student123');
 }
 
 runTests();

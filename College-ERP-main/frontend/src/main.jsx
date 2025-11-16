@@ -15,6 +15,7 @@ import Layout from "./Layout";
 import ErrorBoundary from "./components/ErrorBoundary";
 import Login from "./Pages/Common/Login";
 import AddSubject from "./Pages/admin/AddSubject";
+import AddCourse from "./Pages/admin/AddCourse";
 import CreateTeacher from "./Pages/admin/CreateTeacher";
 import CreateStudent from "./Pages/admin/CreateStudent";
 import AdminDashboard from "./Pages/admin/AdminDashboard";
@@ -46,6 +47,7 @@ const router = createBrowserRouter(
       {/* admin routes */}
       <Route path="admin">
         <Route path="dashboard" element={<AdminDashboard />} />
+        <Route path="add-course" element={<AddCourse />} />
         <Route path="create-teacher" element={<CreateTeacher />} />
         <Route path="create-student" element={<CreateStudent />} />
         <Route path="add-subject" element={<AddSubject />} />
