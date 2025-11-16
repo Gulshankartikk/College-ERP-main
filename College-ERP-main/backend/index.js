@@ -60,6 +60,28 @@ app.use("/api", require("./routes/completeRoutes"));
 // notification routes
 app.use("/notifications", require("./routes/notifications"));
 
+// Direct routes for admin panel
+app.get("/teachers", async (req, res) => {
+  try {
+    const Teacher = require("./models/Teacher");
+    const teachers = await Teacher.find({ isActive: true });
+    res.json({ success: true, teachers });
+  } catch (error) {
+    res.status(500).json({ success: false, msg: error.message });
+  }
+});
+
+app.post("/subjects/add", async (req, res) => {
+  try {
+    const Subject = require("./models/Subject");
+    const subject = new Subject(req.body);
+    await subject.save();
+    res.json({ success: true, subject });
+  } catch (error) {
+    res.status(500).json({ success: false, msg: error.message });
+  }
+});
+
 app.listen(PORT, () => {
   console.log("Server Started at", PORT);
 });
