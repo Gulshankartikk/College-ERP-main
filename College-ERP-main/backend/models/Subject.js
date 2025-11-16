@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const AttendanceSchema = require("./Attendance");
 
 const SubjectSchema = new mongoose.Schema({
   subject_name: {
@@ -37,7 +36,6 @@ const SubjectSchema = new mongoose.Schema({
       ref: "Teacher",
     },
   ],
-  attendance: [AttendanceSchema],
 }, {
   timestamps: true
 });

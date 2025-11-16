@@ -23,7 +23,7 @@ const AttendanceReport = () => {
 
   const fetchInitialData = async () => {
     try {
-      const response = await axios.get(`${BASE_URL}/admin/attendance-report`);
+      const response = await axios.get(`${BASE_URL}/api/admin/attendance-report`);
       if (response.data.success) {
         setReportData(response.data.data);
         setCourses(response.data.data.filters.courses);
@@ -41,7 +41,7 @@ const AttendanceReport = () => {
         Object.entries(filters).filter(([_, value]) => value !== "")
       );
       
-      const response = await axios.get(`${BASE_URL}/admin/attendance-report`, { params });
+      const response = await axios.get(`${BASE_URL}/api/admin/attendance-report`, { params });
       if (response.data.success) {
         setReportData(response.data.data);
       }

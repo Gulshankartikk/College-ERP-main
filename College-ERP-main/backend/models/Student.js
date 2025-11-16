@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const studSchema = new mongoose.Schema({
   student_id: {
     type: String,
-    require: true,
+    required: true,
   },
   user_image: {
     public_id: {
@@ -17,29 +17,29 @@ const studSchema = new mongoose.Schema({
   },
   first_name: {
     type: String,
-    require: true,
+    required: true,
     trim: true, // Removes surrounding whitespace
   },
   last_name: {
     type: String,
-    require: true,
+    required: true,
   },
   email: {
     type: String,
-    require: true,
+    required: true,
     trim: true,
   },
   password: {
     type: String,
-    require: true,
+    required: true,
   },
   dob: {
     type: Date,
-    require: true,
+    required: true,
   },
   gender: {
     type: String,
-    require: true,
+    required: true,
   },
   address: {
     street: {
@@ -61,7 +61,7 @@ const studSchema = new mongoose.Schema({
   },
   phone: {
     type: String,
-    require: true,
+    required: true,
     trim: true,
   },
   course: {
@@ -70,7 +70,7 @@ const studSchema = new mongoose.Schema({
   },
   role: {
     type: String,
-    require: true,
+    required: true,
   },
   otp: {
     type: Number,

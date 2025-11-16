@@ -5,17 +5,18 @@ const JWT_SECRET = process.env.JWT_SECRET;
 const verifyToken = async (req, res, next) => {
   const token = req.headers.authorization;
   if (!token) {
-    return res.status(201).json({ success: false, msg: "Unauthorized Acess" });
+    return res.status(401).json({ success: false, msg: "Unauthorized Access" });
   }
 
   try {
-    const decoded = await jwt.verify(token, JWT_SECRET);
+    const cleanToken = token.replace("Bearer ", "");
+    const decoded = await jwt.verify(cleanToken, JWT_SECRET);
 
     req.user = decoded;
 
     next();
   } catch (Err) {
-    return res.status(403).json({ success: false, msg: "Inavlid token" });
+    return res.status(403).json({ success: false, msg: "Invalid token" });
   }
 };
 
@@ -26,8 +27,9 @@ const isAdmin = async (req, res, next) => {
     return res.status(401).json({ success: false, msg: "Unauthorized User" });
   }
 
+  const cleanToken = token.replace("Bearer ", "");
   jwt.verify(
-    token.replace("Bearer ", ""),
+    cleanToken,
     process.env.JWT_SECRET,
     (err, decoded) => {
       if (err) {
@@ -55,8 +57,9 @@ const isTeacher = (req, res, next) => {
     return res.status(401).json({ success: false, msg: "Unauthorized User" });
   }
 
+  const cleanToken = token.replace("Bearer ", "");
   jwt.verify(
-    token.replace("Bearer ", ""),
+    cleanToken,
     process.env.JWT_SECRET,
     (err, decoded) => {
       if (err) {

@@ -8,6 +8,8 @@ import { useDispatch } from "react-redux";
 import { addUserDetails } from "../../features/UserSlice";
 import { jwtDecode } from "jwt-decode";
 import Loader from "./loader/Loader";
+import collegeImage from "../../assets/dr-ambedkar-institute-of-technology-for-handicapped-kanpur.jpeg.jpg";
+import logo from "../../assets/logo.jpeg";
 
 const Login = () => {
   const [rollNo, setRollNo] = useState("");
@@ -35,7 +37,7 @@ const Login = () => {
           password,
         });
       } else {
-        response = await axios.post(`${BASE_URL}/admin/login`, {
+        response = await axios.post(`${BASE_URL}/api/admin/login`, {
           email: rollNo,
           password,
         });
@@ -52,10 +54,10 @@ const Login = () => {
       let decodedToken = jwtDecode(token);
       console.log(decodedToken);
 
-      if (decodedToken.role == "admin") {
+      if (decodedToken.role === "admin") {
         return navigate("/admin/adminPanel");
       } else {
-        return role == "student"
+        return role === "student"
           ? navigate(`/student/${decodedToken.id}/attendance`)
           : navigate(`/teacher/${decodedToken.id}/courses`);
       }
@@ -73,7 +75,7 @@ const Login = () => {
       <div className="w-[50%] h-screen hidden lg:block">
         <img
           className="h-[100%] w-[100%]"
-          src="/src/assets/dr-ambedkar-institute-of-technology-for-handicapped-kanpur.jpeg.jpg"
+          src={collegeImage}
           alt="college image"
         />
       </div>
@@ -84,7 +86,7 @@ const Login = () => {
         <div className="w-[100%] flex items-center justify-center">
           <img
             className="w-[50%]"
-            src="/src/assets/dr-ambedkar-institute-of-technology-for-handicapped-kanpur.jpeg.jpg"
+            src={logo}
             alt="Dr. Ambedkar Institute of Technology for Handicapped Kanpur"
           />
         </div>

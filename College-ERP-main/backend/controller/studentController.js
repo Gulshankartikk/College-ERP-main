@@ -27,7 +27,7 @@ const studentLogin = async (req, res) => {
       return res.status(400).json({ success: false, msg: 'Invalid credentials' });
     }
 
-    const token = jwt.sign({ id: student._id, role: 'student' }, process.env.JWT_SECRET);
+    const token = jwt.sign({ id: student._id, role: 'student' }, process.env.JWT_SECRET, { expiresIn: '24h' });
     res.cookie('token', token);
     
     res.json({ success: true, token, student: { id: student._id, name: student.name, role: 'student' } });

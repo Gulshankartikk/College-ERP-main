@@ -29,7 +29,7 @@ const teacherLogin = async (req, res) => {
       return res.status(400).json({ success: false, msg: 'Invalid credentials' });
     }
 
-    const token = jwt.sign({ id: teacher._id, role: 'teacher' }, process.env.JWT_SECRET);
+    const token = jwt.sign({ id: teacher._id, role: 'teacher' }, process.env.JWT_SECRET, { expiresIn: '24h' });
     res.cookie('token', token);
     
     res.json({ success: true, token, teacher: { id: teacher._id, name: teacher.name, role: 'teacher' } });

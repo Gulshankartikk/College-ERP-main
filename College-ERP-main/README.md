@@ -58,5 +58,15 @@ A comprehensive College ERP System designed to streamline student and course man
 ## Running the Application
 After setting up both the frontend and backend, you can access the app at http://localhost:5173 and the backend API at http://localhost:4000.
 
+## Default Admin Credentials
+To create an admin user, run:
+```bash
+node createAdminUser.js
+```
+
+**Admin Login:**
+- Email: admin@college.edu
+- Password: admin123
+
 
 
