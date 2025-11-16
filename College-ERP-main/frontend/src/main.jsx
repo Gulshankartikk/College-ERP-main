@@ -30,6 +30,7 @@ import DeleteStudent from "./Pages/admin/DeleteStudent";
 import CreateTeacher from "./Pages/admin/CreateTeacher";
 import CreateStudent from "./Pages/admin/CreateStudent";
 import AdminDashboard from "./Pages/admin/AdminDashboard";
+import AdminAttendanceReport from "./Pages/admin/AttendanceReport";
 
 import StudentDetails from "./Pages/Student/StudentDetails";
 import UpdateStudentdDetails from "./Pages/Student/UpdateStudentdDetails";
@@ -112,6 +113,7 @@ const router = createBrowserRouter(
         <Route path="adminPanel/deleteCourse" element={<DeleteCourse />} />
         <Route path="adminPanel/deleteTeacher" element={<DeleteTeacher />} />
         <Route path="adminPanel/deleteStudent" element={<DeleteStudent />} />
+        <Route path="adminPanel/attendanceReport" element={<AdminAttendanceReport />} />
       </Route>
       {/* unauthorized */}
       <Route path="/unauthorized" element={<Unauth />} />

@@ -48,6 +48,10 @@ const AdminPanel = () => {
       name: "Delete Student",
       option: "deleteStudent",
     },
+    {
+      name: "Attendance Report",
+      option: "attendanceReport",
+    },
   ];
 
   return (

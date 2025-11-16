@@ -23,16 +23,23 @@ const Login = () => {
     e.preventDefault();
     try {
       // Send login request
-      const response =
-        role == "student"
-          ? await axios.post(`${BASE_URL}/student/login`, {
-              student_id: rollNo,
-              password: password,
-            })
-          : await axios.post(`${BASE_URL}/teacher/login`, {
-              teacher_Id: rollNo,
-              password,
-            });
+      let response;
+      if (role === "student") {
+        response = await axios.post(`${BASE_URL}/student/login`, {
+          student_id: rollNo,
+          password: password,
+        });
+      } else if (role === "teacher") {
+        response = await axios.post(`${BASE_URL}/teacher/login`, {
+          teacher_Id: rollNo,
+          password,
+        });
+      } else {
+        response = await axios.post(`${BASE_URL}/admin/login`, {
+          email: rollNo,
+          password,
+        });
+      }
 
       console.log(response.data);
 
@@ -110,6 +117,16 @@ const Login = () => {
               >
                 Teacher
               </button>
+              <div className="bg-black w-1"></div>
+              <button
+                type="button"
+                className={`font-bold ${
+                  role === "admin" ? "text-blue-500" : "text-gray-500"
+                }`}
+                onClick={() => setRole("admin")}
+              >
+                Admin
+              </button>
             </div>
             <hr className="border-t-2 border-black" />
 
@@ -120,14 +137,15 @@ const Login = () => {
                   className="block text-gray-700 font-bold mb-2"
                   htmlFor="roll number"
                 >
-                  Roll No.
+                  {role === "admin" ? "Email" : "Roll No."}
                 </label>
                 <input
-                  type="text"
+                  type={role === "admin" ? "email" : "text"}
                   id="rollno"
                   className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                   value={rollNo}
                   onChange={(e) => setRollNo(e.target.value)}
+                  placeholder={role === "admin" ? "Enter admin email" : "Enter roll number"}
                   required
                 />
               </div>

@@ -30,6 +30,9 @@ router.delete('/admin/students/:studentId', adminController.deleteStudent);
 router.post('/admin/assign-teacher', adminController.assignTeacherToSubject);
 router.post('/admin/remove-teacher', adminController.removeTeacherFromSubject);
 
+// Attendance Reports
+router.get('/admin/attendance-report', adminController.getComprehensiveAttendanceReport);
+
 // ============= TEACHER ROUTES =============
 router.post('/teacher/login', teacherController.teacherLogin);
 router.get('/teacher/:teacherId/dashboard', teacherController.getTeacherDashboard);

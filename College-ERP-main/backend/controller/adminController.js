@@ -213,6 +213,163 @@ const deleteStudent = async (req, res) => {
   }
 };
 
+// Get Comprehensive Attendance Report
+const getComprehensiveAttendanceReport = async (req, res) => {
+  try {
+    const { courseId, subjectId, startDate, endDate, studentId } = req.query;
+    
+    // Build query
+    let query = {};
+    if (courseId) query.course = courseId;
+    if (subjectId) query.subject = subjectId;
+    if (studentId) query.student = studentId;
+    if (startDate && endDate) {
+      query.date = { $gte: new Date(startDate), $lte: new Date(endDate) };
+    }
+    
+    // Get attendance records
+    const attendance = await Attendance.find(query)
+      .populate('student', 'name rollNo email')
+      .populate('subject', 'subject_name subject_code')
+      .populate('course', 'courseName courseCode')
+      .populate('teacher', 'name')
+      .sort({ date: -1, 'student.name': 1 });
+    
+    // Get all courses and subjects for filters
+    const allCourses = await Course.find({ isActive: true }, 'courseName courseCode');
+    const allSubjects = await Subject.find({}, 'subject_name subject_code');
+    
+    // Calculate statistics
+    const studentStats = {};
+    const subjectStats = {};
+    const courseStats = {};
+    
+    attendance.forEach(record => {
+      const studentId = record.student._id.toString();
+      const subjectId = record.subject._id.toString();
+      const courseId = record.course._id.toString();
+      
+      // Student statistics
+      if (!studentStats[studentId]) {
+        studentStats[studentId] = {
+          student: record.student,
+          course: record.course,
+          totalClasses: 0,
+          presentClasses: 0,
+          absentClasses: 0,
+          subjects: {}
+        };
+      }
+      
+      studentStats[studentId].totalClasses++;
+      if (record.isPresent) {
+        studentStats[studentId].presentClasses++;
+      } else {
+        studentStats[studentId].absentClasses++;
+      }
+      
+      // Subject-wise student stats
+      if (!studentStats[studentId].subjects[subjectId]) {
+        studentStats[studentId].subjects[subjectId] = {
+          subject: record.subject,
+          total: 0,
+          present: 0,
+          absent: 0
+        };
+      }
+      
+      studentStats[studentId].subjects[subjectId].total++;
+      if (record.isPresent) {
+        studentStats[studentId].subjects[subjectId].present++;
+      } else {
+        studentStats[studentId].subjects[subjectId].absent++;
+      }
+      
+      // Subject statistics
+      if (!subjectStats[subjectId]) {
+        subjectStats[subjectId] = {
+          subject: record.subject,
+          totalClasses: 0,
+          totalStudents: new Set(),
+          presentCount: 0,
+          absentCount: 0
+        };
+      }
+      
+      subjectStats[subjectId].totalClasses++;
+      subjectStats[subjectId].totalStudents.add(studentId);
+      if (record.isPresent) {
+        subjectStats[subjectId].presentCount++;
+      } else {
+        subjectStats[subjectId].absentCount++;
+      }
+      
+      // Course statistics
+      if (!courseStats[courseId]) {
+        courseStats[courseId] = {
+          course: record.course,
+          totalClasses: 0,
+          totalStudents: new Set(),
+          presentCount: 0,
+          absentCount: 0
+        };
+      }
+      
+      courseStats[courseId].totalClasses++;
+      courseStats[courseId].totalStudents.add(studentId);
+      if (record.isPresent) {
+        courseStats[courseId].presentCount++;
+      } else {
+        courseStats[courseId].absentCount++;
+      }
+    });
+    
+    // Calculate percentages
+    Object.keys(studentStats).forEach(studentId => {
+      const stats = studentStats[studentId];
+      stats.attendancePercentage = stats.totalClasses > 0 ? 
+        ((stats.presentClasses / stats.totalClasses) * 100).toFixed(2) : 0;
+      
+      Object.keys(stats.subjects).forEach(subjectId => {
+        const subjectStats = stats.subjects[subjectId];
+        subjectStats.percentage = subjectStats.total > 0 ? 
+          ((subjectStats.present / subjectStats.total) * 100).toFixed(2) : 0;
+      });
+    });
+    
+    // Convert sets to counts and calculate percentages for subject and course stats
+    Object.keys(subjectStats).forEach(subjectId => {
+      const stats = subjectStats[subjectId];
+      stats.totalStudents = stats.totalStudents.size;
+      stats.attendancePercentage = stats.totalClasses > 0 ? 
+        ((stats.presentCount / (stats.presentCount + stats.absentCount)) * 100).toFixed(2) : 0;
+    });
+    
+    Object.keys(courseStats).forEach(courseId => {
+      const stats = courseStats[courseId];
+      stats.totalStudents = stats.totalStudents.size;
+      stats.attendancePercentage = stats.totalClasses > 0 ? 
+        ((stats.presentCount / (stats.presentCount + stats.absentCount)) * 100).toFixed(2) : 0;
+    });
+    
+    res.json({
+      success: true,
+      data: {
+        attendance,
+        studentStats: Object.values(studentStats),
+        subjectStats: Object.values(subjectStats),
+        courseStats: Object.values(courseStats),
+        filters: {
+          courses: allCourses,
+          subjects: allSubjects
+        }
+      }
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, msg: error.message });
+  }
+};
+
 module.exports = {
   adminLogin,
   addCourse,
@@ -225,5 +382,6 @@ module.exports = {
   deleteCourse,
   deleteSubject,
   deleteTeacher,
-  deleteStudent
+  deleteStudent,
+  getComprehensiveAttendanceReport
 };
