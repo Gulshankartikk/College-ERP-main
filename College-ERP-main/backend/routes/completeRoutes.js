@@ -31,6 +31,48 @@ router.get('/subjects', async (req, res) => {
   }
 });
 
+router.get('/teachers', async (req, res) => {
+  try {
+    const Teacher = require('../models/Teacher');
+    const teachers = await Teacher.find({ isActive: true });
+    res.json({ success: true, teachers });
+  } catch (error) {
+    res.status(500).json({ success: false, msg: error.message });
+  }
+});
+
+router.post('/subjects/add', async (req, res) => {
+  try {
+    const Subject = require('../models/Subject');
+    const subject = new Subject(req.body);
+    await subject.save();
+    res.json({ success: true, subject });
+  } catch (error) {
+    res.status(500).json({ success: false, msg: error.message });
+  }
+});
+
+router.get('/teachers', async (req, res) => {
+  try {
+    const Teacher = require('../models/Teacher');
+    const teachers = await Teacher.find({ isActive: true });
+    res.json({ success: true, teachers });
+  } catch (error) {
+    res.status(500).json({ success: false, msg: error.message });
+  }
+});
+
+router.post('/subjects/add', async (req, res) => {
+  try {
+    const Subject = require('../models/Subject');
+    const subject = new Subject(req.body);
+    await subject.save();
+    res.json({ success: true, subject });
+  } catch (error) {
+    res.status(500).json({ success: false, msg: error.message });
+  }
+});
+
 // Course Management
 router.post('/admin/courses', adminController.addCourse);
 router.delete('/admin/courses/:courseId', require('../middleware/Auth').isAdmin, adminController.deleteCourse);
