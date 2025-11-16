@@ -114,6 +114,19 @@ const StudentNav = () => {
           <ul>
             <li>
               <NavLink
+                to={`/student/${id}/dashboard`}
+                className={({ isActive }) =>
+                  `flex items-center gap-4 p-2 text-sm rounded-lg hover:bg-gray-100 ${
+                    isActive ? "bg-gray-200 text-gray-900" : "text-gray-700"
+                  }`
+                }
+              >
+                <FaBook />
+                Dashboard
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
                 to={`/student/${id}/attendance`}
                 className={({ isActive }) =>
                   `flex items-center gap-4 p-2 text-sm rounded-lg hover:bg-gray-100 ${

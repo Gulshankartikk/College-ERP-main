@@ -32,6 +32,7 @@ import CreateStudent from "./Pages/admin/CreateStudent";
 import AdminDashboard from "./Pages/admin/AdminDashboard";
 import AdminAttendanceReport from "./Pages/admin/AttendanceReport";
 
+import StudentDashboard from "./Pages/Student/StudentDashboard";
 import StudentDetails from "./Pages/Student/StudentDetails";
 import UpdateStudentdDetails from "./Pages/Student/UpdateStudentdDetails";
 import UpdatePass from "./Pages/Common/UpdatePass";
@@ -48,6 +49,7 @@ import StudentManagement from "./Pages/Teacher/StudentManagement";
 import StudentDetailsView from "./Pages/Teacher/StudentDetailsView";
 import AssignmentManagement from "./Pages/Teacher/AssignmentManagement";
 import CoursesList from "./Pages/Teacher/CoursesList";
+import TeacherDashboard from "./Pages/Teacher/TeacherDashboard";
 import ForgetPass from "./Pages/Common/ForgetPassword/ForgetPass";
 import VerifyOtp from "./Pages/Common/ForgetPassword/VerifyOtp";
 
@@ -58,6 +60,7 @@ const router = createBrowserRouter(
       <Route index element={<Login />} />
       {/* student routes */}
       <Route path="student/:id">
+        <Route path="dashboard" element={<StudentDashboard />} />
         <Route path="attendance" element={<Attendance />} />
         <Route path="details" element={<StudentDetails />} />
         <Route path="updateDetails" element={<UpdateStudentdDetails />} />
@@ -67,6 +70,7 @@ const router = createBrowserRouter(
       </Route>
       {/* teacher routes */}
       <Route path="teacher/:id">
+        <Route path="dashboard" element={<TeacherDashboard />} />
         <Route path="courses-list" element={<CoursesList />} />
         <Route path="courses" element={<Courses />} />
         <Route

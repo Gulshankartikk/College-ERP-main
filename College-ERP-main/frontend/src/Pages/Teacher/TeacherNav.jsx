@@ -114,6 +114,19 @@ const TeacherNav = () => {
           <ul>
             <li>
               <NavLink
+                to={`/teacher/${id}/dashboard`}
+                className={({ isActive }) =>
+                  `flex items-center gap-4 p-2 text-sm rounded-lg hover:bg-gray-100 ${
+                    isActive ? "bg-gray-200 text-gray-900" : "text-gray-700"
+                  }`
+                }
+              >
+                <LiaChalkboardTeacherSolid />
+                Dashboard
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
                 to={`/teacher/${id}/courses-list`}
                 className={({ isActive }) =>
                   `flex items-center gap-4 p-2 text-sm rounded-lg hover:bg-gray-100 ${

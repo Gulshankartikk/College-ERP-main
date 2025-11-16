@@ -58,8 +58,8 @@ const Login = () => {
         return navigate("/admin/adminPanel");
       } else {
         return role === "student"
-          ? navigate(`/student/${decodedToken.id}/attendance`)
-          : navigate(`/teacher/${decodedToken.id}/courses`);
+          ? navigate(`/student/${decodedToken.id}/dashboard`)
+          : navigate(`/teacher/${decodedToken.id}/dashboard`);
       }
     } catch (err) {
       console.error("Login error:", err.response ? err.response.data : err);
