@@ -1,0 +1,44 @@
+.admin-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 25px;
+  background: #ffffff;
+  border-bottom: 1px solid #e2e8f0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.header-left h1 {
+  color: #1a73e8;
+  font-size: 24px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+}
+
+.creation-details {
+  display: flex;
+  gap: 20px;
+  font-size: 12px;
+}
+
+.detail-item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.detail-item .label {
+  color: #64748b;
+  font-weight: 500;
+  margin-bottom: 2px;
+}
+
+.detail-item .value {
+  color: #1f1f1f;
+  font-weight: 600;
+}

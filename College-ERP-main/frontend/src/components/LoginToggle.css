@@ -1,0 +1,118 @@
+.login-container {
+  max-width: 400px;
+  margin: 50px auto;
+  padding: 30px;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Toggle Switch Styles */
+.toggle-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 30px;
+  gap: 15px;
+}
+
+.toggle-label {
+  font-weight: 500;
+  color: #64748b;
+  transition: color 0.3s ease;
+}
+
+.toggle-label.active {
+  color: #1a73e8;
+  font-weight: 600;
+}
+
+.toggle-switch {
+  width: 60px;
+  height: 30px;
+  background: #e2e8f0;
+  border-radius: 15px;
+  position: relative;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.toggle-slider {
+  width: 26px;
+  height: 26px;
+  background: #1a73e8;
+  border-radius: 50%;
+  position: absolute;
+  top: 2px;
+  transition: transform 0.3s ease;
+}
+
+.toggle-slider.student {
+  transform: translateX(2px);
+}
+
+.toggle-slider.teacher {
+  transform: translateX(32px);
+}
+
+/* Forms Container */
+.forms-container {
+  position: relative;
+  height: 280px;
+  overflow: hidden;
+}
+
+.form-wrapper {
+  position: absolute;
+  width: 100%;
+  opacity: 0;
+  transform: translateX(100px);
+  transition: all 0.4s ease;
+}
+
+.form-wrapper.active {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.form-wrapper h2 {
+  text-align: center;
+  margin-bottom: 25px;
+  color: #1f1f1f;
+  font-size: 24px;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.login-form input {
+  padding: 12px 16px;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 16px;
+  transition: border-color 0.3s ease;
+}
+
+.login-form input:focus {
+  outline: none;
+  border-color: #1a73e8;
+}
+
+.login-form button {
+  padding: 12px;
+  background: #1a73e8;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.login-form button:hover {
+  background: #185abc;
+}
