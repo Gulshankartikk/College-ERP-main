@@ -108,7 +108,7 @@ const AddSubject = () => {
   return (
     <div className="flex flex-col w-full min-h-[100vh] bg-blue-400 pb-10">
       <div className="ms-5 mt-5 xl:mt-0">
-        <BackButton targetRoute="/admin/adminPanel" />
+        <BackButton targetRoute="/admin/dashboard" />
       </div>
 
       <div className="text-white flex items-center justify-center py-11">

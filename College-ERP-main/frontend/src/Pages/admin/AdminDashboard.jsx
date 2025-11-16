@@ -94,17 +94,14 @@ const AdminDashboard = () => {
 
         {/* Quick Actions */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <Link
-            to="/admin/create-course"
-            className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow text-center"
-          >
+          <div className="bg-white rounded-lg shadow-md p-6 text-center opacity-50">
             <FaPlus className="text-blue-500 text-3xl mx-auto mb-4" />
             <h3 className="text-lg font-semibold text-gray-800">Add Course</h3>
-            <p className="text-gray-600 text-sm">Create new course</p>
-          </Link>
+            <p className="text-gray-600 text-sm">Coming soon</p>
+          </div>
 
           <Link
-            to="/admin/create-subject"
+            to="/admin/add-subject"
             className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow text-center"
           >
             <FaPlus className="text-green-500 text-3xl mx-auto mb-4" />

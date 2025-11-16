@@ -18,22 +18,40 @@ const { sendNotification } = require('./notificationController');
 // Teacher Login
 const teacherLogin = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { username, password } = req.body;
     
-    const teacher = await Teacher.findOne({ email, isActive: true });
+    // Find teacher by email
+    const teacher = await Teacher.findOne({
+      email: username,
+      isActive: true
+    }).populate('assignedCourse', 'courseName courseCode')
+      .populate('assignedSubjects', 'subjectName subjectCode');
+    
     if (!teacher) {
       return res.status(400).json({ success: false, msg: 'Teacher not found' });
     }
-
-    const isMatch = await bcrypt.compare(password, teacher.password);
-    if (!isMatch) {
+    
+    // Check password
+    const isPasswordValid = await bcrypt.compare(password, teacher.password);
+    if (!isPasswordValid) {
       return res.status(400).json({ success: false, msg: 'Invalid credentials' });
     }
 
     const token = jwt.sign({ id: teacher._id, role: 'teacher' }, process.env.JWT_SECRET, { expiresIn: '24h' });
     res.cookie('token', token);
     
-    res.json({ success: true, token, teacher: { id: teacher._id, name: teacher.name, role: 'teacher' } });
+    res.json({ 
+      success: true, 
+      token, 
+      teacher: { 
+        id: teacher._id, 
+        name: teacher.name, 
+        email: teacher.email,
+        assignedCourse: teacher.assignedCourse,
+        assignedSubjects: teacher.assignedSubjects,
+        role: 'teacher' 
+      } 
+    });
   } catch (error) {
     res.status(500).json({ success: false, msg: error.message });
   }

@@ -75,7 +75,7 @@ const CreateTeacher = () => {
 
       if (response.data.success) {
         toast.success('Teacher created successfully!');
-        navigate('/admin/teachers');
+        navigate('/admin/dashboard');
       }
     } catch (error) {
       toast.error(error.response?.data?.msg || 'Failed to create teacher');

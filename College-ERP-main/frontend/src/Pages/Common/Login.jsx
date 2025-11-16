@@ -12,7 +12,7 @@ import collegeImage from "../../assets/dr-ambedkar-institute-of-technology-for-h
 import logo from "../../assets/logo.jpeg";
 
 const Login = () => {
-  const [rollNo, setRollNo] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("student"); // default role
   const navigate = useNavigate();
@@ -27,18 +27,18 @@ const Login = () => {
       // Send login request
       let response;
       if (role === "student") {
-        response = await axios.post(`${BASE_URL}/student/login`, {
-          student_id: rollNo,
-          password: password,
+        response = await axios.post(`${BASE_URL}/api/student/login`, {
+          username,
+          password,
         });
       } else if (role === "teacher") {
-        response = await axios.post(`${BASE_URL}/teacher/login`, {
-          teacher_Id: rollNo,
+        response = await axios.post(`${BASE_URL}/api/teacher/login`, {
+          username,
           password,
         });
       } else {
         response = await axios.post(`${BASE_URL}/api/admin/login`, {
-          email: rollNo,
+          username,
           password,
         });
       }
@@ -55,7 +55,8 @@ const Login = () => {
       console.log(decodedToken);
 
       if (decodedToken.role === "admin") {
-        return navigate("/admin/adminPanel");
+        window.location.href = "/admin/dashboard";
+        return;
       } else {
         return role === "student"
           ? navigate(`/student/${decodedToken.id}/dashboard`)
@@ -139,15 +140,15 @@ const Login = () => {
                   className="block text-gray-700 font-bold mb-2"
                   htmlFor="roll number"
                 >
-                  {role === "admin" ? "Email" : "Roll No."}
+                  "Username"
                 </label>
                 <input
-                  type={role === "admin" ? "email" : "text"}
-                  id="rollno"
+                  type="text"
+                  id="username"
                   className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  value={rollNo}
-                  onChange={(e) => setRollNo(e.target.value)}
-                  placeholder={role === "admin" ? "Enter admin email" : "Enter roll number"}
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  placeholder="Enter username"
                   required
                 />
               </div>

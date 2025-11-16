@@ -1,22 +1,111 @@
-// Import all existing models
-const Course = require('./Course');
-const Subject = require('./Subject');
-const Teacher = require('./Teacher');
-const Student = require('./Student');
-const Attendance = require('./Attendance');
-const Assignment = require('./Assignment');
-const Marks = require('./Marks');
-const Notice = require('./Notice');
-const StudyMaterial = require('./StudyMaterial');
-const Message = require('./Message');
-const StudentNote = require('./StudentNote');
-const StudentRemark = require('./StudentRemark');
-const TeacherTimetable = require('./TeacherTimetable');
-const Notification = require('./Notification');
-
 const mongoose = require('mongoose');
 
-// Only create models that don't exist as separate files
+// Course Schema
+const CourseSchema = new mongoose.Schema({
+  courseName: { type: String, required: true },
+  courseCode: { type: String, required: true, unique: true },
+  courseDuration: { type: String, required: true },
+  isActive: { type: Boolean, default: true }
+}, { timestamps: true });
+
+// Subject Schema
+const SubjectSchema = new mongoose.Schema({
+  subjectName: { type: String, required: true },
+  subjectCode: { type: String, required: true },
+  courseId: { type: mongoose.Schema.Types.ObjectId, ref: 'Course' },
+  isActive: { type: Boolean, default: true }
+}, { timestamps: true });
+
+// Teacher Schema
+const TeacherSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  email: { type: String, required: true, unique: true },
+  password: { type: String, required: true },
+  phone: { type: String },
+  department: { type: String },
+  designation: { type: String },
+  assignedCourse: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Course' }],
+  assignedSubjects: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Subject' }],
+  isActive: { type: Boolean, default: true }
+}, { timestamps: true });
+
+// Student Schema
+const StudentSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  email: { type: String, required: true, unique: true },
+  password: { type: String, required: true },
+  rollNo: { type: String, required: true, unique: true },
+  phone: { type: String },
+  courseId: { type: mongoose.Schema.Types.ObjectId, ref: 'Course', required: true },
+  isActive: { type: Boolean, default: true }
+}, { timestamps: true });
+
+// Attendance Schema
+const AttendanceSchema = new mongoose.Schema({
+  studentId: { type: mongoose.Schema.Types.ObjectId, ref: 'Student', required: true },
+  subjectId: { type: mongoose.Schema.Types.ObjectId, ref: 'Subject', required: true },
+  teacherId: { type: mongoose.Schema.Types.ObjectId, ref: 'Teacher', required: true },
+  date: { type: Date, required: true },
+  status: { type: String, enum: ['Present', 'Absent'], required: true }
+}, { timestamps: true });
+
+// Assignment Schema
+const AssignmentSchema = new mongoose.Schema({
+  teacherId: { type: mongoose.Schema.Types.ObjectId, ref: 'Teacher', required: true },
+  subjectId: { type: mongoose.Schema.Types.ObjectId, ref: 'Subject', required: true },
+  title: { type: String, required: true },
+  description: { type: String },
+  deadline: { type: Date, required: true },
+  fileUrl: { type: String },
+  submissions: [{
+    studentId: { type: mongoose.Schema.Types.ObjectId, ref: 'Student' },
+    submissionDate: { type: Date, default: Date.now },
+    fileUrl: { type: String },
+    remarks: { type: String }
+  }],
+  isActive: { type: Boolean, default: true }
+}, { timestamps: true });
+
+// Marks Schema
+const MarksSchema = new mongoose.Schema({
+  studentId: { type: mongoose.Schema.Types.ObjectId, ref: 'Student', required: true },
+  subjectId: { type: mongoose.Schema.Types.ObjectId, ref: 'Subject', required: true },
+  teacherId: { type: mongoose.Schema.Types.ObjectId, ref: 'Teacher', required: true },
+  marks: { type: Number, required: true },
+  totalMarks: { type: Number, required: true },
+  examType: { type: String, required: true }
+}, { timestamps: true });
+
+// Notice Schema
+const NoticeSchema = new mongoose.Schema({
+  teacherId: { type: mongoose.Schema.Types.ObjectId, ref: 'Teacher', required: true },
+  courseId: { type: mongoose.Schema.Types.ObjectId, ref: 'Course', required: true },
+  title: { type: String, required: true },
+  description: { type: String, required: true },
+  isActive: { type: Boolean, default: true }
+}, { timestamps: true });
+
+// Study Material Schema
+const StudyMaterialSchema = new mongoose.Schema({
+  teacherId: { type: mongoose.Schema.Types.ObjectId, ref: 'Teacher', required: true },
+  subjectId: { type: mongoose.Schema.Types.ObjectId, ref: 'Subject', required: true },
+  title: { type: String, required: true },
+  description: { type: String },
+  fileUrl: { type: String },
+  isActive: { type: Boolean, default: true }
+}, { timestamps: true });
+
+// Notes Schema
+const NotesSchema = new mongoose.Schema({
+  teacherId: { type: mongoose.Schema.Types.ObjectId, ref: 'Teacher', required: true },
+  subjectId: { type: mongoose.Schema.Types.ObjectId, ref: 'Subject', required: true },
+  title: { type: String, required: true },
+  description: { type: String },
+  fileUrl: { type: String },
+  isActive: { type: Boolean, default: true }
+}, { timestamps: true });
+
+// Teacher Subject Assignment Schema
 const TeacherSubjectAssignmentSchema = new mongoose.Schema({
   teacherId: { type: mongoose.Schema.Types.ObjectId, ref: 'Teacher', required: true },
   subjectId: { type: mongoose.Schema.Types.ObjectId, ref: 'Subject', required: true },
@@ -24,6 +113,7 @@ const TeacherSubjectAssignmentSchema = new mongoose.Schema({
   isActive: { type: Boolean, default: true }
 }, { timestamps: true });
 
+// Admin Schema
 const AdminSchema = new mongoose.Schema({
   name: { type: String, required: true },
   email: { type: String, required: true, unique: true },
@@ -31,19 +121,32 @@ const AdminSchema = new mongoose.Schema({
   role: { type: String, default: 'admin' }
 }, { timestamps: true });
 
-// Create only new models
-let TeacherSubjectAssignment, Admin;
-try {
-  TeacherSubjectAssignment = mongoose.model('TeacherSubjectAssignment');
-} catch {
-  TeacherSubjectAssignment = mongoose.model('TeacherSubjectAssignment', TeacherSubjectAssignmentSchema);
-}
+// Notification Schema
+const NotificationSchema = new mongoose.Schema({
+  userId: { type: mongoose.Schema.Types.ObjectId, required: true },
+  userRole: { type: String, enum: ['student', 'teacher', 'admin'], required: true },
+  type: { type: String, required: true },
+  title: { type: String, required: true },
+  message: { type: String, required: true },
+  isRead: { type: Boolean, default: false },
+  entityId: { type: mongoose.Schema.Types.ObjectId },
+  entityType: { type: String }
+}, { timestamps: true });
 
-try {
-  Admin = mongoose.model('Admin');
-} catch {
-  Admin = mongoose.model('Admin', AdminSchema);
-}
+// Create models
+const Course = mongoose.model('Course', CourseSchema);
+const Subject = mongoose.model('Subject', SubjectSchema);
+const Teacher = mongoose.model('Teacher', TeacherSchema);
+const Student = mongoose.model('Student', StudentSchema);
+const Attendance = mongoose.model('Attendance', AttendanceSchema);
+const Assignments = mongoose.model('Assignment', AssignmentSchema);
+const Marks = mongoose.model('Marks', MarksSchema);
+const Notices = mongoose.model('Notice', NoticeSchema);
+const StudyMaterial = mongoose.model('StudyMaterial', StudyMaterialSchema);
+const Notes = mongoose.model('Notes', NotesSchema);
+const TeacherSubjectAssignment = mongoose.model('TeacherSubjectAssignment', TeacherSubjectAssignmentSchema);
+const Admin = mongoose.model('Admin', AdminSchema);
+const Notification = mongoose.model('Notification', NotificationSchema);
 
 module.exports = {
   Course,
@@ -52,14 +155,11 @@ module.exports = {
   Student,
   TeacherSubjectAssignment,
   Attendance,
-  Notes: StudentNote,
+  Notes,
   StudyMaterial,
-  Assignments: Assignment,
+  Assignments,
   Marks,
-  Notices: Notice,
+  Notices,
   Admin,
-  Message,
-  StudentRemark,
-  TeacherTimetable,
   Notification
 };

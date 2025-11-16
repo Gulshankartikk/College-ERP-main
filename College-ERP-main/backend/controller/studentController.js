@@ -15,22 +15,39 @@ const {
 // Student Login
 const studentLogin = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { username, password } = req.body;
     
-    const student = await Student.findOne({ email, isActive: true });
+    // Find student by email or roll number
+    const student = await Student.findOne({
+      $or: [{ email: username }, { rollNo: username }],
+      isActive: true
+    }).populate('courseId', 'courseName courseCode');
+    
     if (!student) {
       return res.status(400).json({ success: false, msg: 'Student not found' });
     }
-
-    const isMatch = await bcrypt.compare(password, student.password);
-    if (!isMatch) {
+    
+    // Check password
+    const isPasswordValid = await bcrypt.compare(password, student.password);
+    if (!isPasswordValid) {
       return res.status(400).json({ success: false, msg: 'Invalid credentials' });
     }
 
     const token = jwt.sign({ id: student._id, role: 'student' }, process.env.JWT_SECRET, { expiresIn: '24h' });
     res.cookie('token', token);
     
-    res.json({ success: true, token, student: { id: student._id, name: student.name, role: 'student' } });
+    res.json({ 
+      success: true, 
+      token, 
+      student: { 
+        id: student._id, 
+        name: student.name, 
+        email: student.email,
+        rollNo: student.rollNo,
+        course: student.courseId,
+        role: 'student' 
+      } 
+    });
   } catch (error) {
     res.status(500).json({ success: false, msg: error.message });
   }

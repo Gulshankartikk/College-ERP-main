@@ -17,7 +17,7 @@ import Cookies from 'js-cookie';
 import LoadingSpinner from '../../components/LoadingSpinner';
 
 const StudentDashboard = () => {
-  const { studentId } = useParams();
+  const { id: studentId } = useParams();
   const [dashboardData, setDashboardData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -25,10 +25,15 @@ const StudentDashboard = () => {
   const fetchDashboardData = async () => {
     try {
       const token = Cookies.get('token');
+      console.log('Fetching dashboard for student:', studentId);
+      console.log('Token:', token ? 'Present' : 'Missing');
+      
       const response = await axios.get(
         `${BASE_URL}/api/student/${studentId}/dashboard`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
+      
+      console.log('Dashboard response:', response.data);
       setDashboardData(response.data.dashboard);
     } catch (error) {
       setError('Failed to load dashboard data');
@@ -247,22 +252,22 @@ const StudentDashboard = () => {
       <div className="mt-8 bg-white rounded-lg shadow-md p-6">
         <h2 className="text-xl font-semibold text-gray-800 mb-4">Quick Actions</h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <button className="flex flex-col items-center p-4 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors">
+          <div className="flex flex-col items-center p-4 bg-blue-50 rounded-lg">
             <FaClipboardList className="text-blue-500 mb-2" size={24} />
             <span className="text-sm font-medium text-gray-700">View Attendance</span>
-          </button>
-          <button className="flex flex-col items-center p-4 bg-green-50 rounded-lg hover:bg-green-100 transition-colors">
+          </div>
+          <div className="flex flex-col items-center p-4 bg-green-50 rounded-lg">
             <MdAssignment className="text-green-500 mb-2" size={24} />
             <span className="text-sm font-medium text-gray-700">Assignments</span>
-          </button>
-          <button className="flex flex-col items-center p-4 bg-purple-50 rounded-lg hover:bg-purple-100 transition-colors">
+          </div>
+          <div className="flex flex-col items-center p-4 bg-purple-50 rounded-lg">
             <FaBell className="text-purple-500 mb-2" size={24} />
             <span className="text-sm font-medium text-gray-700">All Notices</span>
-          </button>
-          <button className="flex flex-col items-center p-4 bg-orange-50 rounded-lg hover:bg-orange-100 transition-colors">
+          </div>
+          <div className="flex flex-col items-center p-4 bg-orange-50 rounded-lg">
             <FaStickyNote className="text-orange-500 mb-2" size={24} />
             <span className="text-sm font-medium text-gray-700">Study Materials</span>
-          </button>
+          </div>
         </div>
       </div>
     </div>

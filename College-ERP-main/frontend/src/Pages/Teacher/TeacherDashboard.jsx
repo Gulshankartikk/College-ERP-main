@@ -17,7 +17,7 @@ import Cookies from 'js-cookie';
 import LoadingSpinner from '../../components/LoadingSpinner';
 
 const TeacherDashboard = () => {
-  const { teacherId } = useParams();
+  const { id: teacherId } = useParams();
   const navigate = useNavigate();
   const [dashboardData, setDashboardData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -126,54 +126,26 @@ const TeacherDashboard = () => {
       {/* Quick Actions */}
       <div className="bg-white rounded-lg shadow-md p-6 mb-8">
         <h2 className="text-xl font-semibold text-gray-800 mb-4">Quick Actions</h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-          <button 
-            onClick={() => navigate(`/teacher/${teacherId}/courses`)}
-            className="flex flex-col items-center p-4 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors"
-          >
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="flex flex-col items-center p-4 bg-blue-50 rounded-lg">
             <FaClipboardList className="text-blue-500 mb-2" size={24} />
             <span className="text-sm font-medium text-gray-700">Mark Attendance</span>
-          </button>
+          </div>
           
-          <button 
-            onClick={() => navigate(`/teacher/${teacherId}/assignments`)}
-            className="flex flex-col items-center p-4 bg-green-50 rounded-lg hover:bg-green-100 transition-colors"
-          >
+          <div className="flex flex-col items-center p-4 bg-green-50 rounded-lg">
             <FaPlus className="text-green-500 mb-2" size={24} />
             <span className="text-sm font-medium text-gray-700">Add Assignment</span>
-          </button>
+          </div>
           
-          <button 
-            onClick={() => navigate(`/teacher/${teacherId}/notices`)}
-            className="flex flex-col items-center p-4 bg-purple-50 rounded-lg hover:bg-purple-100 transition-colors"
-          >
+          <div className="flex flex-col items-center p-4 bg-purple-50 rounded-lg">
             <MdNotifications className="text-purple-500 mb-2" size={24} />
             <span className="text-sm font-medium text-gray-700">Post Notice</span>
-          </button>
+          </div>
           
-          <button 
-            onClick={() => navigate(`/teacher/${teacherId}/materials`)}
-            className="flex flex-col items-center p-4 bg-orange-50 rounded-lg hover:bg-orange-100 transition-colors"
-          >
+          <div className="flex flex-col items-center p-4 bg-orange-50 rounded-lg">
             <FaStickyNote className="text-orange-500 mb-2" size={24} />
             <span className="text-sm font-medium text-gray-700">Upload Material</span>
-          </button>
-          
-          <button 
-            onClick={() => navigate(`/teacher/${teacherId}/marks`)}
-            className="flex flex-col items-center p-4 bg-red-50 rounded-lg hover:bg-red-100 transition-colors"
-          >
-            <MdGrade className="text-red-500 mb-2" size={24} />
-            <span className="text-sm font-medium text-gray-700">Add Marks</span>
-          </button>
-          
-          <button 
-            onClick={() => navigate(`/teacher/${teacherId}/attendance-report`)}
-            className="flex flex-col items-center p-4 bg-indigo-50 rounded-lg hover:bg-indigo-100 transition-colors"
-          >
-            <FaChartBar className="text-indigo-500 mb-2" size={24} />
-            <span className="text-sm font-medium text-gray-700">View Reports</span>
-          </button>
+          </div>
         </div>
       </div>
 

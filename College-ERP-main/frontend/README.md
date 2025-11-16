@@ -24,7 +24,7 @@ Clone the repository:
 
 bash
 Copy code
-git clone https://github.com/your-username/college-erp-system.git
+git clone https://github.com/Gulshankartikk/College-ERP-main
 cd college-erp-system
 Install backend dependencies:
 

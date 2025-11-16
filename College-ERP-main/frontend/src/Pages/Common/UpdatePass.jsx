@@ -1,12 +1,10 @@
 import React, { useState } from "react";
-import StudentNav from "../Student/StudentNav";
 import { toast } from "react-toastify";
 import { BASE_URL } from "../../constants/baseUrl"
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import Cookies from "js-cookie";
 import { useSelector } from "react-redux";
-import TeacherNav from "../Teacher/TeacherNav";
 
 const UpdatePass = () => {
   const { id } = useParams();
@@ -77,8 +75,8 @@ const UpdatePass = () => {
       toast.success("Password Updated Successfully");
 
       role === "teacher"
-        ? navigate(`/teacher/${id}/courses`)
-        : navigate(`/student/${id}/attendance`);
+        ? navigate(`/teacher/${id}/dashboard`)
+        : navigate(`/student/${id}/dashboard`);
     } catch (err) {
       console.log("Something Went Wrong", err);
       toast.error(err.response.data.msg);
@@ -88,10 +86,7 @@ const UpdatePass = () => {
   return (
     <>
       <div className="flex w-full relative">
-        <div className="fixed top-0 left-0">
-          {role == "teacher" ? <TeacherNav /> : <StudentNav />}
-        </div>
-        <div className="w-full lg:pl-[24%] xl:pl-[15%] min-h-[100vh] font-oswald">
+        <div className="w-full min-h-[100vh] font-oswald">
           {/* heading */}
           <div className="w-full cursor-default">
             <h1 className="overflow-hidden w-full text-center font-oswald font-bold text-5xl md:text-8xl lg:text-7xl xl:text-9xl my-9">

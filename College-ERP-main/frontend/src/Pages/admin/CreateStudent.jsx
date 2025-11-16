@@ -55,7 +55,7 @@ const CreateStudent = () => {
 
       if (response.data.success) {
         toast.success('Student created successfully!');
-        navigate('/admin/students');
+        navigate('/admin/dashboard');
       }
     } catch (error) {
       toast.error(error.response?.data?.msg || 'Failed to create student');

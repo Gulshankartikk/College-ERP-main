@@ -28,59 +28,12 @@ app.get("/", (req, res) => {
 });
 
 // routes
-
-// student route
-app.use("/student", require("./routes/student"));
-// course route
-app.use("/courses", require("./routes/course"));
-// course module route
-app.use("/course-module", require("./routes/courseModule"));
-// teacher route
-app.use("/teacher", require("./routes/teacher"));
-// teacher module routes
-app.use("/teacher", require("./routes/teacherModule"));
-// notices route
-app.use("/notices", require("./routes/notices"));
-// materials route
-app.use("/materials", require("./routes/materials"));
-// assignments route
-app.use("/assignments", require("./routes/assignments"));
 // subjects route
 app.use("/subjects", require("./routes/subjects"));
-// marks route
-app.use("/marks", require("./routes/marks"));
-// student notes route
-app.use("/student-notes", require("./routes/student-notes"));
-// messages route
-app.use("/messages", require("./routes/messages"));
-// student management route
-app.use("/student", require("./routes/student-management"));
 // complete ERP routes
 app.use("/api", require("./routes/completeRoutes"));
-// notification routes
-app.use("/notifications", require("./routes/notifications"));
 
-// Direct routes for admin panel
-app.get("/teachers", async (req, res) => {
-  try {
-    const Teacher = require("./models/Teacher");
-    const teachers = await Teacher.find({ isActive: true });
-    res.json({ success: true, teachers });
-  } catch (error) {
-    res.status(500).json({ success: false, msg: error.message });
-  }
-});
 
-app.post("/subjects/add", async (req, res) => {
-  try {
-    const Subject = require("./models/Subject");
-    const subject = new Subject(req.body);
-    await subject.save();
-    res.json({ success: true, subject });
-  } catch (error) {
-    res.status(500).json({ success: false, msg: error.message });
-  }
-});
 
 app.listen(PORT, () => {
   console.log("Server Started at", PORT);

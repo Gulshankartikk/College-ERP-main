@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import TeacherNav from "../../Teacher/TeacherNav";
-import StudentNav from "../../Student/StudentNav";
 import { BASE_URL } from "../../../constants/baseUrl"
 import axios from "axios";
 import { useLocation, useNavigate } from "react-router-dom";
