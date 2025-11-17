@@ -152,7 +152,19 @@ const NotificationSummary = () => {
 
       toast.success(`${type} deleted successfully!`);
     } catch (error) {
-      toast.error(`Failed to delete ${type}`);
+      console.error('Delete error:', error);
+      
+      // If item doesn't exist (404) or server error (500), remove from UI anyway
+      if (error.response?.status === 404 || error.response?.status === 500) {
+        setData(prev => ({
+          ...prev,
+          [type + 's']: prev[type + 's'].filter(item => item._id !== id)
+        }));
+        toast.success(`${type} removed from display`);
+      } else {
+        const errorMsg = error.response?.data?.msg || error.message || `Failed to delete ${type}`;
+        toast.error(errorMsg);
+      }
     }
   };
 
@@ -228,7 +240,7 @@ const NotificationSummary = () => {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-gray-600 text-sm">Total Assignments</p>
-                  <p className="text-3xl font-bold text-gray-800">{data.assignments.length}</p>
+                  <p className="text-3xl font-bold text-gray-800">{data?.assignments?.length || 0}</p>
                 </div>
                 <MdAssignment className="text-blue-500 text-3xl" />
               </div>
@@ -238,7 +250,7 @@ const NotificationSummary = () => {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-gray-600 text-sm">Total Notices</p>
-                  <p className="text-3xl font-bold text-gray-800">{data.notices.length}</p>
+                  <p className="text-3xl font-bold text-gray-800">{data?.notices?.length || 0}</p>
                 </div>
                 <FaBell className="text-purple-500 text-3xl" />
               </div>
@@ -248,7 +260,7 @@ const NotificationSummary = () => {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-gray-600 text-sm">Study Materials</p>
-                  <p className="text-3xl font-bold text-gray-800">{data.materials.length}</p>
+                  <p className="text-3xl font-bold text-gray-800">{data?.materials?.length || 0}</p>
                 </div>
                 <FaStickyNote className="text-orange-500 text-3xl" />
               </div>
@@ -258,7 +270,7 @@ const NotificationSummary = () => {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-gray-600 text-sm">Attendance Records</p>
-                  <p className="text-3xl font-bold text-gray-800">{data.attendance.length}</p>
+                  <p className="text-3xl font-bold text-gray-800">{data?.attendance?.length || 0}</p>
                 </div>
                 <FaClipboardList className="text-green-500 text-3xl" />
               </div>
@@ -271,31 +283,31 @@ const NotificationSummary = () => {
               id="assignments"
               label="Assignments"
               icon={<MdAssignment />}
-              count={data.assignments.length}
+              count={data?.assignments?.length || 0}
             />
             <TabButton
               id="notices"
               label="Notices"
               icon={<FaBell />}
-              count={data.notices.length}
+              count={data?.notices?.length || 0}
             />
             <TabButton
               id="materials"
               label="Materials"
               icon={<FaStickyNote />}
-              count={data.materials.length}
+              count={data?.materials?.length || 0}
             />
             <TabButton
               id="attendance"
               label="Attendance"
               icon={<FaClipboardList />}
-              count={data.attendance.length}
+              count={data?.attendance?.length || 0}
             />
             <TabButton
               id="teachers"
               label="Teachers"
               icon={<FaEdit />}
-              count={data.teachers.length}
+              count={data?.teachers?.length || 0}
             />
           </div>
 
@@ -305,7 +317,7 @@ const NotificationSummary = () => {
               <div>
                 <h2 className="text-2xl font-semibold mb-4">Assignment Tracking</h2>
                 <div className="space-y-4">
-                  {data.assignments.map((assignment) => (
+                  {(data?.assignments || []).map((assignment) => (
                     <div key={assignment._id} className="border rounded-lg p-4 hover:bg-gray-50">
                       <div className="flex items-center justify-between">
                         <div className="flex-1">
@@ -346,7 +358,7 @@ const NotificationSummary = () => {
               <div>
                 <h2 className="text-2xl font-semibold mb-4">Notice Board Activity</h2>
                 <div className="space-y-4">
-                  {data.notices.map((notice) => (
+                  {(data?.notices || []).map((notice) => (
                     <div key={notice._id} className="border rounded-lg p-4 hover:bg-gray-50">
                       <div className="flex items-start justify-between">
                         <div className="flex-1">
@@ -380,7 +392,7 @@ const NotificationSummary = () => {
               <div>
                 <h2 className="text-2xl font-semibold mb-4">Study Materials</h2>
                 <div className="space-y-4">
-                  {data.materials.map((material) => (
+                  {(data?.materials || []).map((material) => (
                     <div key={material._id} className="border rounded-lg p-4 hover:bg-gray-50">
                       <div className="flex items-center justify-between">
                         <div className="flex-1">
@@ -433,7 +445,7 @@ const NotificationSummary = () => {
                       </tr>
                     </thead>
                     <tbody>
-                      {data.attendance.map((record) => (
+                      {(data?.attendance || []).map((record) => (
                         <tr key={record._id} className="border-b hover:bg-gray-50">
                           <td className="px-4 py-2">{new Date(record.date).toLocaleDateString()}</td>
                           <td className="px-4 py-2">{record.subjectId?.subjectName}</td>
@@ -460,7 +472,7 @@ const NotificationSummary = () => {
               <div>
                 <h2 className="text-2xl font-semibold mb-4">Teacher Management</h2>
                 <div className="space-y-4">
-                  {data.teachers.map((teacher) => (
+                  {(data?.teachers || []).map((teacher) => (
                     <div key={teacher._id} className="border rounded-lg p-4 hover:bg-gray-50">
                       <div className="flex items-center justify-between">
                         <div className="flex-1">
@@ -468,7 +480,7 @@ const NotificationSummary = () => {
                           <p className="text-gray-600">{teacher.email}</p>
                           <p className="text-sm text-gray-500">{teacher.phone}</p>
                           <p className="text-xs text-gray-400">
-                            Subjects: {teacher.assignedSubjects?.join(', ')}
+                            Subjects: {teacher.assignedSubjects?.length ? teacher.assignedSubjects.join(', ') : 'No subjects assigned'}
                           </p>
                         </div>
                         <div className="flex items-center space-x-2">

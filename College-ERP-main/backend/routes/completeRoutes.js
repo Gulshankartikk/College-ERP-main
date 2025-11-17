@@ -84,9 +84,9 @@ router.post('/admin/remove-teacher', adminController.removeTeacherFromSubject);
 router.get('/admin/attendance-report', adminController.getComprehensiveAttendanceReport);
 
 // Admin Delete Operations
-router.delete('/admin/assignments/:assignmentId', require('../middleware/Auth').isAdmin, adminController.deleteAssignment);
-router.delete('/admin/notices/:noticeId', require('../middleware/Auth').isAdmin, adminController.deleteNotice);
-router.delete('/admin/materials/:materialId', require('../middleware/Auth').isAdmin, adminController.deleteMaterial);
+router.delete('/admin/assignments/:assignmentId', adminController.deleteAssignment);
+router.delete('/admin/notices/:noticeId', adminController.deleteNotice);
+router.delete('/admin/materials/:materialId', adminController.deleteMaterial);
 
 // Admin Update Operations
 router.put('/admin/teachers/:teacherId', require('../middleware/Auth').isAdmin, adminController.updateTeacher);

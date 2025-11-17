@@ -8,7 +8,10 @@ const {
   TeacherSubjectAssignment,
   Attendance,
   Marks,
-  Admin
+  Admin,
+  Assignments,
+  Notices,
+  StudyMaterial
 } = require('../models/CompleteModels');
 const { sendNotification } = require('./notificationController');
 
@@ -276,10 +279,17 @@ const deleteStudent = async (req, res) => {
 const deleteAssignment = async (req, res) => {
   try {
     const { assignmentId } = req.params;
+    console.log('Attempting to delete assignment:', assignmentId);
+    
+    const assignment = await Assignments.findById(assignmentId);
+    if (!assignment) {
+      return res.status(404).json({ success: false, msg: 'Assignment not found' });
+    }
     
     await Assignments.findByIdAndUpdate(assignmentId, { isActive: false });
     res.json({ success: true, msg: 'Assignment deleted successfully' });
   } catch (error) {
+    console.error('Delete assignment error:', error);
     res.status(500).json({ success: false, msg: error.message });
   }
 };
@@ -288,10 +298,17 @@ const deleteAssignment = async (req, res) => {
 const deleteNotice = async (req, res) => {
   try {
     const { noticeId } = req.params;
+    console.log('Attempting to delete notice:', noticeId);
+    
+    const notice = await Notices.findById(noticeId);
+    if (!notice) {
+      return res.status(404).json({ success: false, msg: 'Notice not found' });
+    }
     
     await Notices.findByIdAndUpdate(noticeId, { isActive: false });
     res.json({ success: true, msg: 'Notice deleted successfully' });
   } catch (error) {
+    console.error('Delete notice error:', error);
     res.status(500).json({ success: false, msg: error.message });
   }
 };
@@ -300,10 +317,17 @@ const deleteNotice = async (req, res) => {
 const deleteMaterial = async (req, res) => {
   try {
     const { materialId } = req.params;
+    console.log('Attempting to delete material:', materialId);
+    
+    const material = await StudyMaterial.findById(materialId);
+    if (!material) {
+      return res.status(404).json({ success: false, msg: 'Material not found' });
+    }
     
     await StudyMaterial.findByIdAndUpdate(materialId, { isActive: false });
     res.json({ success: true, msg: 'Material deleted successfully' });
   } catch (error) {
+    console.error('Delete material error:', error);
     res.status(500).json({ success: false, msg: error.message });
   }
 };
