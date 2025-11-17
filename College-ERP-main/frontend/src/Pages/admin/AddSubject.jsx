@@ -10,6 +10,7 @@ const AddSubject = () => {
   const [teachers, setTeachers] = useState([]);
   const [selectedCourse, setSelectedCourse] = useState("");
   const [formData, setFormData] = useState({
+    selectedCourse: "B-TECH",
     subject_name: "",
     subject_code: "",
     subject_type: "Theory",
