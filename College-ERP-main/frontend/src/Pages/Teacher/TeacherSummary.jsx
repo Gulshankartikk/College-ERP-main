@@ -34,10 +34,10 @@ const TeacherSummary = () => {
             _id: '1',
             title: 'Data Structures Assignment 1',
             subjectId: { subjectName: 'Data Structures', subjectCode: 'CSE201' },
-            deadline: '2024-02-15',
+            deadline: '2025-02-15',
             submittedCount: 2,
             totalStudents: 3,
-            createdAt: '2024-01-15'
+            createdAt: '2025-01-15'
           },
           {
             _id: '2',
@@ -46,7 +46,16 @@ const TeacherSummary = () => {
             deadline: '2024-03-01',
             submittedCount: 0,
             totalStudents: 3,
-            createdAt: '2024-01-20'
+            createdAt: '2025-01-20'
+          },
+           {
+            _id: '2',
+            title: 'Math Assignment',
+            subjectId: { subjectName: 'Mathematics', subjectCode: 'MTH101' },
+            deadline: '2024-03-01',
+            submittedCount: 0,
+            totalStudents: 3,
+            createdAt: '2025-01-20'
           }
         ],
         notices: [
@@ -55,7 +64,7 @@ const TeacherSummary = () => {
             title: 'Important Notice for B.Tech CSE',
             description: 'All students are requested to attend the special lecture on advanced topics.',
             courseId: { courseName: 'B.Tech CSE' },
-            createdAt: '2024-01-10',
+            createdAt: '2025-01-10',
             studentCount: 3
           }
         ],
@@ -65,20 +74,20 @@ const TeacherSummary = () => {
             title: 'Data Structures Notes - Chapter 1',
             subjectId: { subjectName: 'Data Structures', subjectCode: 'CSE201' },
             fileUrl: 'https://example.com/notes.pdf',
-            createdAt: '2024-01-12'
+            createdAt: '2025-01-12'
           },
           {
             _id: '2',
             title: 'Database Quick Reference',
             subjectId: { subjectName: 'Database Systems', subjectCode: 'CSE301' },
             fileUrl: 'https://example.com/db-reference.pdf',
-            createdAt: '2024-01-14'
+            createdAt: '2025-01-14'
           }
         ],
         attendance: [
           {
             _id: '1',
-            date: '2024-01-15',
+            date: '2025-01-15',
             subjectId: { subjectName: 'Data Structures' },
             totalStudents: 3,
             presentCount: 2,
@@ -86,7 +95,7 @@ const TeacherSummary = () => {
           },
           {
             _id: '2',
-            date: '2024-01-16',
+            date: '2025-01-16',
             subjectId: { subjectName: 'Database Systems' },
             totalStudents: 3,
             presentCount: 3,

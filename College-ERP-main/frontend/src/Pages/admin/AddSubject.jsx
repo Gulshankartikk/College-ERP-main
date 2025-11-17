@@ -10,7 +10,7 @@ const AddSubject = () => {
   const [teachers, setTeachers] = useState([]);
   const [selectedCourse, setSelectedCourse] = useState("");
   const [formData, setFormData] = useState({
-    selectedCourse: "B-TECH",
+    selectedCourse: "",
     subject_name: "",
     subject_code: "",
     subject_type: "Theory",
@@ -20,7 +20,7 @@ const AddSubject = () => {
     is_elective: false,
     teacher: ""
   });
-
+  const selectedCourses = ["B-TECH", "M-TECH", "PHD", "DIPLOMA", "CERTIFICATE", "OTHER"];
   const branches = ["CSE", "ECE", "MECH", "CIVIL", "EEE", "IT"];
   const semesters = [1, 2, 3, 4, 5, 6, 7, 8];
   const subjectTypes = ["Theory", "Practical", "Lab"];
@@ -64,47 +64,59 @@ const AddSubject = () => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    if (!formData.subject_name || !formData.subject_code || !formData.credits || !formData.semester || !formData.branch) {
-      toast.error("Please fill all required fields");
-      return;
-    }
+  if (
+    !formData.subject_name ||
+    !formData.subject_code ||
+    !formData.credits ||
+    !formData.semester ||
+    !formData.branch
+  ) {
+    toast.error("Please fill all required fields");
+    return;
+  }
 
-    try {
-      const response = await axios.post(
-        `${BASE_URL}/subjects/add`,
-        {
-          ...formData,
-          courseId: selectedCourse
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`
-          }
-        }
-      );
+  try {
+    const payload = {
+      subject_name: formData.subject_name,
+      subject_code: formData.subject_code,
+      subject_type: formData.subject_type,
+      credits: Number(formData.credits),
+      semester: Number(formData.semester),
+      branch: formData.branch,
+      is_elective: formData.is_elective,
+      teacherId: formData.teacher || null, // optional
+      courseId: selectedCourse || null, // optional
+    };
 
-      toast.success("Subject added successfully");
-      
-      // Reset form
-      setFormData({
-        subject_name: "",
-        subject_code: "",
-        subject_type: "Theory",
-        credits: "",
-        semester: "",
-        branch: "",
-        is_elective: false,
-        teacher: ""
-      });
-      setSelectedCourse("");
-    } catch (error) {
-      console.error("Error adding subject:", error);
-      toast.error("Failed to add subject");
-    }
-  };
+    const res = await axios.post(`${BASE_URL}/subjects/add`, payload, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    toast.success("Subject added successfully");
+
+    setFormData({
+      selectedCourse: "",
+      subject_name: "",
+      subject_code: "",
+      subject_type: "Theory",
+      credits: "",
+      semester: "",
+      branch: "",
+      is_elective: false,
+      teacher: "",
+    });
+
+    setSelectedCourse("");
+  } catch (error) {
+    console.error("Error adding subject:", error);
+    toast.error(error.response?.data?.message || "Failed to add subject");
+  }
+};
+
 
   return (
     <div className="flex flex-col w-full min-h-[100vh] bg-blue-400 pb-10">

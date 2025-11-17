@@ -10,7 +10,8 @@ export const AttendanceModal = ({ isOpen, onClose, teacherId }) => {
   const [students, setStudents] = useState([
     { _id: '6919d9552d2366a7429b1181', name: 'Gulshan Kartik', rollNo: 'CSE2021001', status: 'Present' },
     { _id: '6919d9552d2366a7429b1182', name: 'Aditya Sharma', rollNo: 'CSE2021002', status: 'Present' },
-    { _id: '6919d9552d2366a7429b1183', name: 'Abhishek Gond', rollNo: 'MCA2022001', status: 'Absent' }
+    { _id: '6919d9552d2366a7429b1183', name: 'Abhishek Gond', rollNo: 'MCA2022001', status: 'Absent' },
+    { _id: '6919d9552d2366a7429b1184', name: 'Ankita Maurya', rollNo: 'MCA2022002', status: 'Present' }
   ]);
   const [loading, setLoading] = useState(false);
 
@@ -181,6 +182,16 @@ export const AssignmentModal = ({ isOpen, onClose, teacherId }) => {
             >
               <option value="CSE201">Data Structures - CSE201</option>
               <option value="CSE301">Database Systems - CSE301</option>
+              <option value="PHY101">Physics - PHY101</option>
+              <option value="CHE101">Chemistry - CHE101</option>
+              <option value="MAT101">Engineering Mathematics I - MAT101</option>
+              <option value="MAT102">Engineering Mathematics II - MAT102</option>
+              <option value="EEE101">Basic Electrical Engineering - EEE101</option>
+              <option value="ME101">Engineering Mechanics - ME101</option>
+              <option value="CS101">Introduction to Programming - CS101</option>
+              <option value="ENG101">English Communication - ENG101</option>
+
+              
             </select>
           </div>
           

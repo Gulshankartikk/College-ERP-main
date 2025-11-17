@@ -65,6 +65,8 @@ const AddCourse = () => {
                   required
                   className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
                   placeholder="Bachelor of Technology - Computer Science"
+                  
+                  
                 />
               </div>
 
