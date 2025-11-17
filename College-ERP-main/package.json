@@ -7,7 +7,9 @@
     "start": "node start-server.js",
     "backend": "cd backend && node index.js",
     "frontend": "cd frontend && npm run dev",
-    "install-all": "cd backend && npm install && cd ../frontend && npm install"
+    "install-all": "cd backend && npm install && cd ../frontend && npm install",
+    "health-check": "node health-check.js",
+    "fix-permissions": "cd backend && mkdir uploads 2>nul || echo Uploads directory ready"
   },
   "keywords": ["college", "erp", "management", "education"],
   "author": "College ERP Team",
