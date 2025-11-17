@@ -61,35 +61,35 @@ router.post('/subjects/add', async (req, res) => {
 });
 
 // Course Management
-router.post('/admin/courses', adminController.addCourse);
-router.delete('/admin/courses/:courseId', require('../middleware/Auth').isAdmin, adminController.deleteCourse);
+router.post('/admin/courses', isAdmin, adminController.addCourse);
+router.delete('/admin/courses/:courseId', isAdmin, adminController.deleteCourse);
 
 // Subject Management
-router.post('/admin/subjects', adminController.addSubject);
-router.delete('/admin/subjects/:subjectId', require('../middleware/Auth').isAdmin, adminController.deleteSubject);
+router.post('/admin/subjects', isAdmin, adminController.addSubject);
+router.delete('/admin/subjects/:subjectId', isAdmin, adminController.deleteSubject);
 
 // Teacher Management
-router.post('/admin/teachers', adminController.addTeacher);
-router.delete('/admin/teachers/:teacherId', require('../middleware/Auth').isAdmin, adminController.deleteTeacher);
+router.post('/admin/teachers', isAdmin, adminController.addTeacher);
+router.delete('/admin/teachers/:teacherId', isAdmin, adminController.deleteTeacher);
 
 // Student Management
-router.post('/admin/students', adminController.addStudent);
-router.delete('/admin/students/:studentId', require('../middleware/Auth').isAdmin, adminController.deleteStudent);
+router.post('/admin/students', isAdmin, adminController.addStudent);
+router.delete('/admin/students/:studentId', isAdmin, adminController.deleteStudent);
 
 // Assignment Management
-router.post('/admin/assign-teacher', adminController.assignTeacherToSubject);
-router.post('/admin/remove-teacher', adminController.removeTeacherFromSubject);
+router.post('/admin/assign-teacher', isAdmin, adminController.assignTeacherToSubject);
+router.post('/admin/remove-teacher', isAdmin, adminController.removeTeacherFromSubject);
 
 // Attendance Reports
-router.get('/admin/attendance-report', adminController.getComprehensiveAttendanceReport);
+router.get('/admin/attendance-report', isAdmin, adminController.getComprehensiveAttendanceReport);
 
 // Admin Delete Operations
-router.delete('/admin/assignments/:assignmentId', adminController.deleteAssignment);
-router.delete('/admin/notices/:noticeId', adminController.deleteNotice);
-router.delete('/admin/materials/:materialId', adminController.deleteMaterial);
+router.delete('/admin/assignments/:assignmentId', isAdmin, adminController.deleteAssignment);
+router.delete('/admin/notices/:noticeId', isAdmin, adminController.deleteNotice);
+router.delete('/admin/materials/:materialId', isAdmin, adminController.deleteMaterial);
 
 // Admin Update Operations
-router.put('/admin/teachers/:teacherId', require('../middleware/Auth').isAdmin, adminController.updateTeacher);
+router.put('/admin/teachers/:teacherId', isAdmin, adminController.updateTeacher);
 
 // ============= TEACHER ROUTES =============
 router.post('/teacher/login', teacherController.teacherLogin);
@@ -108,6 +108,7 @@ router.get('/teacher/:teacherId/marks/all-students', teacherController.getAllStu
 
 // File upload middleware
 const upload = require('../middleware/upload');
+const { isAdmin } = require('../middleware/Auth');
 
 // Notes Management
 router.post('/teacher/:teacherId/notes', upload.single('file'), teacherController.addNotes);

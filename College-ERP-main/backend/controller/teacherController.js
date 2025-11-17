@@ -133,13 +133,13 @@ const getStudentsBySubject = async (req, res) => {
 const markAttendance = async (req, res) => {
   try {
     const { teacherId } = req.params;
-    const { subjectId, date, attendanceData } = req.body;
+    const { subjectId, date, attendance } = req.body;
     
     // Delete existing attendance for the date
     await Attendance.deleteMany({ subjectId, teacherId, date });
     
     // Create new attendance records
-    const attendanceRecords = attendanceData.map(record => ({
+    const attendanceRecords = attendance.map(record => ({
       studentId: record.studentId,
       subjectId,
       teacherId,
@@ -149,21 +149,9 @@ const markAttendance = async (req, res) => {
     
     const savedRecords = await Attendance.insertMany(attendanceRecords);
     
-    // Get teacher and subject details for notification
-    const teacher = await Teacher.findById(teacherId);
-    const subject = await Subject.findById(subjectId).populate('courseId');
-    
-    // Send notification to students
-    await sendNotification('attendance', {
-      sender: { id: teacherId, role: 'teacher', name: teacher.name },
-      subjectName: subject.subjectName,
-      courseId: subject.courseId._id,
-      subjectId,
-      entityId: savedRecords[0]._id
-    });
-    
     res.json({ success: true, msg: 'Attendance marked successfully' });
   } catch (error) {
+    console.error('Attendance error:', error);
     res.status(500).json({ success: false, msg: error.message });
   }
 };

@@ -64,7 +64,7 @@ const Login = () => {
       }
     } catch (err) {
       console.error("Login error:", err.response ? err.response.data : err);
-      toast.error("Invalid Credintials");
+      toast.error("Invalid Credentials");
     }
   };
 
@@ -138,9 +138,9 @@ const Login = () => {
               <div className="flex flex-col">
                 <label
                   className="block text-gray-700 font-bold mb-2"
-                  htmlFor="roll number"
+                  htmlFor="username"
                 >
-                  "Username"
+                  Username
                 </label>
                 <input
                   type="text"

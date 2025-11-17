@@ -2,11 +2,27 @@ const mongoose = require("mongoose");
 
 const db = async () => {
   try {
-    await mongoose.connect(`${process.env.MONGO_URI}`);
+    const mongoUri = process.env.MONGO_URI || 'mongodb://localhost:27017/college-erp';
+    
+    await mongoose.connect(mongoUri, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
 
-    console.log("Connected with mongo");
+    console.log("✅ Connected with MongoDB:", mongoUri);
+    
+    mongoose.connection.on('error', (err) => {
+      console.error('❌ MongoDB connection error:', err);
+    });
+    
+    mongoose.connection.on('disconnected', () => {
+      console.log('⚠️ MongoDB disconnected');
+    });
+    
   } catch (err) {
-    console.log("Error Connecting with mongo:-", err);
+    console.error("❌ Error Connecting with MongoDB:", err.message);
+    console.log("🔄 Retrying connection in 5 seconds...");
+    setTimeout(db, 5000);
   }
 };
 

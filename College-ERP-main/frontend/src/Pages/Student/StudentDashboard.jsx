@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
 import { BASE_URL } from '../../constants/baseUrl';
 import { 
@@ -10,318 +10,137 @@ import {
   FaChartBar,
   FaCalendarAlt,
   FaExclamationTriangle,
-  FaCheckCircle
+  FaCheckCircle,
+  FaFileAlt,
+  FaTasks,
+  FaUser,
+  FaGraduationCap
 } from 'react-icons/fa';
 import { MdAssignment, MdNotifications } from 'react-icons/md';
 import Cookies from 'js-cookie';
-import LoadingSpinner from '../../components/LoadingSpinner';
+import { toast } from 'react-toastify';
+import StudentHeader from '../../components/StudentHeader';
 
 const StudentDashboard = () => {
-  const { id: studentId } = useParams();
-  const [dashboardData, setDashboardData] = useState(null);
+  const { studentId } = useParams();
+  const [student, setStudent] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
 
-  const fetchDashboardData = async () => {
+  useEffect(() => {
+    fetchStudentData();
+  }, [studentId]);
+
+  const fetchStudentData = async () => {
     try {
       const token = Cookies.get('token');
-      console.log('Fetching dashboard for student:', studentId);
-      console.log('Token:', token ? 'Present' : 'Missing');
-      
       const response = await axios.get(
         `${BASE_URL}/api/student/${studentId}/dashboard`,
-        { headers: { Authorization: `Bearer ${token}` } }
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
       );
-      
-      console.log('Dashboard response:', response.data);
-      setDashboardData(response.data.dashboard);
+      setStudent(response.data.student);
     } catch (error) {
-      setError('Failed to load dashboard data');
-      console.error('Dashboard error:', error);
+      console.error('Error fetching student data:', error);
+      toast.error('Failed to load student data');
     } finally {
       setLoading(false);
     }
   };
 
-  useEffect(() => {
-    if (studentId) {
-      fetchDashboardData();
-    }
-  }, [studentId]);
-
   if (loading) {
-    return <LoadingSpinner message="Loading your dashboard..." />;
-  }
-
-  if (error) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-red-500 text-xl">{error}</div>
+      <div className="min-h-screen bg-gray-50">
+        <StudentHeader studentId={studentId} studentName={student?.name} />
+        <div className="flex items-center justify-center h-64">
+          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-500"></div>
+        </div>
       </div>
     );
   }
 
-  const { student, subjectAttendance, assignments, notices, notes, studyMaterials, overallStats } = dashboardData || {};
+  const quickActions = [
+    {
+      title: "Notes",
+      description: "Access your class notes",
+      icon: <FaFileAlt className="text-3xl text-blue-500" />,
+      link: `/student/${studentId}/notes`,
+      color: "bg-blue-50 hover:bg-blue-100 border-blue-200"
+    },
+    {
+      title: "Study Materials",
+      description: "Download study materials",
+      icon: <FaBook className="text-3xl text-green-500" />,
+      link: `/student/${studentId}/materials`,
+      color: "bg-green-50 hover:bg-green-100 border-green-200"
+    },
+    {
+      title: "Assignments",
+      description: "View and submit assignments",
+      icon: <FaTasks className="text-3xl text-purple-500" />,
+      link: `/student/${studentId}/assignments`,
+      color: "bg-purple-50 hover:bg-purple-100 border-purple-200"
+    },
+    {
+      title: "Attendance",
+      description: "Check your attendance record",
+      icon: <FaClipboardList className="text-3xl text-orange-500" />,
+      link: `/student/${studentId}/attendance`,
+      color: "bg-orange-50 hover:bg-orange-100 border-orange-200"
+    }
+  ];
 
   return (
-    <div className="p-6 bg-gray-50 min-h-screen">
-      {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-800 mb-2">
-          Welcome, {student?.name}!
-        </h1>
-        <p className="text-gray-600">
-          Course: {student?.courseId?.courseName} | Roll No: {student?.rollNo}
-        </p>
-      </div>
-
-      {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <div className="flex items-center">
-            <div className="p-3 rounded-full bg-blue-100 text-blue-600">
-              <FaBook size={24} />
-            </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">Total Subjects</p>
-              <p className="text-2xl font-bold text-gray-900">{overallStats?.totalSubjects || 0}</p>
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <div className="flex items-center">
-            <div className="p-3 rounded-full bg-green-100 text-green-600">
-              <MdAssignment size={24} />
-            </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">Assignments</p>
-              <p className="text-2xl font-bold text-gray-900">{overallStats?.totalAssignments || 0}</p>
-              <p className="text-xs text-green-600">
-                {overallStats?.submittedAssignments || 0} submitted
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <div className="flex items-center">
-            <div className="p-3 rounded-full bg-yellow-100 text-yellow-600">
-              <FaExclamationTriangle size={24} />
-            </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">Overdue</p>
-              <p className="text-2xl font-bold text-gray-900">{overallStats?.overdueAssignments || 0}</p>
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <div className="flex items-center">
-            <div className="p-3 rounded-full bg-purple-100 text-purple-600">
-              <MdNotifications size={24} />
-            </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">Notices</p>
-              <p className="text-2xl font-bold text-gray-900">{overallStats?.totalNotices || 0}</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Main Content Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* Attendance Overview */}
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-semibold text-gray-800">Attendance Overview</h2>
-            <FaChartBar className="text-blue-500" size={20} />
-          </div>
-          <div className="space-y-4">
-            {subjectAttendance?.slice(0, 5).map((subject, index) => (
-              <div key={index} className="flex items-center justify-between">
-                <div>
-                  <p className="font-medium text-gray-800">{subject.subject.subjectName}</p>
-                  <p className="text-sm text-gray-600">
-                    {subject.present}/{subject.total} classes
-                  </p>
-                </div>
-                <div className="flex items-center">
-                  <div className="w-16 bg-gray-200 rounded-full h-2 mr-3">
-                    <div 
-                      className={`h-2 rounded-full ${
-                        subject.percentage >= 75 ? 'bg-green-500' : 
-                        subject.percentage >= 60 ? 'bg-yellow-500' : 'bg-red-500'
-                      }`}
-                      style={{ width: `${subject.percentage}%` }}
-                    ></div>
-                  </div>
-                  <span className={`text-sm font-medium ${
-                    subject.percentage >= 75 ? 'text-green-600' : 
-                    subject.percentage >= 60 ? 'text-yellow-600' : 'text-red-600'
-                  }`}>
-                    {subject.percentage}%
-                  </span>
-                </div>
+    <div className="min-h-screen bg-gray-50">
+      <StudentHeader studentId={studentId} studentName={student?.name} />
+      
+      <div className="py-8">
+        <div className="max-w-7xl mx-auto px-4">
+          {/* Welcome Section */}
+          <div className="bg-white rounded-lg shadow-md p-8 mb-8">
+            <div className="flex items-center space-x-4 mb-6">
+              <div className="bg-blue-100 p-3 rounded-full">
+                <FaGraduationCap className="text-3xl text-blue-600" />
               </div>
+              <div>
+                <h1 className="text-3xl font-bold text-gray-800">
+                  Welcome, {student?.name || "Student"}
+                </h1>
+                <p className="text-gray-600">Ready to learn something new today?</p>
+              </div>
+            </div>
+            
+            {/* Student Info */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 bg-gray-50 p-4 rounded-lg">
+              <div className="flex items-center space-x-2">
+                <FaUser className="text-gray-500" />
+                <span className="text-gray-700">Roll No: {student?.rollNo}</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <span className="text-gray-700">Email: {student?.email}</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <FaGraduationCap className="text-gray-500" />
+                <span className="text-gray-700">Course: {student?.courseId?.courseName}</span>
+              </div>
+            </div>
+          </div>
+          
+          {/* Quick Actions */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {quickActions.map((action, index) => (
+              <Link
+                key={index}
+                to={action.link}
+                className={`${action.color} border-2 p-6 rounded-lg transition-all duration-200 hover:shadow-md`}
+              >
+                <div className="text-center">
+                  <div className="mb-4">{action.icon}</div>
+                  <h3 className="text-lg font-semibold text-gray-800 mb-2">{action.title}</h3>
+                  <p className="text-gray-600 text-sm">{action.description}</p>
+                </div>
+              </Link>
             ))}
-          </div>
-        </div>
-
-        {/* Recent Assignments */}
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-semibold text-gray-800">Recent Assignments</h2>
-            <MdAssignment className="text-green-500" size={20} />
-          </div>
-          <div className="space-y-4">
-            {assignments?.slice(0, 5).map((assignment, index) => (
-              <div key={index} className="border-l-4 border-blue-500 pl-4 py-2">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="font-medium text-gray-800">{assignment.title}</p>
-                    <p className="text-sm text-gray-600">{assignment.subjectId?.subjectName}</p>
-                    <p className="text-xs text-gray-500">
-                      Due: {new Date(assignment.deadline).toLocaleDateString()}
-                    </p>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    {assignment.fileUrl && (
-                      <a 
-                        href={assignment.fileUrl} 
-                        target="_blank" 
-                        rel="noopener noreferrer"
-                        className="text-blue-500 hover:text-blue-700 text-sm"
-                      >
-                        Download
-                      </a>
-                    )}
-                    {assignment.isSubmitted ? (
-                      <FaCheckCircle className="text-green-500" size={20} />
-                    ) : assignment.isOverdue ? (
-                      <FaExclamationTriangle className="text-red-500" size={20} />
-                    ) : (
-                      <FaCalendarAlt className="text-yellow-500" size={20} />
-                    )}
-                  </div>
-                </div>
-              </div>
-            )) || (
-              <div className="space-y-4">
-                <div className="border-l-4 border-blue-500 pl-4 py-2">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="font-medium text-gray-800">Data Structures Assignment 1</p>
-                      <p className="text-sm text-gray-600">Data Structures and Algorithms</p>
-                      <p className="text-xs text-gray-500">Due: Feb 15, 2024</p>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <a 
-                        href="https://example.com/assignment.pdf" 
-                        target="_blank" 
-                        rel="noopener noreferrer"
-                        className="text-blue-500 hover:text-blue-700 text-sm"
-                      >
-                        Download
-                      </a>
-                      <FaCalendarAlt className="text-yellow-500" size={20} />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Recent Notices */}
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-semibold text-gray-800">Recent Notices</h2>
-            <FaBell className="text-purple-500" size={20} />
-          </div>
-          <div className="space-y-4">
-            {notices?.slice(0, 5).map((notice, index) => (
-              <div key={index} className="border-l-4 border-purple-500 pl-4 py-2">
-                <div className="flex items-start justify-between">
-                  <div className="flex-1">
-                    <p className="font-medium text-gray-800">{notice.title}</p>
-                    <p className="text-sm text-gray-600 line-clamp-2">{notice.description}</p>
-                    <p className="text-xs text-gray-500">
-                      {new Date(notice.createdAt).toLocaleDateString()} by {notice.teacherId?.name}
-                    </p>
-                  </div>
-                  <button className="text-blue-500 hover:text-blue-700 text-sm ml-2">
-                    View
-                  </button>
-                </div>
-              </div>
-            )) || (
-              <div className="space-y-4">
-                <div className="border-l-4 border-purple-500 pl-4 py-2">
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1">
-                      <p className="font-medium text-gray-800">Important Notice for B.Tech CSE</p>
-                      <p className="text-sm text-gray-600 line-clamp-2">All students are requested to attend the special lecture on advanced topics.</p>
-                      <p className="text-xs text-gray-500">Today by Dr. John Smith</p>
-                    </div>
-                    <button className="text-blue-500 hover:text-blue-700 text-sm ml-2">
-                      View
-                    </button>
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Study Materials & Notes */}
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-semibold text-gray-800">Study Materials</h2>
-            <FaStickyNote className="text-orange-500" size={20} />
-          </div>
-          <div className="space-y-4">
-            {studyMaterials?.slice(0, 3).map((material, index) => (
-              <div key={index} className="border-l-4 border-orange-500 pl-4 py-2">
-                <p className="font-medium text-gray-800">{material.title}</p>
-                <p className="text-sm text-gray-600">{material.subjectId.subjectName}</p>
-                <p className="text-xs text-gray-500">
-                  {new Date(material.createdAt).toLocaleDateString()}
-                </p>
-              </div>
-            ))}
-            {notes?.slice(0, 2).map((note, index) => (
-              <div key={`note-${index}`} className="border-l-4 border-blue-500 pl-4 py-2">
-                <p className="font-medium text-gray-800">{note.title}</p>
-                <p className="text-sm text-gray-600">{note.subjectId.subjectName}</p>
-                <p className="text-xs text-gray-500">
-                  {new Date(note.createdAt).toLocaleDateString()}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* Quick Actions */}
-      <div className="mt-8 bg-white rounded-lg shadow-md p-6">
-        <h2 className="text-xl font-semibold text-gray-800 mb-4">Quick Actions</h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div className="flex flex-col items-center p-4 bg-blue-50 rounded-lg">
-            <FaClipboardList className="text-blue-500 mb-2" size={24} />
-            <span className="text-sm font-medium text-gray-700">View Attendance</span>
-          </div>
-          <div className="flex flex-col items-center p-4 bg-green-50 rounded-lg">
-            <MdAssignment className="text-green-500 mb-2" size={24} />
-            <span className="text-sm font-medium text-gray-700">Assignments</span>
-          </div>
-          <div className="flex flex-col items-center p-4 bg-purple-50 rounded-lg">
-            <FaBell className="text-purple-500 mb-2" size={24} />
-            <span className="text-sm font-medium text-gray-700">All Notices</span>
-          </div>
-          <div className="flex flex-col items-center p-4 bg-orange-50 rounded-lg">
-            <FaStickyNote className="text-orange-500 mb-2" size={24} />
-            <span className="text-sm font-medium text-gray-700">Study Materials</span>
           </div>
         </div>
       </div>
