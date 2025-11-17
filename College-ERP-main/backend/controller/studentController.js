@@ -110,7 +110,8 @@ const getStudentAttendance = async (req, res) => {
     
     res.json({ 
       success: true, 
-      attendance, 
+      attendance,
+      student,
       stats: {
         totalClasses,
         presentClasses,
@@ -152,7 +153,7 @@ const getNotesBySubject = async (req, res) => {
       .populate('teacherId', 'name')
       .sort({ createdAt: -1 });
     
-    res.json({ success: true, notes });
+    res.json({ success: true, notes, student });
   } catch (error) {
     res.status(500).json({ success: false, msg: error.message });
   }
@@ -173,7 +174,7 @@ const getStudyMaterials = async (req, res) => {
       .populate('teacherId', 'name')
       .sort({ createdAt: -1 });
     
-    res.json({ success: true, materials });
+    res.json({ success: true, materials, student });
   } catch (error) {
     res.status(500).json({ success: false, msg: error.message });
   }
@@ -194,7 +195,7 @@ const getAssignments = async (req, res) => {
       .populate('teacherId', 'name')
       .sort({ deadline: 1 });
     
-    res.json({ success: true, assignments });
+    res.json({ success: true, assignments, student });
   } catch (error) {
     res.status(500).json({ success: false, msg: error.message });
   }
@@ -413,23 +414,7 @@ const getStudentDashboard = async (req, res) => {
     
     res.json({
       success: true,
-      dashboard: {
-        student,
-        subjects,
-        subjectAttendance: Object.values(subjectAttendance),
-        assignments: assignmentsWithStatus,
-        subjectMarks: Object.values(subjectMarks),
-        notices,
-        notes,
-        studyMaterials,
-        overallStats: {
-          totalSubjects: subjects.length,
-          totalAssignments: assignments.length,
-          submittedAssignments: assignmentsWithStatus.filter(a => a.isSubmitted).length,
-          overdueAssignments: assignmentsWithStatus.filter(a => a.isOverdue).length,
-          totalNotices: notices.length
-        }
-      }
+      student
     });
   } catch (error) {
     res.status(500).json({ success: false, msg: error.message });

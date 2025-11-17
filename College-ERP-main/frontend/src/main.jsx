@@ -22,10 +22,15 @@ import AdminDashboard from "./Pages/admin/AdminDashboard";
 import NotificationSummary from "./Pages/admin/NotificationSummary";
 import TeacherSummary from "./Pages/Teacher/TeacherSummary";
 import StudentDashboard from "./Pages/Student/StudentDashboard";
+import StudentNotes from "./Pages/Student/StudentNotes";
+import StudentMaterials from "./Pages/Student/StudentMaterials";
+import StudentAssignments from "./Pages/Student/StudentAssignments";
+import StudentAttendance from "./Pages/Student/StudentAttendance";
 import TeacherDashboard from "./Pages/Teacher/TeacherDashboard";
 import UpdatePass from "./Pages/Common/UpdatePass";
 import ForgetPass from "./Pages/Common/ForgetPassword/ForgetPass";
 import VerifyOtp from "./Pages/Common/ForgetPassword/VerifyOtp";
+import NotFound from "./Pages/Common/NotFound";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -33,8 +38,12 @@ const router = createBrowserRouter(
       {/* home route */}
       <Route index element={<Login />} />
       {/* student routes */}
-      <Route path="student/:id">
+      <Route path="student/:studentId">
         <Route path="dashboard" element={<StudentDashboard />} />
+        <Route path="notes" element={<StudentNotes />} />
+        <Route path="materials" element={<StudentMaterials />} />
+        <Route path="assignments" element={<StudentAssignments />} />
+        <Route path="attendance" element={<StudentAttendance />} />
         <Route path="updatePassword" element={<UpdatePass />} />
         <Route path="forgetPassword" element={<ForgetPass />} />
         <Route path="forgetPassword/verifyotp" element={<VerifyOtp />} />
@@ -56,6 +65,8 @@ const router = createBrowserRouter(
         <Route path="add-subject" element={<AddSubject />} />
         <Route path="notifications" element={<NotificationSummary />} />
       </Route>
+      {/* 404 route */}
+      <Route path="*" element={<NotFound />} />
     </Route>
   )
 );
