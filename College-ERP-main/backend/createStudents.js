@@ -18,16 +18,16 @@ async function createStudents() {
     // Create students
     const students = [
       {
-        name: 'Alice Johnson',
-        email: 'alice@student.edu',
+        name: 'kartikeya',
+        email: 'alice@student.edu',//alice@student.edu
         phone: '+91-9876543220',
         rollNo: 'CSE2021001',
         password: await bcrypt.hash('student123', 10),
         courseId: courses[0]._id
       },
       {
-        name: 'Bob Wilson',
-        email: 'bob@student.edu',
+        name: 'sandy',
+        email: 'bob@student.edu',//bob@student.edu
         phone: '+91-9876543221',
         rollNo: 'CSE2021002',
         password: await bcrypt.hash('student123', 10),
@@ -49,8 +49,8 @@ async function createStudents() {
     }
 
     console.log('\n📋 Student Login Credentials:');
-    console.log('👨🎓 Student 1: alice@student.edu / student123');
-    console.log('👨🎓 Student 2: bob@student.edu / student123');
+    console.log('👨🎓 Student 1: alice@student.edu / student123');//alice@student.edu 
+    console.log('👨🎓 Student 2: bob@student.edu / student123');//bob@student.edu 
 
   } catch (error) {
     console.error('Error:', error);
