@@ -72,7 +72,7 @@ const TeacherDashboard = () => {
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-gray-800 mb-2">
-          Welcome, {teacher?.name}!
+          Welcome,gulshan {teacher?.name}!
         </h1>
         <p className="text-gray-600">
           Department: {teacher?.department || 'Not specified'} | 
