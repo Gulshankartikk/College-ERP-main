@@ -17,25 +17,25 @@ async function createStudents() {
 
     // Create students
     const students = [
-      {
-        name: 'kartikeya',
-        email: 'student',//alice@student.edu
-        phone: '+91-9876543220',
-        rollNo: 'CSE2021001',
-        password: await bcrypt.hash('student123', 10),
-        courseId: courses[0]._id
-      },
-      {
-        name: 'sandy',
-        email: 'student2',//bob@student.edu
-        phone: '+91-9876543221',
-        rollNo: 'CSE2021002',
-        password: await bcrypt.hash('student123', 10),
-        courseId: courses[0]._id
-      },
+      // {
+      //   name: 'kartikeya',
+      //   email: 'student',//alice@student.edu
+      //   phone: '+91-9876543220',
+      //   rollNo: 'CSE2021001',
+      //   password: await bcrypt.hash('student123', 10),
+      //   courseId: courses[0]._id
+      // },
+      // {
+      //   name: 'sandy',
+      //   email: 'student2',//bob@student.edu
+      //   phone: '+91-9876543221',
+      //   rollNo: 'CSE2021002',
+      //   password: await bcrypt.hash('student123', 10),
+      //   courseId: courses[0]._id
+      // },
       {
   name: 'AADESH KUMAR',
-  email: 'student',
+  email: 'student1',
   phone: '',
   rollNo: '2301660100001',
   password: await bcrypt.hash('student123', 10),
@@ -43,7 +43,7 @@ async function createStudents() {
 },
 {
   name: 'AALOK SINGH',
-  email: 'student',
+  email: 'student2',
   phone: '',
   rollNo: '2301660100002',
   password: await bcrypt.hash('student123', 10),
@@ -51,7 +51,7 @@ async function createStudents() {
 },
 {
   name: 'AARTI SAMANT',
-  email: 'student',
+  email: 'student3',
   phone: '',
   rollNo: '2301660100003',
   password: await bcrypt.hash('student123', 10),
@@ -59,7 +59,7 @@ async function createStudents() {
 },
 {
   name: 'ABHAY KUMAR CHAUDHARY',
-  email: 'student',
+  email: 'student4',
   phone: '',
   rollNo: '2301660100004',
   password: await bcrypt.hash('student123', 10),
@@ -67,7 +67,7 @@ async function createStudents() {
 },
 {
   name: 'ABHAY MAURYA',
-  email: 'student',
+  email: 'student5',
   phone: '',
   rollNo: '2301660100005',
   password: await bcrypt.hash('student123', 10),
@@ -75,7 +75,7 @@ async function createStudents() {
 },
 {
   name: 'ABHINAV KANNOUGIYA',
-  email: 'student',
+  email: 'student6',
   phone: '',
   rollNo: '2301660100006',
   password: await bcrypt.hash('student123', 10),
@@ -83,7 +83,7 @@ async function createStudents() {
 },
 {
   name: 'ABHINAV SINGH',
-  email: 'student',
+  email: 'student7',
   phone: '',
   rollNo: '2301660100007',
   password: await bcrypt.hash('student123', 10),
@@ -91,7 +91,7 @@ async function createStudents() {
 },
 {
   name: 'ABHINAY KUMAR',
-  email: 'student',
+  email: 'student8',
   phone: '',
   rollNo: '2301660100008',
   password: await bcrypt.hash('student123', 10),
@@ -99,7 +99,7 @@ async function createStudents() {
 },
 {
   name: 'ABHISHEK GOND',
-  email: 'student',
+  email: 'student9',
   phone: '',
   rollNo: '2301660100009',
   password: await bcrypt.hash('student123', 10),
@@ -107,7 +107,7 @@ async function createStudents() {
 },
 {
   name: 'ABHISHEK SHARMA',
-  email: 'student',
+  email: 'student10',
   phone: '',
   rollNo: '2301660100010',
   password: await bcrypt.hash('student123', 10),
@@ -115,7 +115,7 @@ async function createStudents() {
 },
 {
   name: 'ABHISHEK SRIVASTAVA',
-  email: 'student',
+  email: 'student11',
   phone: '',
   rollNo: '2301660100011',
   password: await bcrypt.hash('student123', 10),
@@ -123,7 +123,7 @@ async function createStudents() {
 },
 {
   name: 'ADARSH DHUSIA',
-  email: 'student',
+  email: 'student12',
   phone: '',
   rollNo: '2301660100012',
   password: await bcrypt.hash('student123', 10),
@@ -131,7 +131,7 @@ async function createStudents() {
 },
 {
   name: 'ADARSH PANDEY',
-  email: 'student',
+  email: 'student13',
   phone: '',
   rollNo: '2301660100013',
   password: await bcrypt.hash('student123', 10),
@@ -139,7 +139,7 @@ async function createStudents() {
 },
 {
   name: 'ADITYA KUMAR',
-  email: 'student',
+  email: 'student14',
   phone: '',
   rollNo: '2301660100014',
   password: await bcrypt.hash('student123', 10),
@@ -147,7 +147,7 @@ async function createStudents() {
 },
 {
   name: 'ADITYA KUMAR GOND',
-  email: 'student',
+  email: 'student15',
   phone: '',
   rollNo: '2301660100015',
   password: await bcrypt.hash('student123', 10),
@@ -155,7 +155,7 @@ async function createStudents() {
 },
 {
   name: 'ADITYA KUMAR SHARMA',
-  email: 'student',
+  email: 'student16',
   phone: '',
   rollNo: '2301660100016',
   password: await bcrypt.hash('student123', 10),
@@ -163,7 +163,7 @@ async function createStudents() {
 },
 {
   name: 'ADITYA MISHRA',
-  email: 'student',
+  email: 'student17',
   phone: '',
   rollNo: '2301660100017',
   password: await bcrypt.hash('student123', 10),
@@ -171,7 +171,7 @@ async function createStudents() {
 },
 {
   name: 'AKANKSHA SHUKLA',
-  email: 'student',
+  email: 'student18',
   phone: '',
   rollNo: '2301660100018',
   password: await bcrypt.hash('student123', 10),
@@ -179,7 +179,7 @@ async function createStudents() {
 },
 {
   name: 'AKARSH KUMAR SINGH',
-  email: 'student',
+  email: 'student19',
   phone: '',
   rollNo: '2301660100019',
   password: await bcrypt.hash('student123', 10),
@@ -187,7 +187,7 @@ async function createStudents() {
 },
 {
   name: 'ALOK RANJAN',
-  email: 'student',
+  email: 'student20',
   phone: '',
   rollNo: '2301660100020',
   password: await bcrypt.hash('student123', 10),
@@ -195,7 +195,7 @@ async function createStudents() {
 },
 {
   name: 'AMAN',
-  email: 'student',
+  email: 'student21',
   phone: '',
   rollNo: '2301660100021',
   password: await bcrypt.hash('student123', 10),
@@ -203,7 +203,7 @@ async function createStudents() {
 },
 {
   name: 'AMAN GUPTA',
-  email: 'student',
+  email: 'student22',
   phone: '',
   rollNo: '2301660100022',
   password: await bcrypt.hash('student123', 10),
@@ -211,7 +211,7 @@ async function createStudents() {
 },
 {
   name: 'AMAN KUMAR',
-  email: 'student',
+  email: 'student23',
   phone: '',
   rollNo: '2301660100023',
   password: await bcrypt.hash('student123', 10),
@@ -219,7 +219,7 @@ async function createStudents() {
 },
 {
   name: 'AMARJEET YADAV',
-  email: 'student',
+  email: 'student24',
   phone: '',
   rollNo: '2301660100024',
   password: await bcrypt.hash('student123', 10),
@@ -227,7 +227,7 @@ async function createStudents() {
 },
 {
   name: 'AMIT KUSHWAHA',
-  email: 'student',
+  email: 'student25',
   phone: '',
   rollNo: '2301660100025',
   password: await bcrypt.hash('student123', 10),
@@ -235,7 +235,7 @@ async function createStudents() {
 },
 {
   name: 'ANAMIKA',
-  email: 'student',
+  email: 'student26',
   phone: '',
   rollNo: '2301660100026',
   password: await bcrypt.hash('student123', 10),
@@ -243,7 +243,7 @@ async function createStudents() {
 },
 {
   name: 'ANAMIKA SINGH',
-  email: 'student',
+  email: 'student27',
   phone: '',
   rollNo: '2301660100027',
   password: await bcrypt.hash('student123', 10),
@@ -251,7 +251,7 @@ async function createStudents() {
 },
 {
   name: 'ANANT KUMAR',
-  email: 'student',
+  email: 'student28',
   phone: '',
   rollNo: '2301660100028',
   password: await bcrypt.hash('student123', 10),
@@ -259,7 +259,7 @@ async function createStudents() {
 },
 {
   name: 'ANANYA CHATURVEDI',
-  email: 'student',
+  email: 'student29',
   phone: '',
   rollNo: '2301660100029',
   password: await bcrypt.hash('student123', 10),
@@ -267,7 +267,7 @@ async function createStudents() {
 },
 {
   name: 'ANCHAL SINGH',
-  email: 'student',
+  email: 'student30',
   phone: '',
   rollNo: '2301660100030',
   password: await bcrypt.hash('student123', 10),
@@ -275,7 +275,7 @@ async function createStudents() {
 },
 {
   name: 'ANJALI DWIVEDI',
-  email: 'student',
+  email: 'student31',
   phone: '',
   rollNo: '2301660100031',
   password: await bcrypt.hash('student123', 10),
@@ -283,7 +283,7 @@ async function createStudents() {
 },
 {
   name: 'ANKIT KUMAR',
-  email: 'student',
+  email: 'student32',
   phone: '',
   rollNo: '2301660100032',
   password: await bcrypt.hash('student123', 10),
@@ -291,7 +291,7 @@ async function createStudents() {
 },
 {
   name: 'ANKIT MATHUR',
-  email: 'student',
+  email: 'student33',
   phone: '',
   rollNo: '2301660100033',
   password: await bcrypt.hash('student123', 10),
@@ -299,7 +299,7 @@ async function createStudents() {
 },
 {
   name: 'ANKIT YADAV',
-  email: 'student',
+  email: 'student34',
   phone: '',
   rollNo: '2301660100034',
   password: await bcrypt.hash('student123', 10),
@@ -307,7 +307,7 @@ async function createStudents() {
 },
 {
   name: 'ANKITA MAURYA',
-  email: 'student',
+  email: 'student35',
   phone: '',
   rollNo: '2301660100035',
   password: await bcrypt.hash('student123', 10),
@@ -315,7 +315,7 @@ async function createStudents() {
 },
 {
   name: 'ANKUSH KUMAR',
-  email: 'student',
+  email: 'student36',
   phone: '',
   rollNo: '2301660100036',
   password: await bcrypt.hash('student123', 10),
@@ -323,7 +323,7 @@ async function createStudents() {
 },
 {
   name: 'ANMOL KUMAR DUBEY',
-  email: 'student',
+  email: 'student37',
   phone: '',
   rollNo: '2301660100037',
   password: await bcrypt.hash('student123', 10),
@@ -331,7 +331,7 @@ async function createStudents() {
 },
 {
   name: 'ANSHUMAAN GUPTA',
-  email: 'student',
+  email: 'student38',
   phone: '',
   rollNo: '2301660100038',
   password: await bcrypt.hash('student123', 10),
@@ -339,7 +339,7 @@ async function createStudents() {
 },
 {
   name: 'ANUJ GUPTA',
-  email: 'student',
+  email: 'student39',
   phone: '',
   rollNo: '2301660100039',
   password: await bcrypt.hash('student123', 10),
@@ -347,7 +347,7 @@ async function createStudents() {
 },
 {
   name: 'ANUJ SINGH',
-  email: 'student',
+  email: 'student40',
   phone: '',
   rollNo: '2301660100040',
   password: await bcrypt.hash('student123', 10),
@@ -355,7 +355,7 @@ async function createStudents() {
 },
 {
   name: 'ANUP',
-  email: 'student',
+  email: 'student41',
   phone: '',
   rollNo: '2301660100041',
   password: await bcrypt.hash('student123', 10),
@@ -363,7 +363,7 @@ async function createStudents() {
 },
 {
   name: 'APURVA SINGH',
-  email: 'student',
+  email: 'student42',
   phone: '',
   rollNo: '2301660100042',
   password: await bcrypt.hash('student123', 10),
@@ -371,7 +371,7 @@ async function createStudents() {
 },
 {
   name: 'ARPIT GANGWAR',
-  email: 'student',
+  email: 'student43',
   phone: '',
   rollNo: '2301660100043',
   password: await bcrypt.hash('student123', 10),
@@ -379,7 +379,7 @@ async function createStudents() {
 },
 {
   name: 'ARPIT TIWARI',
-  email: 'student',
+  email: 'student44',
   phone: '',
   rollNo: '2301660100044',
   password: await bcrypt.hash('student123', 10),
@@ -387,7 +387,7 @@ async function createStudents() {
 },
 {
   name: 'ARYAN KUMAR',
-  email: 'student',
+  email: 'student45',
   phone: '',
   rollNo: '2301660100045',
   password: await bcrypt.hash('student123', 10),
@@ -395,7 +395,7 @@ async function createStudents() {
 },
 {
   name: 'ARYAN PATEL',
-  email: 'student',
+  email: 'student46',
   phone: '',
   rollNo: '2301660100046',
   password: await bcrypt.hash('student123', 10),
@@ -403,7 +403,7 @@ async function createStudents() {
 },
 {
   name: 'ARYAN SHRIVASTAVA',
-  email: 'student',
+  email: 'student47',
   phone: '',
   rollNo: '2301660100047',
   password: await bcrypt.hash('student123', 10),
@@ -411,7 +411,7 @@ async function createStudents() {
 },
 {
   name: 'ARYAN YADAV',
-  email: 'student',
+  email: 'student48',
   phone: '',
   rollNo: '2301660100048',
   password: await bcrypt.hash('student123', 10),
@@ -419,7 +419,7 @@ async function createStudents() {
 },
 {
   name: 'ASHLOK YADAV',
-  email: 'student',
+  email: 'student49',
   phone: '',
   rollNo: '2301660100049',
   password: await bcrypt.hash('student123', 10),
@@ -427,7 +427,7 @@ async function createStudents() {
 },
 {
   name: 'ATITH SINGH',
-  email: 'student',
+  email: 'student50',
   phone: '',
   rollNo: '2301660100050',
   password: await bcrypt.hash('student123', 10),
@@ -435,7 +435,7 @@ async function createStudents() {
 },
 {
   name: 'AYUSH PATEL',
-  email: 'student',
+  email: 'student51',
   phone: '',
   rollNo: '2301660100051',
   password: await bcrypt.hash('student123', 10),
@@ -443,7 +443,7 @@ async function createStudents() {
 },
 {
   name: 'AYUSH SAXENA',
-  email: 'student',
+  email: 'student52',
   phone: '',
   rollNo: '2301660100052',
   password: await bcrypt.hash('student123', 10),
@@ -451,7 +451,7 @@ async function createStudents() {
 },
 {
   name: 'AYUSH VERMA',
-  email: 'student',
+  email: 'student53',
   phone: '',
   rollNo: '2301660100053',
   password: await bcrypt.hash('student123', 10),
@@ -459,7 +459,7 @@ async function createStudents() {
 },
 {
   name: 'BADAL KUMAR',
-  email: 'student',
+  email: 'student54',
   phone: '',
   rollNo: '2301660100054',
   password: await bcrypt.hash('student123', 10),
@@ -467,7 +467,7 @@ async function createStudents() {
 },
 {
   name: 'BHAVESH SINGH',
-  email: 'student',
+  email: 'student55',
   phone: '',
   rollNo: '2301660100055',
   password: await bcrypt.hash('student123', 10),
@@ -475,7 +475,7 @@ async function createStudents() {
 },
 {
   name: 'CHITTRANSHI GUPTA',
-  email: 'student',
+  email: 'student56',
   phone: '',
   rollNo: '2301660100056',
   password: await bcrypt.hash('student123', 10),
@@ -483,7 +483,7 @@ async function createStudents() {
 },
 {
   name: 'DESHRAJ SINGH PARMAR',
-  email: 'student',
+  email: 'student57',
   phone: '',
   rollNo: '2301660100057',
   password: await bcrypt.hash('student123', 10),
@@ -491,7 +491,7 @@ async function createStudents() {
 },
 {
   name: 'DHEERENDRA KUMAR',
-  email: 'student',
+  email: 'student58',
   phone: '',
   rollNo: '2301660100058',
   password: await bcrypt.hash('student123', 10),
@@ -499,7 +499,7 @@ async function createStudents() {
 },
 {
   name: 'DURGESH DIWAKAR',
-  email: 'student',
+  email: 'student59',
   phone: '',
   rollNo: '2301660100059',
   password: await bcrypt.hash('student123', 10),
@@ -507,7 +507,7 @@ async function createStudents() {
 },
 {
   name: 'DURGESH KUMAR',
-  email: 'student',
+  email: 'student60',
   phone: '',
   rollNo: '2301660100060',
   password: await bcrypt.hash('student123', 10),
@@ -515,7 +515,7 @@ async function createStudents() {
 },
 {
   name: 'ESMOLI GUPTA',
-  email: 'student',
+  email: 'student61',
   phone: '',
   rollNo: '2301660100061',
   password: await bcrypt.hash('student123', 10),
@@ -523,7 +523,7 @@ async function createStudents() {
 },
 {
   name: 'FAIZ HUSSAIN KHAN',
-  email: 'student',
+  email: 'student62',
   phone: '',
   rollNo: '2301660100062',
   password: await bcrypt.hash('student123', 10),
@@ -531,7 +531,7 @@ async function createStudents() {
 },
 {
   name: 'GARIMA DAROLIA',
-  email: 'student',
+  email: 'student63',
   phone: '',
   rollNo: '2301660100063',
   password: await bcrypt.hash('student123', 10),
@@ -539,7 +539,7 @@ async function createStudents() {
 },
 {
   name: 'GAURAV KUMAR',
-  email: 'student',
+  email: 'student64',
   phone: '',
   rollNo: '2301660100064',
   password: await bcrypt.hash('student123', 10),
@@ -547,7 +547,7 @@ async function createStudents() {
 },
 {
   name: 'GULSHAN KUMAR',
-  email: 'student',
+  email: 'student65',
   phone: '',
   rollNo: '2301660100065',
   password: await bcrypt.hash('student123', 10),
@@ -555,7 +555,7 @@ async function createStudents() {
 },
 {
   name: 'HARSH KUMAR',
-  email: 'student',
+  email: 'student66',
   phone: '',
   rollNo: '2301660100066',
   password: await bcrypt.hash('student123', 10),
@@ -563,7 +563,7 @@ async function createStudents() {
 },
 {
   name: 'HARSH RAI',
-  email: 'student',
+  email: 'student67',
   phone: '',
   rollNo: '2301660100067',
   password: await bcrypt.hash('student123', 10),
@@ -571,7 +571,7 @@ async function createStudents() {
 },
 {
   name: 'HARSH RAJ PAL',
-  email: 'student',
+  email: 'student68',
   phone: '',
   rollNo: '2301660100068',
   password: await bcrypt.hash('student123', 10),
@@ -579,7 +579,7 @@ async function createStudents() {
 },
 {
   name: 'HARSH VERMA',
-  email: 'student',
+  email: 'student69',
   phone: '',
   rollNo: '2301660100069',
   password: await bcrypt.hash('student123', 10),
@@ -587,7 +587,7 @@ async function createStudents() {
 },
 {
   name: 'HARSHIT KUMAR',
-  email: 'student',
+  email: 'student70',
   phone: '',
   rollNo: '2301660100070',
   password: await bcrypt.hash('student123', 10),
@@ -595,7 +595,7 @@ async function createStudents() {
 },
 {
   name: 'HARSHITA OJHA',
-  email: 'student',
+  email: 'student71',
   phone: '',
   rollNo: '2301660100071',
   password: await bcrypt.hash('student123', 10),
@@ -603,7 +603,7 @@ async function createStudents() {
 },
 {
   name: 'HARSHITA SINGH',
-  email: 'student',
+  email: 'student72',
   phone: '',
   rollNo: '2301660100072',
   password: await bcrypt.hash('student123', 10),
@@ -611,7 +611,7 @@ async function createStudents() {
 },
 {
   name: 'HIMANSHU SINGH',
-  email: 'student',
+  email: 'student73',
   phone: '',
   rollNo: '2301660100073',
   password: await bcrypt.hash('student123', 10),
@@ -619,7 +619,7 @@ async function createStudents() {
 },
 {
   name: 'HIMANSHU YADAV',
-  email: 'student',
+  email: 'student74',
   phone: '',
   rollNo: '2301660100074',
   password: await bcrypt.hash('student123', 10),
@@ -627,7 +627,7 @@ async function createStudents() {
 },
 {
   name: 'JAISWAR SACHIN LAXMISHANKAR',
-  email: 'student',
+  email: 'student75',
   phone: '',
   rollNo: '2301660100075',
   password: await bcrypt.hash('student123', 10),
@@ -635,7 +635,7 @@ async function createStudents() {
 },
 {
   name: 'JAY SRIVASTAVA',
-  email: 'student',
+  email: 'student76',
   phone: '',
   rollNo: '2301660100076',
   password: await bcrypt.hash('student123', 10),
@@ -643,7 +643,7 @@ async function createStudents() {
 },
 {
   name: 'JHANVI SINGH',
-  email: 'student',
+  email: 'student77',
   phone: '',
   rollNo: '2301660100077',
   password: await bcrypt.hash('student123', 10),
@@ -651,7 +651,7 @@ async function createStudents() {
 },
 {
   name: 'KAJAL',
-  email: 'student',
+  email: 'student78',
   phone: '',
   rollNo: '2301660100078',
   password: await bcrypt.hash('student123', 10),
@@ -659,7 +659,7 @@ async function createStudents() {
 },
 {
   name: 'KISLAYA SRIVASTAVA',
-  email: 'student',
+  email: 'student79',
   phone: '',
   rollNo: '2301660100079',
   password: await bcrypt.hash('student123', 10),
@@ -667,7 +667,7 @@ async function createStudents() {
 },
 {
   name: 'KOMAL GUPTA',
-  email: 'student',
+  email: 'student80',
   phone: '',
   rollNo: '2301660100080',
   password: await bcrypt.hash('student123', 10),
@@ -675,7 +675,7 @@ async function createStudents() {
 },
 {
   name: 'KRATIKA',
-  email: 'student',
+  email: 'student81',
   phone: '',
   rollNo: '2301660100081',
   password: await bcrypt.hash('student123', 10),
@@ -683,7 +683,7 @@ async function createStudents() {
 },
 {
   name: 'KRISHNA RAJ MISHRA',
-  email: 'student',
+  email: 'student82',
   phone: '',
   rollNo: '2301660100082',
   password: await bcrypt.hash('student123', 10),
@@ -691,7 +691,7 @@ async function createStudents() {
 },
 {
   name: 'KUMAR KAUSTUBH',
-  email: 'student',
+  email: 'student83',
   phone: '',
   rollNo: '2301660100083',
   password: await bcrypt.hash('student123', 10),
@@ -699,7 +699,7 @@ async function createStudents() {
 },
 {
   name: 'MANISH KUMAR MAURYA',
-  email: 'student',
+  email: 'student84',
   phone: '',
   rollNo: '2301660100084',
   password: await bcrypt.hash('student123', 10),
@@ -707,7 +707,7 @@ async function createStudents() {
 },
 {
   name: 'MEHTAB ALI',
-  email: 'student',
+  email: 'student85',
   phone: '',
   rollNo: '2301660100085',
   password: await bcrypt.hash('student123', 10),
@@ -715,7 +715,7 @@ async function createStudents() {
 },
 {
   name: 'MOHAMMAD ZUBAIR',
-  email: 'student',
+  email: 'student86',
   phone: '',
   rollNo: '2301660100086',
   password: await bcrypt.hash('student123', 10),
@@ -723,7 +723,7 @@ async function createStudents() {
 },
 {
   name: 'MOHD AAMIR',
-  email: 'student',
+  email: 'student87',
   phone: '',
   rollNo: '2301660100087',
   password: await bcrypt.hash('student123', 10),
@@ -731,7 +731,7 @@ async function createStudents() {
 },
 {
   name: 'NIDHI GUPTA',
-  email: 'student',
+  email: 'student89',
   phone: '',
   rollNo: '2301660100089',
   password: await bcrypt.hash('student123', 10),
@@ -739,7 +739,7 @@ async function createStudents() {
 },
 {
   name: 'NIDHI MISHRA',
-  email: 'student',
+  email: 'student90',
   phone: '',
   rollNo: '2301660100090',
   password: await bcrypt.hash('student123', 10),
@@ -747,7 +747,7 @@ async function createStudents() {
 },
 {
   name: 'NIKITA YADAV',
-  email: 'student',
+  email: 'student91',
   phone: '',
   rollNo: '2301660100091',
   password: await bcrypt.hash('student123', 10),
@@ -755,7 +755,7 @@ async function createStudents() {
 },
 {
   name: 'NISHANT',
-  email: 'student',
+  email: 'student92',
   phone: '',
   rollNo: '2301660100092',
   password: await bcrypt.hash('student123', 10),
@@ -763,7 +763,7 @@ async function createStudents() {
 },
 {
   name: 'NISHANT KUMAR',
-  email: 'student',
+  email: 'student93',
   phone: '',
   rollNo: '2301660100093',
   password: await bcrypt.hash('student123', 10),
@@ -771,7 +771,7 @@ async function createStudents() {
 },
 {
   name: 'NISHANT PRATAP SINGH',
-  email: 'student',
+  email: 'student94',
   phone: '',
   rollNo: '2301660100094',
   password: await bcrypt.hash('student123', 10),
@@ -779,7 +779,7 @@ async function createStudents() {
 },
 {
   name: 'NITIN BAGHEL',
-  email: 'student',
+  email: 'student95',
   phone: '',
   rollNo: '2301660100095',
   password: await bcrypt.hash('student123', 10),
@@ -787,7 +787,7 @@ async function createStudents() {
 },
 {
   name: 'NITISH OJHA',
-  email: 'student',
+  email: 'student96',
   phone: '',
   rollNo: '2301660100096',
   password: await bcrypt.hash('student123', 10),
@@ -795,7 +795,7 @@ async function createStudents() {
 },
 {
   name: 'OSHIM RAEEN',
-  email: 'student',
+  email: 'student97',
   phone: '',
   rollNo: '2301660100097',
   password: await bcrypt.hash('student123', 10),
@@ -803,7 +803,7 @@ async function createStudents() {
 },
 {
   name: 'OUM GUPTA',
-  email: 'student',
+  email: 'student98',
   phone: '',
   rollNo: '2301660100098',
   password: await bcrypt.hash('student123', 10),
@@ -811,7 +811,7 @@ async function createStudents() {
 },
 {
   name: 'PAWAN KUSHWAHA',
-  email: 'student',
+  email: 'student99',
   phone: '',
   rollNo: '2301660100099',
   password: await bcrypt.hash('student123', 10),
@@ -819,7 +819,7 @@ async function createStudents() {
 },
 {
   name: 'PRAKHAR DEV DUBEY',
-  email: 'student',
+  email: 'student100',
   phone: '',
   rollNo: '2301660100100',
   password: await bcrypt.hash('student123', 10),
@@ -827,15 +827,14 @@ async function createStudents() {
 },
 {
   name: 'PRATIBHA SINGH',
-  email: 'student',
+  email: 'student101',
   phone: '',
   rollNo: '2301660100101',
   password: await bcrypt.hash('student123', 10),
   courseId: courses[0]._id
-},
-{
+},{
   name: 'PRIYANSHU KUMAR PANDEY',
-  email: 'student',
+  email: 'student102',
   phone: '',
   rollNo: '2301660100102',
   password: await bcrypt.hash('student123', 10),
@@ -843,7 +842,7 @@ async function createStudents() {
 },
 {
   name: 'PRIYANSHU SINGH SIKARWAR',
-  email: 'student',
+  email: 'student103',
   phone: '',
   rollNo: '2301660100103',
   password: await bcrypt.hash('student123', 10),
@@ -851,7 +850,7 @@ async function createStudents() {
 },
 {
   name: 'RAHUL PRAJAPATI',
-  email: 'student',
+  email: 'student104',
   phone: '',
   rollNo: '2301660100104',
   password: await bcrypt.hash('student123', 10),
@@ -859,7 +858,7 @@ async function createStudents() {
 },
 {
   name: 'RAJ ARYAN',
-  email: 'student',
+  email: 'student105',
   phone: '',
   rollNo: '2301660100105',
   password: await bcrypt.hash('student123', 10),
@@ -867,7 +866,7 @@ async function createStudents() {
 },
 {
   name: 'RAJ KAMAL SINGH',
-  email: 'student',
+  email: 'student106',
   phone: '',
   rollNo: '2301660100106',
   password: await bcrypt.hash('student123', 10),
@@ -875,7 +874,7 @@ async function createStudents() {
 },
 {
   name: 'RAJ KUSHWAHA',
-  email: 'student',
+  email: 'student107',
   phone: '',
   rollNo: '2301660100107',
   password: await bcrypt.hash('student123', 10),
@@ -883,7 +882,7 @@ async function createStudents() {
 },
 {
   name: 'RAJ MAURYA',
-  email: 'student',
+  email: 'student108',
   phone: '',
   rollNo: '2301660100108',
   password: await bcrypt.hash('student123', 10),
@@ -891,7 +890,7 @@ async function createStudents() {
 },
 {
   name: 'RAJAN VERMA',
-  email: 'student',
+  email: 'student109',
   phone: '',
   rollNo: '2301660100109',
   password: await bcrypt.hash('student123', 10),
@@ -899,7 +898,7 @@ async function createStudents() {
 },
 {
   name: 'RIDDHIMA SINHA',
-  email: 'student',
+  email: 'student110',
   phone: '',
   rollNo: '2301660100110',
   password: await bcrypt.hash('student123', 10),
@@ -907,7 +906,7 @@ async function createStudents() {
 },
 {
   name: 'RISHABH KUMAR',
-  email: 'student',
+  email: 'student111',
   phone: '',
   rollNo: '2301660100111',
   password: await bcrypt.hash('student123', 10),
@@ -915,7 +914,7 @@ async function createStudents() {
 },
 {
   name: 'RISHABH SHUKLA',
-  email: 'student',
+  email: 'student112',
   phone: '',
   rollNo: '2301660100112',
   password: await bcrypt.hash('student123', 10),
@@ -923,7 +922,7 @@ async function createStudents() {
 },
 {
   name: 'RIYA SINGH',
-  email: 'student',
+  email: 'student113',
   phone: '',
   rollNo: '2301660100113',
   password: await bcrypt.hash('student123', 10),
@@ -931,7 +930,7 @@ async function createStudents() {
 },
 {
   name: 'ROHIT YADAV',
-  email: 'student',
+  email: 'student114',
   phone: '',
   rollNo: '2301660100114',
   password: await bcrypt.hash('student123', 10),
@@ -939,7 +938,7 @@ async function createStudents() {
 },
 {
   name: 'SACHIN RAJPUT',
-  email: 'student',
+  email: 'student115',
   phone: '',
   rollNo: '2301660100115',
   password: await bcrypt.hash('student123', 10),
@@ -947,7 +946,7 @@ async function createStudents() {
 },
 {
   name: 'SAHIL KANAUJIYA',
-  email: 'student',
+  email: 'student116',
   phone: '',
   rollNo: '2301660100116',
   password: await bcrypt.hash('student123', 10),
@@ -955,7 +954,7 @@ async function createStudents() {
 },
 {
   name: 'SANDEEP KUMAR PATEL',
-  email: 'student',
+  email: 'student117',
   phone: '',
   rollNo: '2301660100117',
   password: await bcrypt.hash('student123', 10),
@@ -963,7 +962,7 @@ async function createStudents() {
 },
 {
   name: 'SANDEEP SINGH',
-  email: 'student',
+  email: 'student118',
   phone: '',
   rollNo: '2301660100118',
   password: await bcrypt.hash('student123', 10),
@@ -971,7 +970,7 @@ async function createStudents() {
 },
 {
   name: 'SANDHYA PANDEY',
-  email: 'student',
+  email: 'student119',
   phone: '',
   rollNo: '2301660100119',
   password: await bcrypt.hash('student123', 10),
@@ -979,7 +978,7 @@ async function createStudents() {
 },
 {
   name: 'SANGRAM',
-  email: 'student',
+  email: 'student120',
   phone: '',
   rollNo: '2301660100120',
   password: await bcrypt.hash('student123', 10),
@@ -987,7 +986,7 @@ async function createStudents() {
 },
 {
   name: 'SANJANA BHARTI',
-  email: 'student',
+  email: 'student121',
   phone: '',
   rollNo: '2301660100121',
   password: await bcrypt.hash('student123', 10),
@@ -995,7 +994,7 @@ async function createStudents() {
 },
 {
   name: 'SANKET YADAV',
-  email: 'student',
+  email: 'student122',
   phone: '',
   rollNo: '2301660100122',
   password: await bcrypt.hash('student123', 10),
@@ -1003,7 +1002,7 @@ async function createStudents() {
 },
 {
   name: 'SATISH KUMAR',
-  email: 'student',
+  email: 'student123',
   phone: '',
   rollNo: '2301660100123',
   password: await bcrypt.hash('student123', 10),
@@ -1011,7 +1010,7 @@ async function createStudents() {
 },
 {
   name: 'SATYAM MISHRA',
-  email: 'student',
+  email: 'student124',
   phone: '',
   rollNo: '2301660100124',
   password: await bcrypt.hash('student123', 10),
@@ -1019,7 +1018,7 @@ async function createStudents() {
 },
 {
   name: 'SHAILESH YADAV',
-  email: 'student',
+  email: 'student125',
   phone: '',
   rollNo: '2301660100125',
   password: await bcrypt.hash('student123', 10),
@@ -1027,7 +1026,7 @@ async function createStudents() {
 },
 {
   name: 'SHIVAM',
-  email: 'student',
+  email: 'student126',
   phone: '',
   rollNo: '2301660100126',
   password: await bcrypt.hash('student123', 10),
@@ -1035,7 +1034,7 @@ async function createStudents() {
 },
 {
   name: 'SHIVAM SHARMA',
-  email: 'student',
+  email: 'student127',
   phone: '',
   rollNo: '2301660100127',
   password: await bcrypt.hash('student123', 10),
@@ -1043,7 +1042,7 @@ async function createStudents() {
 },
 {
   name: 'SHIVAM SINGH',
-  email: 'student',
+  email: 'student128',
   phone: '',
   rollNo: '2301660100128',
   password: await bcrypt.hash('student123', 10),
@@ -1051,7 +1050,7 @@ async function createStudents() {
 },
 {
   name: 'SHIVANGI',
-  email: 'student',
+  email: 'student129',
   phone: '',
   rollNo: '2301660100129',
   password: await bcrypt.hash('student123', 10),
@@ -1059,7 +1058,7 @@ async function createStudents() {
 },
 {
   name: 'SHOBHIT KATIYAR',
-  email: 'student',
+  email: 'student130',
   phone: '',
   rollNo: '2301660100130',
   password: await bcrypt.hash('student123', 10),
@@ -1067,7 +1066,7 @@ async function createStudents() {
 },
 {
   name: 'SHREYA PANDEY',
-  email: 'student',
+  email: 'student131',
   phone: '',
   rollNo: '2301660100131',
   password: await bcrypt.hash('student123', 10),
@@ -1075,7 +1074,7 @@ async function createStudents() {
 },
 {
   name: 'SHREYANSH KANDU',
-  email: 'student',
+  email: 'student132',
   phone: '',
   rollNo: '2301660100132',
   password: await bcrypt.hash('student123', 10),
@@ -1083,7 +1082,7 @@ async function createStudents() {
 },
 {
   name: 'SIDDHARTH JAISWAL',
-  email: 'student',
+  email: 'student133',
   phone: '',
   rollNo: '2301660100133',
   password: await bcrypt.hash('student123', 10),
@@ -1091,7 +1090,7 @@ async function createStudents() {
 },
 {
   name: 'SONAL YADAV',
-  email: 'student',
+  email: 'student134',
   phone: '',
   rollNo: '2301660100134',
   password: await bcrypt.hash('student123', 10),
@@ -1099,7 +1098,7 @@ async function createStudents() {
 },
 {
   name: 'SRISHTI GUPTA',
-  email: 'student',
+  email: 'student135',
   phone: '',
   rollNo: '2301660100135',
   password: await bcrypt.hash('student123', 10),
@@ -1107,7 +1106,7 @@ async function createStudents() {
 },
 {
   name: 'SULABH GUPTA',
-  email: 'student',
+  email: 'student136',
   phone: '',
   rollNo: '2301660100136',
   password: await bcrypt.hash('student123', 10),
@@ -1115,7 +1114,7 @@ async function createStudents() {
 },
 {
   name: 'SUMIT KUMAR',
-  email: 'student',
+  email: 'student137',
   phone: '',
   rollNo: '2301660100137',
   password: await bcrypt.hash('student123', 10),
@@ -1123,7 +1122,7 @@ async function createStudents() {
 },
 {
   name: 'SURAJ KUMAR YADAV',
-  email: 'student',
+  email: 'student138',
   phone: '',
   rollNo: '2301660100138',
   password: await bcrypt.hash('student123', 10),
@@ -1131,7 +1130,7 @@ async function createStudents() {
 },
 {
   name: 'SURYBHAN KUMAR',
-  email: 'student',
+  email: 'student139',
   phone: '',
   rollNo: '2301660100139',
   password: await bcrypt.hash('student123', 10),
@@ -1139,7 +1138,7 @@ async function createStudents() {
 },
 {
   name: 'TANISHK SONI',
-  email: 'student',
+  email: 'student140',
   phone: '',
   rollNo: '2301660100140',
   password: await bcrypt.hash('student123', 10),
@@ -1147,7 +1146,7 @@ async function createStudents() {
 },
 {
   name: 'TAPAN KUMAR YADAV',
-  email: 'student',
+  email: 'student141',
   phone: '',
   rollNo: '2301660100141',
   password: await bcrypt.hash('student123', 10),
@@ -1155,7 +1154,7 @@ async function createStudents() {
 },
 {
   name: 'TARKESHWAR GUPTA',
-  email: 'student',
+  email: 'student142',
   phone: '',
   rollNo: '2301660100142',
   password: await bcrypt.hash('student123', 10),
@@ -1163,7 +1162,7 @@ async function createStudents() {
 },
 {
   name: 'TAUSIF',
-  email: 'student',
+  email: 'student143',
   phone: '',
   rollNo: '2301660100143',
   password: await bcrypt.hash('student123', 10),
@@ -1171,7 +1170,7 @@ async function createStudents() {
 },
 {
   name: 'UTKARSH KUSHWAHA',
-  email: 'student',
+  email: 'student144',
   phone: '',
   rollNo: '2301660100144',
   password: await bcrypt.hash('student123', 10),
@@ -1179,7 +1178,7 @@ async function createStudents() {
 },
 {
   name: 'UTKARSH PATHAK',
-  email: 'student',
+  email: 'student145',
   phone: '',
   rollNo: '2301660100145',
   password: await bcrypt.hash('student123', 10),
@@ -1187,7 +1186,7 @@ async function createStudents() {
 },
 {
   name: 'UTKARSH SAHU',
-  email: 'student',
+  email: 'student146',
   phone: '',
   rollNo: '2301660100146',
   password: await bcrypt.hash('student123', 10),
@@ -1195,7 +1194,7 @@ async function createStudents() {
 },
 {
   name: 'UTKARSH SINGH',
-  email: 'student',
+  email: 'student147',
   phone: '',
   rollNo: '2301660100147',
   password: await bcrypt.hash('student123', 10),
@@ -1203,7 +1202,7 @@ async function createStudents() {
 },
 {
   name: 'VIJAY KUMAR',
-  email: 'student',
+  email: 'student148',
   phone: '',
   rollNo: '2301660100148',
   password: await bcrypt.hash('student123', 10),
@@ -1211,7 +1210,7 @@ async function createStudents() {
 },
 {
   name: 'VISHAL SHARMA',
-  email: 'student',
+  email: 'student149',
   phone: '',
   rollNo: '2301660100149',
   password: await bcrypt.hash('student123', 10),
@@ -1219,7 +1218,7 @@ async function createStudents() {
 },
 {
   name: 'VISHESH YADAV',
-  email: 'student',
+  email: 'student150',
   phone: '',
   rollNo: '2301660100150',
   password: await bcrypt.hash('student123', 10),
@@ -1227,14 +1226,12 @@ async function createStudents() {
 },
 {
   name: 'VISHWAS CHAUHAN',
-  email: 'student',
+  email: 'student151',
   phone: '',
   rollNo: '2301660100151',
   password: await bcrypt.hash('student123', 10),
   courseId: courses[0]._id
-},
-
-
+}
     ];
 
     for (const studentData of students) {
