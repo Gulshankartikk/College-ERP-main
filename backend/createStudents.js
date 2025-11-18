@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 require('dotenv').config();
 
-const { Student, Course } = require('./models/CompleteModels');
+const { Student, Course, Subject, Attendance, Teacher } = require('./models/CompleteModels');
 
 mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/college-erp');
 
@@ -1247,9 +1247,62 @@ async function createStudents() {
       }
     }
 
+    // Create sample attendance data
+    const subjects = await Subject.find();
+    const createdStudents = await Student.find();
+    const teachers = await Teacher.find();
+    
+    if (subjects.length > 0 && createdStudents.length > 0 && teachers.length > 0) {
+      console.log('\n📊 Creating attendance data...');
+      
+      const attendanceData = [];
+      const startDate = new Date('2024-01-01');
+      const endDate = new Date();
+      
+      for (let subject of subjects) {
+        const courseStudents = createdStudents.filter(s => s.courseId.toString() === subject.courseId.toString());
+        const teacher = teachers[0]; // Use first teacher
+        
+        for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 7)) {
+          for (let student of courseStudents) {
+            const isPresent = Math.random() > 0.2; // 80% attendance rate
+            attendanceData.push({
+              studentId: student._id,
+              subjectId: subject._id,
+              teacherId: teacher._id,
+              date: new Date(d),
+              status: isPresent ? 'Present' : 'Absent'
+            });
+          }
+        }
+      }
+      
+      await Attendance.insertMany(attendanceData);
+      console.log(`✅ Created ${attendanceData.length} attendance records`);
+      
+      // Calculate attendance percentages
+      for (let student of createdStudents) {
+        for (let subject of subjects) {
+          const totalClasses = await Attendance.countDocuments({
+            studentId: student._id,
+            subjectId: subject._id
+          });
+          
+          const presentClasses = await Attendance.countDocuments({
+            studentId: student._id,
+            subjectId: subject._id,
+            status: 'Present'
+          });
+          
+          const percentage = totalClasses > 0 ? ((presentClasses / totalClasses) * 100).toFixed(2) : 0;
+          console.log(`📈 ${student.name} - ${subject.subjectName}: ${percentage}% (${presentClasses}/${totalClasses})`);
+        }
+      }
+    }
+    
     console.log('\n📋 Student Login Credentials:');
-    console.log('👨🎓 Student 1: student / student123');
-    console.log('👨🎓 Student 2: student2 / student123');
+    console.log('👨🎓 Student 1: student1 / student123');
+    console.log('👨🎓 Student 151: student151 / student123');
 
   } catch (error) {
     console.error('Error:', error);

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FaTimes } from 'react-icons/fa';
 import axios from 'axios';
 import { BASE_URL } from '../constants/baseUrl';
@@ -7,13 +7,65 @@ import { toast } from 'react-toastify';
 
 export const AttendanceModal = ({ isOpen, onClose, teacherId }) => {
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
-  const [students, setStudents] = useState([
-    { _id: '6919d9552d2366a7429b1181', name: 'Gulshan Kartik', rollNo: 'CSE2021001', status: 'Present' },
-    { _id: '6919d9552d2366a7429b1182', name: 'Aditya Sharma', rollNo: 'CSE2021002', status: 'Present' },
-    { _id: '6919d9552d2366a7429b1183', name: 'Abhishek Gond', rollNo: 'MCA2022001', status: 'Absent' },
-    { _id: '6919d9552d2366a7429b1184', name: 'Ankita Maurya', rollNo: 'MCA2022002', status: 'Present' }
-  ]);
+  const [students, setStudents] = useState([]);
+  const [subjects, setSubjects] = useState([]);
+  const [selectedSubject, setSelectedSubject] = useState('');
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (isOpen) {
+      fetchData();
+    }
+  }, [isOpen]);
+
+  const fetchData = async () => {
+    try {
+      const token = Cookies.get('token');
+      const subjectsRes = await axios.get(`${BASE_URL}/api/subjects`, { 
+        headers: { Authorization: `Bearer ${token}` } 
+      });
+      
+      if (subjectsRes.data.success) {
+        setSubjects(subjectsRes.data.subjects);
+        if (subjectsRes.data.subjects.length > 0) {
+          const firstSubject = subjectsRes.data.subjects[0];
+          setSelectedSubject(firstSubject._id);
+          fetchStudentsBySubject(firstSubject._id);
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching subjects:', error);
+    }
+  };
+
+  const fetchStudentsBySubject = async (subjectId) => {
+    try {
+      const token = Cookies.get('token');
+      const subject = subjects.find(s => s._id === subjectId) || 
+                     await axios.get(`${BASE_URL}/api/subjects`, { headers: { Authorization: `Bearer ${token}` } })
+                           .then(res => res.data.subjects.find(s => s._id === subjectId));
+      
+      if (subject) {
+        const studentsRes = await axios.get(`${BASE_URL}/api/admin/students`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        
+        if (studentsRes.data.success) {
+          const filteredStudents = studentsRes.data.students
+            .filter(student => student.courseId._id === subject.courseId)
+            .map(student => ({ ...student, status: 'Present' }));
+          setStudents(filteredStudents);
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching students:', error);
+    }
+  };
+
+  const handleSubjectChange = (subjectId) => {
+    setSelectedSubject(subjectId);
+    fetchStudentsBySubject(subjectId);
+  };
 
   const handleStatusChange = (studentId, status) => {
     setStudents(prev => prev.map(student => 
@@ -31,7 +83,7 @@ export const AttendanceModal = ({ isOpen, onClose, teacherId }) => {
       }));
 
       await axios.post(`${BASE_URL}/api/teacher/${teacherId}/attendance`, {
-        subjectId: '6919d9542d2366a7429b117c',
+        subjectId: selectedSubject,
         date: selectedDate,
         attendance: attendanceData
       }, {
@@ -60,6 +112,19 @@ export const AttendanceModal = ({ isOpen, onClose, teacherId }) => {
         </div>
         
         <div className="mb-4">
+          <label className="block text-sm font-medium mb-2">Subject</label>
+          <select
+            value={selectedSubject}
+            onChange={(e) => handleSubjectChange(e.target.value)}
+            className="w-full p-2 border rounded-lg mb-4"
+          >
+            {subjects.map(subject => (
+              <option key={subject._id} value={subject._id}>
+                {subject.subjectName} ({subject.subjectCode})
+              </option>
+            ))}
+          </select>
+          
           <label className="block text-sm font-medium mb-2">Date</label>
           <input
             type="date"
@@ -69,37 +134,62 @@ export const AttendanceModal = ({ isOpen, onClose, teacherId }) => {
           />
         </div>
 
-        <div className="space-y-3">
+        <div className="space-y-3 max-h-96 overflow-y-auto">
           {students.map(student => (
             <div key={student._id} className="flex items-center justify-between p-3 border rounded-lg">
-              <div>
-                <p className="font-medium">{student.name}</p>
-                <p className="text-sm text-gray-600">{student.rollNo}</p>
+              <div className="flex items-center space-x-3">
+                <input
+                  type="checkbox"
+                  checked={student.status === 'Present'}
+                  onChange={(e) => handleStatusChange(student._id, e.target.checked ? 'Present' : 'Absent')}
+                  className="w-4 h-4 text-green-600 rounded focus:ring-green-500"
+                />
+                <div>
+                  <p className="font-medium">{student.name}</p>
+                  <p className="text-sm text-gray-600">{student.rollNo}</p>
+                </div>
               </div>
-              <div className="flex space-x-2">
-                <button 
-                  onClick={() => handleStatusChange(student._id, 'Present')}
-                  className={`px-3 py-1 rounded text-sm ${
-                    student.status === 'Present' 
-                      ? 'bg-green-500 text-white' 
-                      : 'bg-gray-200 text-gray-700'
-                  }`}
-                >
-                  Present
-                </button>
-                <button 
-                  onClick={() => handleStatusChange(student._id, 'Absent')}
-                  className={`px-3 py-1 rounded text-sm ${
-                    student.status === 'Absent' 
-                      ? 'bg-red-500 text-white' 
-                      : 'bg-gray-200 text-gray-700'
-                  }`}
-                >
-                  Absent
-                </button>
+              <div className="flex items-center space-x-2">
+                <span className={`px-2 py-1 rounded text-xs font-medium ${
+                  student.status === 'Present' 
+                    ? 'bg-green-100 text-green-800' 
+                    : 'bg-red-100 text-red-800'
+                }`}>
+                  {student.status}
+                </span>
+                <div className="flex space-x-2">
+                  <button 
+                    onClick={() => handleStatusChange(student._id, 'Present')}
+                    className={`px-3 py-1 rounded text-sm font-medium transition-colors ${
+                      student.status === 'Present' 
+                        ? 'bg-green-500 text-white shadow-md' 
+                        : 'bg-green-100 text-green-700 hover:bg-green-200 border border-green-300'
+                    }`}
+                  >
+                    Present
+                  </button>
+                  <button 
+                    onClick={() => handleStatusChange(student._id, 'Absent')}
+                    className={`px-3 py-1 rounded text-sm font-medium transition-colors ${
+                      student.status === 'Absent' 
+                        ? 'bg-red-500 text-white shadow-md' 
+                        : 'bg-red-100 text-red-700 hover:bg-red-200 border border-red-300'
+                    }`}
+                  >
+                    Absent
+                  </button>
+                </div>
               </div>
             </div>
           ))}
+        </div>
+
+        <div className="mt-4 p-3 bg-gray-50 rounded-lg">
+          <div className="flex justify-between text-sm">
+            <span>Total Students: {students.length}</span>
+            <span className="text-green-600">Present: {students.filter(s => s.status === 'Present').length}</span>
+            <span className="text-red-600">Absent: {students.filter(s => s.status === 'Absent').length}</span>
+          </div>
         </div>
 
         <div className="flex justify-end space-x-2 mt-6">
@@ -122,8 +212,32 @@ export const AssignmentModal = ({ isOpen, onClose, teacherId }) => {
     title: '',
     description: '',
     deadline: '',
-    subjectId: '6919d9542d2366a7429b117c'
+    subjectId: ''
   });
+  const [subjects, setSubjects] = useState([]);
+
+  useEffect(() => {
+    if (isOpen) {
+      fetchSubjects();
+    }
+  }, [isOpen]);
+
+  const fetchSubjects = async () => {
+    try {
+      const token = Cookies.get('token');
+      const response = await axios.get(`${BASE_URL}/api/subjects`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (response.data.success) {
+        setSubjects(response.data.subjects);
+        if (response.data.subjects.length > 0) {
+          setFormData(prev => ({ ...prev, subjectId: response.data.subjects[0]._id }));
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching subjects:', error);
+    }
+  };
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async () => {
@@ -140,7 +254,7 @@ export const AssignmentModal = ({ isOpen, onClose, teacherId }) => {
       });
 
       toast.success('Assignment created successfully!');
-      setFormData({ title: '', description: '', deadline: '', subjectId: '6919d9542d2366a7429b117c' });
+      setFormData({ title: '', description: '', deadline: '', subjectId: subjects[0]?._id || '' });
       onClose();
     } catch (error) {
       toast.error('Failed to create assignment');
@@ -176,22 +290,15 @@ export const AssignmentModal = ({ isOpen, onClose, teacherId }) => {
           <div>
             <label className="block text-sm font-medium mb-2">Subject</label>
             <select
-              value={formData.subject}
-              onChange={(e) => setFormData({...formData, subject: e.target.value})}
+              value={formData.subjectId}
+              onChange={(e) => setFormData({...formData, subjectId: e.target.value})}
               className="w-full p-2 border rounded-lg"
             >
-              <option value="CSE201">Data Structures - CSE201</option>
-              <option value="CSE301">Database Systems - CSE301</option>
-              <option value="PHY101">Physics - PHY101</option>
-              <option value="CHE101">Chemistry - CHE101</option>
-              <option value="MAT101">Engineering Mathematics I - MAT101</option>
-              <option value="MAT102">Engineering Mathematics II - MAT102</option>
-              <option value="EEE101">Basic Electrical Engineering - EEE101</option>
-              <option value="ME101">Engineering Mechanics - ME101</option>
-              <option value="CS101">Introduction to Programming - CS101</option>
-              <option value="ENG101">English Communication - ENG101</option>
-
-              
+              {subjects.map(subject => (
+                <option key={subject._id} value={subject._id}>
+                  {subject.subjectName} - {subject.subjectCode}
+                </option>
+              ))}
             </select>
           </div>
           
@@ -235,8 +342,32 @@ export const NoticeModal = ({ isOpen, onClose, teacherId }) => {
   const [formData, setFormData] = useState({
     title: '',
     description: '',
-    courseId: '6919d9542d2366a7429b117a'
+    courseId: ''
   });
+  const [courses, setCourses] = useState([]);
+
+  useEffect(() => {
+    if (isOpen) {
+      fetchCourses();
+    }
+  }, [isOpen]);
+
+  const fetchCourses = async () => {
+    try {
+      const token = Cookies.get('token');
+      const response = await axios.get(`${BASE_URL}/api/courses`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (response.data.success) {
+        setCourses(response.data.courses);
+        if (response.data.courses.length > 0) {
+          setFormData(prev => ({ ...prev, courseId: response.data.courses[0]._id }));
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching courses:', error);
+    }
+  };
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async () => {
@@ -253,7 +384,7 @@ export const NoticeModal = ({ isOpen, onClose, teacherId }) => {
       });
 
       toast.success('Notice posted successfully!');
-      setFormData({ title: '', description: '', courseId: '6919d9542d2366a7429b117a' });
+      setFormData({ title: '', description: '', courseId: courses[0]?._id || '' });
       onClose();
     } catch (error) {
       toast.error('Failed to post notice');
@@ -293,8 +424,11 @@ export const NoticeModal = ({ isOpen, onClose, teacherId }) => {
               onChange={(e) => setFormData({...formData, courseId: e.target.value})}
               className="w-full p-2 border rounded-lg"
             >
-              <option value="6919d9542d2366a7429b117a">B.Tech Computer Science</option>
-              <option value="6919d9542d2366a7429b117b">Master of Computer Applications</option>
+              {courses.map(course => (
+                <option key={course._id} value={course._id}>
+                  {course.courseName} ({course.courseCode})
+                </option>
+              ))}
             </select>
           </div>
           
@@ -328,9 +462,33 @@ export const MaterialModal = ({ isOpen, onClose, teacherId }) => {
   const [formData, setFormData] = useState({
     title: '',
     description: '',
-    subjectId: '6919d9542d2366a7429b117c',
+    subjectId: '',
     fileUrl: ''
   });
+  const [subjects, setSubjects] = useState([]);
+
+  useEffect(() => {
+    if (isOpen) {
+      fetchSubjects();
+    }
+  }, [isOpen]);
+
+  const fetchSubjects = async () => {
+    try {
+      const token = Cookies.get('token');
+      const response = await axios.get(`${BASE_URL}/api/subjects`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (response.data.success) {
+        setSubjects(response.data.subjects);
+        if (response.data.subjects.length > 0) {
+          setFormData(prev => ({ ...prev, subjectId: response.data.subjects[0]._id }));
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching subjects:', error);
+    }
+  };
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async () => {
@@ -352,7 +510,7 @@ export const MaterialModal = ({ isOpen, onClose, teacherId }) => {
       });
 
       toast.success('Material uploaded successfully!');
-      setFormData({ title: '', description: '', subjectId: '6919d9542d2366a7429b117c', fileUrl: '' });
+      setFormData({ title: '', description: '', subjectId: subjects[0]?._id || '', fileUrl: '' });
       onClose();
     } catch (error) {
       toast.error('Failed to upload material');
@@ -392,8 +550,11 @@ export const MaterialModal = ({ isOpen, onClose, teacherId }) => {
               onChange={(e) => setFormData({...formData, subjectId: e.target.value})}
               className="w-full p-2 border rounded-lg"
             >
-              <option value="6919d9542d2366a7429b117c">Data Structures - CSE201</option>
-              <option value="6919d9542d2366a7429b117d">Database Systems - CSE301</option>
+              {subjects.map(subject => (
+                <option key={subject._id} value={subject._id}>
+                  {subject.subjectName} - {subject.subjectCode}
+                </option>
+              ))}
             </select>
           </div>
           

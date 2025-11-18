@@ -8,29 +8,38 @@ import { BASE_URL } from '../constants/baseUrl';
 const TeacherHeader = ({ currentRole = 'teacher' }) => {
   const navigate = useNavigate();
   const [studentId, setStudentId] = useState(null);
+  const [userRole, setUserRole] = useState(null);
 
   useEffect(() => {
-    fetchStudentId();
+    fetchUserData();
   }, []);
 
-  const fetchStudentId = async () => {
+  const fetchUserData = async () => {
     try {
       const token = Cookies.get('token');
-      const response = await axios.get(`${BASE_URL}/api/admin/students`, { 
-        headers: { Authorization: `Bearer ${token}` } 
-      });
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      setUserRole(payload.role);
       
-      if (response.data.students?.length > 0) {
-        setStudentId(response.data.students[0]._id);
+      // Only fetch student ID if user is teacher or admin
+      if (payload.role === 'teacher' || payload.role === 'admin') {
+        const response = await axios.get(`${BASE_URL}/api/admin/students`, { 
+          headers: { Authorization: `Bearer ${token}` } 
+        });
+        
+        if (response.data.students?.length > 0) {
+          setStudentId(response.data.students[0]._id);
+        }
       }
     } catch (error) {
-      console.error('Error fetching student ID:', error);
+      console.error('Error fetching user data:', error);
     }
   };
 
   const handleRoleSwitch = (role) => {
-    if (role === 'student' && studentId) {
-      navigate(`/student/${studentId}/dashboard`);
+    // Only allow role switching for teachers and admins
+    if ((userRole === 'teacher' || userRole === 'admin') && role === 'student' && studentId) {
+      // Direct navigation to student dashboard
+      window.location.href = `/student/${studentId}/dashboard`;
     }
   };
 
@@ -44,21 +53,23 @@ const TeacherHeader = ({ currentRole = 'teacher' }) => {
       <div className="flex justify-between items-center">
         <div className="flex items-center space-x-4">
           <h1 className="text-xl font-semibold text-gray-800">Teacher Portal</h1>
-          <div className="flex items-center space-x-2 bg-gray-100 rounded-lg p-1">
-            <button
-              className="flex items-center px-3 py-2 rounded-md text-sm font-medium bg-green-500 text-white"
-            >
-              <FaChalkboardTeacher className="mr-2" />
-              Teacher
-            </button>
-            <button
-              onClick={() => handleRoleSwitch('student')}
-              className="flex items-center px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-200 transition-colors"
-            >
-              <FaUserGraduate className="mr-2" />
-              Student View
-            </button>
-          </div>
+          {(userRole === 'teacher' || userRole === 'admin') && (
+            <div className="flex items-center space-x-2 bg-gray-100 rounded-lg p-1">
+              <button
+                className="flex items-center px-3 py-2 rounded-md text-sm font-medium bg-green-500 text-white"
+              >
+                <FaChalkboardTeacher className="mr-2" />
+                Teacher
+              </button>
+              <button
+                onClick={() => handleRoleSwitch('student')}
+                className="flex items-center px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-200 transition-colors"
+              >
+                <FaUserGraduate className="mr-2" />
+                Student View
+              </button>
+            </div>
+          )}
         </div>
         
         <button
