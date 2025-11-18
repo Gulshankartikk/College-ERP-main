@@ -1248,8 +1248,8 @@ async function createStudents() {
     }
 
     console.log('\n📋 Student Login Credentials:');
-    console.log('👨🎓 Student 1: student / student123');//alice@student.edu 
-    console.log('👨🎓 Student 2: student2 / student123');//bob@student.edu 
+    console.log('👨🎓 Student 1: student / student123');
+    console.log('👨🎓 Student 2: student2 / student123');
 
   } catch (error) {
     console.error('Error:', error);
