@@ -1,0 +1,28 @@
+{
+  "name": "college-erp",
+  "version": "1.0.0",
+  "description": "College ERP Management System",
+  "main": "start-server.js",
+  "scripts": {
+    "start": "node start-server.js",
+    "backend": "cd backend && npm start",
+    "frontend": "cd frontend && npm run dev",
+    "dev": "concurrently \"npm run backend\" \"npm run frontend\"",
+    "install-all": "npm install && cd backend && npm install && cd ../frontend && npm install",
+    "build": "cd frontend && npm run build",
+    "setup": "npm run install-all && npm run setup-env",
+    "setup-env": "node setupCompleteERP.js",
+    "health-check": "node health-check.js"
+  },
+  "keywords": [
+    "college",
+    "erp",
+    "management",
+    "education"
+  ],
+  "author": "College ERP Team",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
