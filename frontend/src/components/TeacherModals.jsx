@@ -33,7 +33,7 @@ export const AttendanceModal = ({ isOpen, onClose, teacherId }) => {
       await axios.post(`${BASE_URL}/api/teacher/${teacherId}/attendance`, {
         subjectId: '6919d9542d2366a7429b117c',
         date: selectedDate,
-        attendanceData
+        attendance: attendanceData
       }, {
         headers: { Authorization: `Bearer ${token}` }
       });

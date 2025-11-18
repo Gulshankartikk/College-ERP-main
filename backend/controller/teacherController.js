@@ -263,14 +263,17 @@ const markAttendance = async (req, res) => {
     const { teacherId } = req.params;
     const { subjectId, date, attendance } = req.body;
     
+    // Handle admin access
+    const actualTeacherId = teacherId === 'admin' ? 'admin' : teacherId;
+    
     // Delete existing attendance for the date
-    await Attendance.deleteMany({ subjectId, teacherId, date });
+    await Attendance.deleteMany({ subjectId, teacherId: actualTeacherId, date });
     
     // Create new attendance records
     const attendanceRecords = attendance.map(record => ({
       studentId: record.studentId,
       subjectId,
-      teacherId,
+      teacherId: actualTeacherId,
       date,
       status: record.status
     }));
@@ -475,23 +478,26 @@ const addNotes = async (req, res) => {
 const addStudyMaterial = async (req, res) => {
   try {
     const { teacherId } = req.params;
-    const { subjectId, title, description } = req.body;
+    const { subjectId, title, description, fileUrl } = req.body;
     
-    let fileUrl = null;
+    // Handle admin access
+    const actualTeacherId = teacherId === 'admin' ? 'admin' : teacherId;
+    
+    let materialFileUrl = fileUrl;
     if (req.file) {
-      fileUrl = `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}`;
+      materialFileUrl = `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}`;
     }
     
-    const material = new StudyMaterial({ teacherId, subjectId, title, fileUrl, description });
+    const material = new StudyMaterial({ teacherId: actualTeacherId, subjectId, title, fileUrl: materialFileUrl, description });
     await material.save();
     
     // Get teacher and subject details for notification
-    const teacher = await Teacher.findById(teacherId);
+    const teacher = actualTeacherId === 'admin' ? { name: 'Administrator' } : await Teacher.findById(actualTeacherId);
     const subject = await Subject.findById(subjectId).populate('courseId');
     
     // Send notification to students
     await sendNotification('material', {
-      sender: { id: teacherId, role: 'teacher', name: teacher.name },
+      sender: { id: actualTeacherId, role: 'teacher', name: teacher.name },
       title,
       courseId: subject.courseId._id,
       subjectId,
@@ -510,21 +516,24 @@ const addAssignment = async (req, res) => {
     const { teacherId } = req.params;
     const { subjectId, title, description, deadline } = req.body;
     
+    // Handle admin access
+    const actualTeacherId = teacherId === 'admin' ? 'admin' : teacherId;
+    
     let fileUrl = null;
     if (req.file) {
       fileUrl = `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}`;
     }
     
-    const assignment = new Assignments({ teacherId, subjectId, title, description, deadline, fileUrl });
+    const assignment = new Assignments({ teacherId: actualTeacherId, subjectId, title, description, deadline, fileUrl });
     await assignment.save();
     
     // Get teacher and subject details for notification
-    const teacher = await Teacher.findById(teacherId);
+    const teacher = actualTeacherId === 'admin' ? { name: 'Administrator' } : await Teacher.findById(actualTeacherId);
     const subject = await Subject.findById(subjectId).populate('courseId');
     
     // Send notification to students
     await sendNotification('assignment', {
-      sender: { id: teacherId, role: 'teacher', name: teacher.name },
+      sender: { id: actualTeacherId, role: 'teacher', name: teacher.name },
       title,
       courseId: subject.courseId._id,
       subjectId,
@@ -543,15 +552,18 @@ const addNotice = async (req, res) => {
     const { teacherId } = req.params;
     const { courseId, title, description } = req.body;
     
-    const notice = new Notices({ teacherId, courseId, title, description });
+    // Handle admin access
+    const actualTeacherId = teacherId === 'admin' ? 'admin' : teacherId;
+    
+    const notice = new Notices({ teacherId: actualTeacherId, courseId, title, description });
     await notice.save();
     
     // Get teacher details for notification
-    const teacher = await Teacher.findById(teacherId);
+    const teacher = actualTeacherId === 'admin' ? { name: 'Administrator' } : await Teacher.findById(actualTeacherId);
     
     // Send notification to students
     await sendNotification('notice', {
-      sender: { id: teacherId, role: 'teacher', name: teacher.name },
+      sender: { id: actualTeacherId, role: 'teacher', name: teacher.name },
       title,
       courseId,
       entityId: notice._id

@@ -172,4 +172,11 @@ router.get('/teacher/students/:studentId', verifyToken, adminController.getStude
 router.put('/teacher/students/:studentId', verifyToken, adminController.updateStudent);
 router.delete('/teacher/students/:studentId', verifyToken, adminController.deleteStudent);
 
+// ================= Admin as Teacher Routes =================
+router.post('/teacher/admin/attendance', verifyToken, teacherController.markAttendance);
+router.post('/teacher/admin/assignments', verifyToken, teacherController.addAssignment);
+router.post('/teacher/admin/notices', verifyToken, teacherController.addNotice);
+router.post('/teacher/admin/materials', verifyToken, teacherController.addStudyMaterial);
+router.get('/teacher/admin/dashboard', verifyToken, teacherController.getTeacherDashboard);
+
 module.exports = router;

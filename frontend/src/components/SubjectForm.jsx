@@ -8,7 +8,9 @@ const SubjectForm = ({ userRole, userId, onSuccess }) => {
   const [formData, setFormData] = useState({
     subjectName: '',
     subjectCode: '',
-    courseId: ''
+    courseId: '',
+    newCourseName: '',
+    newCourseCode: ''
   });
   const [courses, setCourses] = useState([]);
 
@@ -37,16 +39,39 @@ const SubjectForm = ({ userRole, userId, onSuccess }) => {
     
     try {
       const token = Cookies.get('token') || localStorage.getItem('token');
+      let courseId = formData.courseId;
+      
+      // Create new course if selected
+      if (formData.courseId === 'add-new' && formData.newCourseName && formData.newCourseCode) {
+        const courseEndpoint = userRole === 'admin' 
+          ? `${BASE_URL}/api/admin/courses`
+          : `${BASE_URL}/api/teacher/${userId}/courses`;
+        
+        const courseResponse = await axios.post(courseEndpoint, {
+          courseName: formData.newCourseName,
+          courseCode: formData.newCourseCode,
+          courseDuration: '4 years'
+        }, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        
+        courseId = courseResponse.data.course._id;
+      }
+      
       const endpoint = userRole === 'admin' 
         ? `${BASE_URL}/api/admin/subjects`
         : `${BASE_URL}/api/teacher/${userId}/subjects`;
       
-      await axios.post(endpoint, formData, {
+      await axios.post(endpoint, {
+        subjectName: formData.subjectName,
+        subjectCode: formData.subjectCode,
+        courseId: courseId === 'add-new' ? '' : courseId
+      }, {
         headers: { Authorization: `Bearer ${token}` }
       });
       
       toast.success('Subject added successfully');
-      setFormData({ subjectName: '', subjectCode: '', courseId: '' });
+      setFormData({ subjectName: '', subjectCode: '', courseId: '', newCourseName: '', newCourseCode: '' });
       if (onSuccess) onSuccess();
     } catch (error) {
       toast.error('Failed to add subject');
@@ -73,7 +98,18 @@ const SubjectForm = ({ userRole, userId, onSuccess }) => {
           <option value="Operating Systems">Operating Systems</option>
           <option value="Machine Learning">Machine Learning</option>
           <option value="Artificial Intelligence">Artificial Intelligence</option>
+          <option value="custom">Add Custom Subject</option>
         </select>
+        {formData.subjectName === 'custom' && (
+          <input
+            type="text"
+            name="customSubjectName"
+            placeholder="Enter custom subject name"
+            className="mt-2 block w-full border border-gray-300 rounded-md px-3 py-2"
+            onChange={(e) => setFormData({...formData, subjectName: e.target.value})}
+            required
+          />
+        )}
       </div>
       <div>
         <label className="block text-sm font-medium text-gray-700">Subject Code</label>
@@ -109,7 +145,24 @@ const SubjectForm = ({ userRole, userId, onSuccess }) => {
               {course.courseName} ({course.courseCode})
             </option>
           ))}
+          <option value="add-new">Add New Course</option>
         </select>
+        {formData.courseId === 'add-new' && (
+          <div className="mt-2 space-y-2">
+            <input
+              type="text"
+              placeholder="Enter course name"
+              className="block w-full border border-gray-300 rounded-md px-3 py-2"
+              onChange={(e) => setFormData({...formData, newCourseName: e.target.value})}
+            />
+            <input
+              type="text"
+              placeholder="Enter course code"
+              className="block w-full border border-gray-300 rounded-md px-3 py-2"
+              onChange={(e) => setFormData({...formData, newCourseCode: e.target.value})}
+            />
+          </div>
+        )}
       </div>
       <button
         type="submit"
