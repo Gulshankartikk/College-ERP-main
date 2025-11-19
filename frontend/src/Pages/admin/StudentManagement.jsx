@@ -18,7 +18,8 @@ const StudentManagement = () => {
     email: '',
     phone: '',
     courseId: '',
-    rollNo: ''
+    rollNo: '',
+    password: ''
   });
 
   useEffect(() => {
@@ -104,7 +105,7 @@ const StudentManagement = () => {
       
       setShowModal(false);
       setEditingStudent(null);
-      setFormData({ name: '', email: '', phone: '', courseId: '', rollNo: '' });
+      setFormData({ name: '', email: '', phone: '', courseId: '', rollNo: '', password: '' });
       fetchStudents();
     } catch (error) {
       console.error('Error saving student:', error);
@@ -141,7 +142,7 @@ const StudentManagement = () => {
             <button
               onClick={() => {
                 setEditingStudent(null);
-                setFormData({ name: '', email: '', phone: '', courseId: '', rollNo: '' });
+                setFormData({ name: '', email: '', phone: '', courseId: '', rollNo: '', password: '' });
                 setShowModal(true);
               }}
               className="flex items-center space-x-2 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
@@ -271,17 +272,30 @@ const StudentManagement = () => {
                   </select>
                 </div>
                 {!editingStudent && (
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700">Roll Number</label>
-                    <input
-                      type="text"
-                      name="rollNo"
-                      value={formData.rollNo}
-                      onChange={handleChange}
-                      className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2"
-                      required
-                    />
-                  </div>
+                  <>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">Roll Number</label>
+                      <input
+                        type="text"
+                        name="rollNo"
+                        value={formData.rollNo}
+                        onChange={handleChange}
+                        className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2"
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">Password</label>
+                      <input
+                        type="password"
+                        name="password"
+                        value={formData.password}
+                        onChange={handleChange}
+                        className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2"
+                        required
+                      />
+                    </div>
+                  </>
                 )}
                 <div className="flex justify-end space-x-3 pt-4">
                   <button

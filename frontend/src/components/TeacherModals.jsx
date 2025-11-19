@@ -212,9 +212,13 @@ export const AssignmentModal = ({ isOpen, onClose, teacherId }) => {
     title: '',
     description: '',
     deadline: '',
-    subjectId: ''
+    subjectId: '',
+    fileUrl: ''
   });
   const [subjects, setSubjects] = useState([]);
+  const [file, setFile] = useState(null);
+  const [uploadType, setUploadType] = useState('link');
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (isOpen) {
@@ -238,7 +242,16 @@ export const AssignmentModal = ({ isOpen, onClose, teacherId }) => {
       console.error('Error fetching subjects:', error);
     }
   };
-  const [loading, setLoading] = useState(false);
+
+  const handleFileChange = (e) => {
+    const selectedFile = e.target.files[0];
+    if (selectedFile && selectedFile.type === 'application/pdf') {
+      setFile(selectedFile);
+    } else {
+      toast.error('Please select a PDF file');
+      e.target.value = '';
+    }
+  };
 
   const handleSubmit = async () => {
     if (!formData.title || !formData.deadline) {
@@ -246,15 +259,43 @@ export const AssignmentModal = ({ isOpen, onClose, teacherId }) => {
       return;
     }
 
+    if (uploadType === 'link' && !formData.fileUrl) {
+      toast.error('Please provide a file link');
+      return;
+    }
+
+    if (uploadType === 'file' && !file) {
+      toast.error('Please select a PDF file');
+      return;
+    }
+
     setLoading(true);
     try {
       const token = Cookies.get('token');
-      await axios.post(`${BASE_URL}/api/teacher/${teacherId}/assignments`, formData, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      
+      if (uploadType === 'file') {
+        const formDataToSend = new FormData();
+        formDataToSend.append('title', formData.title);
+        formDataToSend.append('description', formData.description);
+        formDataToSend.append('deadline', formData.deadline);
+        formDataToSend.append('subjectId', formData.subjectId);
+        formDataToSend.append('file', file);
+
+        await axios.post(`${BASE_URL}/api/teacher/${teacherId}/assignments`, formDataToSend, {
+          headers: { 
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'multipart/form-data'
+          }
+        });
+      } else {
+        await axios.post(`${BASE_URL}/api/teacher/${teacherId}/assignments`, formData, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+      }
 
       toast.success('Assignment created successfully!');
-      setFormData({ title: '', description: '', deadline: '', subjectId: subjects[0]?._id || '' });
+      setFormData({ title: '', description: '', deadline: '', subjectId: subjects[0]?._id || '', fileUrl: '' });
+      setFile(null);
       onClose();
     } catch (error) {
       toast.error('Failed to create assignment');
@@ -267,7 +308,7 @@ export const AssignmentModal = ({ isOpen, onClose, teacherId }) => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg p-6 w-full max-w-lg">
+      <div className="bg-white rounded-lg p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-semibold">Add Assignment</h2>
           <button onClick={onClose} className="text-gray-500 hover:text-gray-700">
@@ -311,6 +352,58 @@ export const AssignmentModal = ({ isOpen, onClose, teacherId }) => {
               className="w-full p-2 border rounded-lg"
             />
           </div>
+
+          <div>
+            <label className="block text-sm font-medium mb-2">Upload Type</label>
+            <div className="flex space-x-4">
+              <label className="flex items-center">
+                <input
+                  type="radio"
+                  value="link"
+                  checked={uploadType === 'link'}
+                  onChange={(e) => setUploadType(e.target.value)}
+                  className="mr-2"
+                />
+                Link
+              </label>
+              <label className="flex items-center">
+                <input
+                  type="radio"
+                  value="file"
+                  checked={uploadType === 'file'}
+                  onChange={(e) => setUploadType(e.target.value)}
+                  className="mr-2"
+                />
+                PDF Upload
+              </label>
+            </div>
+          </div>
+
+          {uploadType === 'link' ? (
+            <div>
+              <label className="block text-sm font-medium mb-2">File Link</label>
+              <input
+                type="url"
+                value={formData.fileUrl}
+                onChange={(e) => setFormData({...formData, fileUrl: e.target.value})}
+                className="w-full p-2 border rounded-lg"
+                placeholder="https://example.com/assignment.pdf"
+              />
+            </div>
+          ) : (
+            <div>
+              <label className="block text-sm font-medium mb-2">Upload PDF</label>
+              <input
+                type="file"
+                accept=".pdf"
+                onChange={handleFileChange}
+                className="w-full p-2 border rounded-lg"
+              />
+              {file && (
+                <p className="text-sm text-green-600 mt-1">Selected: {file.name}</p>
+              )}
+            </div>
+          )}
           
           <div>
             <label className="block text-sm font-medium mb-2">Description</label>
@@ -466,6 +559,9 @@ export const MaterialModal = ({ isOpen, onClose, teacherId }) => {
     fileUrl: ''
   });
   const [subjects, setSubjects] = useState([]);
+  const [file, setFile] = useState(null);
+  const [uploadType, setUploadType] = useState('link');
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (isOpen) {
@@ -489,7 +585,16 @@ export const MaterialModal = ({ isOpen, onClose, teacherId }) => {
       console.error('Error fetching subjects:', error);
     }
   };
-  const [loading, setLoading] = useState(false);
+
+  const handleFileChange = (e) => {
+    const selectedFile = e.target.files[0];
+    if (selectedFile && selectedFile.type === 'application/pdf') {
+      setFile(selectedFile);
+    } else {
+      toast.error('Please select a PDF file');
+      e.target.value = '';
+    }
+  };
 
   const handleSubmit = async () => {
     if (!formData.title) {
@@ -497,23 +602,46 @@ export const MaterialModal = ({ isOpen, onClose, teacherId }) => {
       return;
     }
 
+    if (uploadType === 'link' && !formData.fileUrl) {
+      toast.error('Please provide a file link');
+      return;
+    }
+
+    if (uploadType === 'file' && !file) {
+      toast.error('Please select a PDF file');
+      return;
+    }
+
     setLoading(true);
     try {
       const token = Cookies.get('token');
-      const materialData = {
-        ...formData,
-        fileUrl: formData.fileUrl || 'https://example.com/sample-material.pdf'
-      };
       
-      await axios.post(`${BASE_URL}/api/teacher/${teacherId}/materials`, materialData, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      if (uploadType === 'file') {
+        const formDataToSend = new FormData();
+        formDataToSend.append('title', formData.title);
+        formDataToSend.append('description', formData.description);
+        formDataToSend.append('subjectId', formData.subjectId);
+        formDataToSend.append('file', file);
+
+        await axios.post(`${BASE_URL}/api/teacher/${teacherId}/materials`, formDataToSend, {
+          headers: { 
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'multipart/form-data'
+          }
+        });
+      } else {
+        await axios.post(`${BASE_URL}/api/teacher/${teacherId}/materials`, formData, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+      }
 
       toast.success('Material uploaded successfully!');
       setFormData({ title: '', description: '', subjectId: subjects[0]?._id || '', fileUrl: '' });
+      setFile(null);
       onClose();
     } catch (error) {
-      toast.error('Failed to upload material');
+      console.error('Material upload error:', error);
+      toast.error(error.response?.data?.msg || 'Failed to upload material');
     } finally {
       setLoading(false);
     }
@@ -523,7 +651,7 @@ export const MaterialModal = ({ isOpen, onClose, teacherId }) => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg p-6 w-full max-w-lg">
+      <div className="bg-white rounded-lg p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-semibold">Upload Material</h2>
           <button onClick={onClose} className="text-gray-500 hover:text-gray-700">
@@ -557,17 +685,58 @@ export const MaterialModal = ({ isOpen, onClose, teacherId }) => {
               ))}
             </select>
           </div>
-          
+
           <div>
-            <label className="block text-sm font-medium mb-2">File URL</label>
-            <input
-              type="url"
-              value={formData.fileUrl}
-              onChange={(e) => setFormData({...formData, fileUrl: e.target.value})}
-              className="w-full p-2 border rounded-lg"
-              placeholder="https://example.com/material.pdf"
-            />
+            <label className="block text-sm font-medium mb-2">Upload Type</label>
+            <div className="flex space-x-4">
+              <label className="flex items-center">
+                <input
+                  type="radio"
+                  value="link"
+                  checked={uploadType === 'link'}
+                  onChange={(e) => setUploadType(e.target.value)}
+                  className="mr-2"
+                />
+                Link
+              </label>
+              <label className="flex items-center">
+                <input
+                  type="radio"
+                  value="file"
+                  checked={uploadType === 'file'}
+                  onChange={(e) => setUploadType(e.target.value)}
+                  className="mr-2"
+                />
+                PDF Upload
+              </label>
+            </div>
           </div>
+
+          {uploadType === 'link' ? (
+            <div>
+              <label className="block text-sm font-medium mb-2">File Link</label>
+              <input
+                type="url"
+                value={formData.fileUrl}
+                onChange={(e) => setFormData({...formData, fileUrl: e.target.value})}
+                className="w-full p-2 border rounded-lg"
+                placeholder="https://example.com/material.pdf"
+              />
+            </div>
+          ) : (
+            <div>
+              <label className="block text-sm font-medium mb-2">Upload PDF</label>
+              <input
+                type="file"
+                accept=".pdf"
+                onChange={handleFileChange}
+                className="w-full p-2 border rounded-lg"
+              />
+              {file && (
+                <p className="text-sm text-green-600 mt-1">Selected: {file.name}</p>
+              )}
+            </div>
+          )}
           
           <div>
             <label className="block text-sm font-medium mb-2">Description</label>
