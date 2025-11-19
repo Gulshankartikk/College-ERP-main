@@ -35,7 +35,7 @@ const AddSubject = () => {
 
   const fetchCourses = async () => {
     try {
-      const response = await axios.get(`${BASE_URL}/courses`, {
+      const response = await axios.get(`${BASE_URL}/api/courses`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setCourses(response.data.data);
@@ -46,7 +46,7 @@ const AddSubject = () => {
 
   const fetchTeachers = async () => {
     try {
-      const response = await axios.get(`${BASE_URL}/teachers`, {
+      const response = await axios.get(`${BASE_URL}/api/teachers`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setTeachers(response.data.teachers || []);
@@ -90,7 +90,7 @@ const AddSubject = () => {
       courseId: selectedCourse || null, // optional
     };
 
-    const res = await axios.post(`${BASE_URL}/subjects/add`, payload, {
+    const res = await axios.post(`${BASE_URL}/api/subjects/add`, payload, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -157,9 +157,14 @@ const AddSubject = () => {
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-2 focus:shadow-outline"
             >
               <option value="">Select Course</option>
+              {selectedCourses.map(course => (
+                <option key={course} value={course}>
+                  {course}
+                </option>
+              ))}
               {courses.map(course => (
                 <option key={course._id} value={course._id}>
-                  {course.courseName} - {course.branch} - Sem {course.semester}
+                  {course.courseName}
                 </option>
               ))}
             </select>
