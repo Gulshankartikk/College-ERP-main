@@ -1,4 +1,5 @@
 const express = require('express');
+const mongoose = require('mongoose');
 const router = express.Router();
 
 // ================= MIDDLEWARES =================
@@ -9,73 +10,76 @@ const upload = require('../middleware/upload');
 const adminController = require('../controller/adminController');
 const teacherController = require('../controller/teacherController');
 const studentController = require('../controller/studentController');
-const notificationController = require('../controller/notificationController');
 
 // ================= MODELS =================
 const { Course, Subject, Teacher, Student } = require('../models/CompleteModels');
 
 
 // ======================================================
-//                     ADMIN ROUTES
+//                        ADMIN LOGIN
 // ======================================================
-
-// Login only - admin accounts cannot be created
 router.post('/admin/login', adminController.adminLogin);
 
-// ======================================================
-//                     TEACHER ROUTES
-// ======================================================
 
-// Registration and Login
+// ======================================================
+//                      TEACHER ROUTES
+// ======================================================
 router.post('/teacher/register', teacherController.teacherRegister);
 router.post('/teacher/login', teacherController.teacherLogin);
 
-// Dashboard
 router.get('/teacher/:teacherId/dashboard', verifyToken, teacherController.getTeacherDashboard);
-
-// Teacher Assignment Management
 router.get('/teacher/:teacherId/assignments', verifyToken, teacherController.getTeacherAssignments);
 router.post('/teacher/:teacherId/assignments', verifyToken, upload.single('file'), teacherController.addAssignment);
+
 router.get('/teacher/:teacherId/students/:subjectId', verifyToken, teacherController.getStudentsBySubject);
 router.post('/teacher/:teacherId/attendance', verifyToken, teacherController.markAttendance);
 router.get('/teacher/:teacherId/attendance-report', verifyToken, teacherController.getAttendanceReport);
+
 router.post('/teacher/:teacherId/marks', verifyToken, teacherController.addMarks);
 router.get('/teacher/:teacherId/marks/:subjectId', verifyToken, teacherController.getAllStudentsMarks);
+
 router.post('/teacher/:teacherId/notes', verifyToken, upload.single('file'), teacherController.addNotes);
 router.post('/teacher/:teacherId/materials', verifyToken, upload.single('file'), teacherController.addStudyMaterial);
 router.post('/teacher/:teacherId/notices', verifyToken, teacherController.addNotice);
+
 router.post('/teacher/:teacherId/courses', verifyToken, teacherController.addCourse);
 router.post('/teacher/:teacherId/subjects', verifyToken, teacherController.addSubject);
+
 router.get('/teacher/:teacherId/notes', verifyToken, teacherController.getTeacherNotes);
 router.get('/teacher/:teacherId/materials', verifyToken, teacherController.getTeacherMaterials);
 router.get('/teacher/:teacherId/notices', verifyToken, teacherController.getTeacherNotices);
 
-// ======================================================
-//                     STUDENT ROUTES
-// ======================================================
 
-// Registration and Login
+// ======================================================
+//                      STUDENT ROUTES
+// ======================================================
 router.post('/student/register', studentController.studentRegister);
 router.post('/student/login', studentController.studentLogin);
 
-// Dashboard
 router.get('/student/:studentId/dashboard', verifyToken, studentController.getStudentDashboard);
-
-// Student Academic Routes
 router.get('/student/:studentId/profile', verifyToken, studentController.getStudentProfile);
+
 router.get('/student/:studentId/attendance', verifyToken, studentController.getStudentAttendance);
 router.get('/student/:studentId/subjects', verifyToken, studentController.getStudentSubjects);
+
 router.get('/student/:studentId/notes', verifyToken, studentController.getNotesBySubject);
 router.get('/student/:studentId/materials', verifyToken, studentController.getStudyMaterials);
 router.get('/student/:studentId/assignments', verifyToken, studentController.getAssignments);
+
 router.post('/student/:studentId/assignments/:assignmentId/submit', verifyToken, studentController.submitAssignment);
 router.get('/student/:studentId/marks', verifyToken, studentController.getStudentMarks);
 router.get('/student/:studentId/notices', verifyToken, studentController.getNotices);
 
-// Dashboard
+
+// ======================================================
+//                      ADMIN DASHBOARD
+// ======================================================
 router.get('/admin/dashboard', verifyToken, isAdmin, adminController.getDashboardData);
 
-// Fetch all students
+
+// ======================================================
+//                       FETCH STUDENTS
+// ======================================================
 router.get('/admin/students', verifyToken, isAdmin, async (req, res) => {
   try {
     const students = await Student.find({ isActive: true })
@@ -87,7 +91,10 @@ router.get('/admin/students', verifyToken, isAdmin, async (req, res) => {
   }
 });
 
-// Fetch courses (public for registration)
+
+// ======================================================
+//                     FETCH COURSES (PUBLIC)
+// ======================================================
 router.get('/courses', async (req, res) => {
   try {
     const courses = await Course.find({ isActive: true });
@@ -97,11 +104,15 @@ router.get('/courses', async (req, res) => {
   }
 });
 
-// Fetch subjects (public)
+
+// ======================================================
+//                     FETCH SUBJECTS (PUBLIC)
+// ======================================================
 router.get('/subjects', async (req, res) => {
   try {
     const subjects = await Subject.find({})
-      .populate('courseId', 'courseName courseCode');
+      .populate('courseId', 'courseName courseCode')
+      .populate('teacherId', 'name email');
 
     res.json({ success: true, subjects });
   } catch (error) {
@@ -109,7 +120,10 @@ router.get('/subjects', async (req, res) => {
   }
 });
 
-// Fetch teachers
+
+// ======================================================
+//                   FETCH TEACHERS
+// ======================================================
 router.get('/teachers', verifyToken, isAdmin, async (req, res) => {
   try {
     const teachers = await Teacher.find({ isActive: true });
@@ -119,64 +133,96 @@ router.get('/teachers', verifyToken, isAdmin, async (req, res) => {
   }
 });
 
-// Add subject
+
+// ======================================================
+//             ⭐ CORRECTED ADD SUBJECT ROUTE ⭐
+// ======================================================
 router.post('/subjects/add', verifyToken, isAdmin, async (req, res) => {
   try {
-    const subject = new Subject(req.body);
+    const {
+      subjectName,
+      subjectCode,
+      subjectType,
+      credits,
+      semester,
+      branch,
+      isElective,
+      teacherId,
+      courseId
+    } = req.body;
+
+    if (!subjectName || !subjectCode || !semester || !branch) {
+      return res.status(400).json({
+        success: false,
+        msg: "Subject Name, Code, Semester and Branch are required."
+      });
+    }
+
+    const existing = await Subject.findOne({ subjectCode });
+    if (existing) {
+      return res.status(400).json({ success: false, msg: "Subject Code already exists." });
+    }
+
+    const subjectData = {
+      subjectName,
+      subjectCode,
+      subjectType,
+      credits,
+      semester,
+      branch,
+      isElective,
+      courseId: courseId || null,
+      teacherId: teacherId || null
+    };
+
+    const subject = new Subject(subjectData);
     await subject.save();
 
-    res.json({ success: true, subject });
+    if (teacherId) {
+      await Teacher.findByIdAndUpdate(teacherId, {
+        $push: { assignedSubjects: subject._id }
+      });
+    }
+
+    res.json({ success: true, msg: "Subject added successfully", subject });
   } catch (error) {
+    console.error("Error adding subject:", error);
     res.status(500).json({ success: false, msg: error.message });
   }
 });
 
-// ================= Course Management =================
+
+
+// ======================================================
+//                COURSE / SUBJECT MANAGEMENT (ADMIN)
+// ======================================================
 router.post('/admin/courses', verifyToken, isAdmin, adminController.addCourse);
 router.delete('/admin/courses/:courseId', verifyToken, isAdmin, adminController.deleteCourse);
 
-// ================= Subject Management =================
 router.post('/admin/subjects', verifyToken, isAdmin, adminController.addSubject);
 router.delete('/admin/subjects/:subjectId', verifyToken, isAdmin, adminController.deleteSubject);
 
-// ================= Teacher Management =================
+
+// ======================================================
+//                    TEACHER MANAGEMENT
+// ======================================================
 router.post('/admin/teachers', verifyToken, isAdmin, adminController.addTeacher);
 router.delete('/admin/teachers/:teacherId', verifyToken, isAdmin, adminController.deleteTeacher);
 
-// ================= Student Management =================
+
+// ======================================================
+//                    STUDENT MANAGEMENT
+// ======================================================
 router.post('/admin/students', verifyToken, isAdmin, adminController.addStudent);
 router.delete('/admin/students/:studentId', verifyToken, isAdmin, adminController.deleteStudent);
 
-// ================= Assignment Management =================
+
+// ======================================================
+//              TEACHER ASSIGNMENT TO SUBJECT
+// ======================================================
 router.post('/admin/assign-teacher', verifyToken, isAdmin, adminController.assignTeacherToSubject);
 router.post('/admin/remove-teacher', verifyToken, isAdmin, adminController.removeTeacherFromSubject);
 
-// ================= Attendance Reports =================
-router.get('/admin/attendance-report', verifyToken, isAdmin, adminController.getComprehensiveAttendanceReport);
 
-// ================= Admin Delete Operations =================
-router.delete('/admin/assignments/:assignmentId', verifyToken, isAdmin, adminController.deleteAssignment);
-router.delete('/admin/notices/:noticeId', verifyToken, isAdmin, adminController.deleteNotice);
-router.delete('/admin/materials/:materialId', verifyToken, isAdmin, adminController.deleteMaterial);
-
-// ================= Admin Update Operations =================
-router.put('/admin/teachers/:teacherId', verifyToken, isAdmin, adminController.updateTeacher);
-router.put('/admin/students/:studentId', verifyToken, adminController.updateStudent);
-
-// ================= Admin View Operations =================
-router.get('/admin/students/:studentId', verifyToken, adminController.getStudentDetails);
-router.get('/admin/teachers/:teacherId', verifyToken, isAdmin, adminController.getTeacherDetails);
-
-// ================= Teacher Student Management =================
-router.get('/teacher/students/:studentId', verifyToken, adminController.getStudentDetails);
-router.put('/teacher/students/:studentId', verifyToken, adminController.updateStudent);
-router.delete('/teacher/students/:studentId', verifyToken, adminController.deleteStudent);
-
-// ================= Admin as Teacher Routes =================
-router.post('/teacher/admin/attendance', verifyToken, teacherController.markAttendance);
-router.post('/teacher/admin/assignments', verifyToken, teacherController.addAssignment);
-router.post('/teacher/admin/notices', verifyToken, teacherController.addNotice);
-router.post('/teacher/admin/materials', verifyToken, teacherController.addStudyMaterial);
-router.get('/teacher/admin/dashboard', verifyToken, teacherController.getTeacherDashboard);
-
+// ======================================================
 module.exports = router;

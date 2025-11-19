@@ -38,9 +38,10 @@ const AddSubject = () => {
       const response = await axios.get(`${BASE_URL}/api/courses`, {
         headers: { Authorization: `Bearer ${token}` }
       });
-      setCourses(response.data.data);
+      setCourses(response.data.data || []);
     } catch (error) {
       console.error("Error fetching courses:", error);
+      setCourses([]);
     }
   };
 
@@ -52,6 +53,7 @@ const AddSubject = () => {
       setTeachers(response.data.teachers || []);
     } catch (error) {
       console.error("Error fetching teachers:", error);
+      setTeachers([]);
     }
   };
 
@@ -63,7 +65,7 @@ const AddSubject = () => {
     }));
   };
 
-  const handleSubmit = async (e) => {
+ const handleSubmit = async (e) => {
   e.preventDefault();
 
   if (
@@ -79,15 +81,15 @@ const AddSubject = () => {
 
   try {
     const payload = {
-      subject_name: formData.subject_name,
-      subject_code: formData.subject_code,
-      subject_type: formData.subject_type,
+      subjectName: formData.subject_name,
+      subjectCode: formData.subject_code,
+      subjectType: formData.subject_type,
       credits: Number(formData.credits),
       semester: Number(formData.semester),
       branch: formData.branch,
-      is_elective: formData.is_elective,
-      teacherId: formData.teacher || null, // optional
-      courseId: selectedCourse || null, // optional
+      isElective: formData.is_elective,
+      teacherId: formData.teacher || null,
+      courseId: selectedCourse || null,
     };
 
     const res = await axios.post(`${BASE_URL}/api/subjects/add`, payload, {
@@ -111,11 +113,13 @@ const AddSubject = () => {
     });
 
     setSelectedCourse("");
+
   } catch (error) {
     console.error("Error adding subject:", error);
     toast.error(error.response?.data?.message || "Failed to add subject");
   }
 };
+
 
 
   return (
@@ -162,7 +166,7 @@ const AddSubject = () => {
                   {course}
                 </option>
               ))}
-              {courses.map(course => (
+              {courses && courses.map(course => (
                 <option key={course._id} value={course._id}>
                   {course.courseName}
                 </option>
@@ -308,7 +312,7 @@ const AddSubject = () => {
               onChange={handleChange}
             >
               <option value="">Select Teacher</option>
-              {teachers.map(teacher => (
+              {teachers && teachers.map(teacher => (
                 <option key={teacher._id} value={teacher._id}>
                   {teacher.name} ({teacher.teacher_Id})
                 </option>

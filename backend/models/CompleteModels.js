@@ -9,12 +9,47 @@ const CourseSchema = new mongoose.Schema({
 }, { timestamps: true });
 
 // Subject Schema
+// const SubjectSchema = new mongoose.Schema({
+//   subjectName: { type: String, required: true },
+//   subjectCode: { type: String, required: true },
+//   courseId: { type: mongoose.Schema.Types.ObjectId, ref: 'Course' },
+//   isActive: { type: Boolean, default: true }
+// }, { timestamps: true });
+
+// Subject Schema
 const SubjectSchema = new mongoose.Schema({
   subjectName: { type: String, required: true },
   subjectCode: { type: String, required: true },
-  courseId: { type: mongoose.Schema.Types.ObjectId, ref: 'Course' },
+
+  subjectType: {
+    type: String,
+    enum: ["Theory", "Practical", "Lab"],
+    default: "Theory"
+  },
+
+  credits: { type: Number, default: 0 },
+
+  semester: { type: Number, required: true },
+
+  branch: { type: String, required: true },
+
+  isElective: { type: Boolean, default: false },
+
+  teacherId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Teacher",
+    default: null
+  },
+
+  courseId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Course",
+    default: null
+  },
+
   isActive: { type: Boolean, default: true }
 }, { timestamps: true });
+
 
 // Teacher Schema
 const TeacherSchema = new mongoose.Schema({
