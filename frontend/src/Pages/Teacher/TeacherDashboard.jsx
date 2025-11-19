@@ -82,10 +82,10 @@ const TeacherDashboard = () => {
         {/* HEADER */}
         <BackButton className="mb-4" />
 
-        <h1 className="text-3xl font-bold text-gray-800 mb-2">
+        <h1 className="text-3xl font-extrabold text-gray-900 mb-2">
           Welcome, {teacher?.name}!
         </h1>
-        <p className="text-gray-600">
+        <p className="text-gray-700 font-semibold">
           Department: {teacher?.department || 'Not specified'} | Designation:{' '}
           {teacher?.designation || 'Teacher'}
         </p>
@@ -123,7 +123,7 @@ const TeacherDashboard = () => {
 
         {/* ===================== QUICK ACTIONS ===================== */}
         <div className="bg-white rounded-lg shadow-md p-6 mb-8">
-          <h2 className="text-xl font-semibold mb-4">Quick Actions</h2>
+          <h2 className="text-xl font-bold text-gray-900 mb-4">Quick Actions</h2>
 
           <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
 
@@ -258,8 +258,8 @@ const DashboardCard = ({ title, value, icon, color }) => (
         {icon}
       </div>
       <div className="ml-4">
-        <p className="text-sm text-gray-600">{title}</p>
-        <p className="text-2xl font-bold">{value}</p>
+        <p className="text-sm text-gray-700 font-semibold">{title}</p>
+        <p className="text-2xl font-extrabold text-gray-900">{value}</p>
       </div>
     </div>
   </div>
@@ -271,14 +271,14 @@ const QuickAction = ({ label, icon, onClick }) => (
     className="flex flex-col items-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
   >
     {icon}
-    <span className="text-sm font-medium">{label}</span>
+    <span className="text-sm font-bold text-gray-800">{label}</span>
   </button>
 );
 
 const SectionCard = ({ title, icon, children }) => (
   <div className="bg-white rounded-lg shadow-md p-6 mb-8">
     <div className="flex items-center justify-between mb-4">
-      <h2 className="text-xl font-semibold">{title}</h2>
+      <h2 className="text-xl font-bold text-gray-900">{title}</h2>
       {icon}
     </div>
     <div className="space-y-4">{children}</div>
@@ -287,9 +287,9 @@ const SectionCard = ({ title, icon, children }) => (
 
 const ListItem = ({ title, subtitle, extra, color }) => (
   <div className={`border-l-4 border-${color}-500 pl-4 py-2`}>
-    <p className="font-medium text-gray-800">{title}</p>
-    <p className="text-sm text-gray-600">{subtitle}</p>
-    {extra && <p className="text-xs text-gray-500">{extra}</p>}
+    <p className="font-bold text-gray-900">{title}</p>
+    <p className="text-sm text-gray-700 font-semibold">{subtitle}</p>
+    {extra && <p className="text-xs text-gray-600 font-medium">{extra}</p>}
   </div>
 );
 

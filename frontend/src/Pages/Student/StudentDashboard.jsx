@@ -118,10 +118,10 @@ const StudentDashboard = () => {
                 <FaGraduationCap className="text-3xl text-blue-600" />
               </div>
               <div>
-                <h1 className="text-3xl font-bold text-gray-800">
+                <h1 className="text-3xl font-extrabold text-gray-900">
                   Welcome, {student?.name || "Student"}
                 </h1>
-                <p className="text-gray-600">Ready to learn something new today?</p>
+                <p className="text-gray-700 font-semibold">Ready to learn something new today?</p>
               </div>
             </div>
             
@@ -129,14 +129,14 @@ const StudentDashboard = () => {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 bg-gray-50 p-4 rounded-lg">
               <div className="flex items-center space-x-2">
                 <FaUser className="text-gray-500" />
-                <span className="text-gray-700">Roll No: {student?.rollNo}</span>
+                <span className="text-gray-800 font-semibold">Roll No: {student?.rollNo}</span>
               </div>
               <div className="flex items-center space-x-2">
-                <span className="text-gray-700">Email: {student?.email}</span>
+                <span className="text-gray-800 font-semibold">Email: {student?.email}</span>
               </div>
               <div className="flex items-center space-x-2">
                 <FaGraduationCap className="text-gray-500" />
-                <span className="text-gray-700">Course: {student?.courseId?.courseName}</span>
+                <span className="text-gray-800 font-semibold">Course: {student?.courseId?.courseName}</span>
               </div>
             </div>
           </div>
@@ -151,8 +151,8 @@ const StudentDashboard = () => {
               >
                 <div className="text-center">
                   <div className="mb-4">{action.icon}</div>
-                  <h3 className="text-lg font-semibold text-gray-800 mb-2">{action.title}</h3>
-                  <p className="text-gray-600 text-sm">{action.description}</p>
+                  <h3 className="text-lg font-bold text-gray-900 mb-2">{action.title}</h3>
+                  <p className="text-gray-700 text-sm font-semibold">{action.description}</p>
                 </div>
               </Link>
             ))}
