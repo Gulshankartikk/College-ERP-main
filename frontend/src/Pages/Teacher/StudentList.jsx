@@ -82,39 +82,49 @@ const StudentList = () => {
     ));
   };
 
-  const handleSaveAttendance = async () => {
-    if (!selectedSubject || students.length === 0) {
-      toast.error('Please select a subject and ensure students are loaded');
-      return;
+const handleSaveAttendance = async () => {
+  if (!selectedSubject || students.length === 0) {
+    toast.error('Please select a subject and ensure students are loaded');
+    return;
+  }
+
+  const teacherId = localStorage.getItem('userId');
+  if (!teacherId) {
+    toast.error("Teacher ID missing. Please log in again.");
+    return;
+  }
+
+  setSaving(true);
+
+  try {
+    const token = Cookies.get('token');
+    const attendanceData = students.map(student => ({
+      studentId: student._id,
+      status: student.status
+    }));
+
+    // CORRECT ROUTE + CORRECT BODY
+    const response = await axios.post(`${BASE_URL}/api/teacher/admin/attendance`, {
+      teacherId,
+      subjectId: selectedSubject,
+      date: selectedDate,
+      attendance: attendanceData
+    }, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+
+    if (response.data.success) {
+      toast.success('Attendance saved successfully!');
+    } else {
+      toast.error(response.data.msg || 'Failed to save attendance');
     }
+  } catch (error) {
+    toast.error(error.response?.data?.msg || 'Failed to save attendance');
+  } finally {
+    setSaving(false);
+  }
+};
 
-    setSaving(true);
-    try {
-      const token = Cookies.get('token');
-      const attendanceData = students.map(student => ({
-        studentId: student._id,
-        status: student.status
-      }));
-
-      const response = await axios.post(`${BASE_URL}/api/teacher/${teacherId}/attendance`, {
-        subjectId: selectedSubject,
-        date: selectedDate,
-        attendance: attendanceData
-      }, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-
-      if (response.data.success) {
-        toast.success('Attendance saved successfully!');
-      } else {
-        toast.error(response.data.msg || 'Failed to save attendance');
-      }
-    } catch (error) {
-      toast.error(error.response?.data?.msg || 'Failed to save attendance');
-    } finally {
-      setSaving(false);
-    }
-  };
 
   const markAllPresent = () => {
     setStudents(prev => prev.map(student => ({ ...student, status: 'Present' })));
