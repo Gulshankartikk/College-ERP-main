@@ -18,6 +18,7 @@ import Cookies from 'js-cookie';
 import LoadingSpinner from '../../components/LoadingSpinner';
 import TeacherHeader from '../../components/TeacherHeader';
 import BackButton from '../../components/BackButton';
+import Footer from '../../components/Footer';
 import { AttendanceModal, AssignmentModal, NoticeModal, MaterialModal } from '../../components/TeacherModals';
 
 const TeacherDashboard = () => {
@@ -75,7 +76,7 @@ const TeacherDashboard = () => {
   const { teacher, assignments = [] } = dashboardData || {};
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen" style={{ background: 'linear-gradient(135deg, #2d545e 0%, #12343b 100%)' }}>
       <TeacherHeader currentRole="teacher" />
 
       <div className="p-6">
@@ -83,10 +84,10 @@ const TeacherDashboard = () => {
         {/* HEADER */}
         <BackButton className="mb-4" />
 
-        <h1 className="text-3xl font-extrabold text-gray-900 mb-2">
+        <h1 className="text-3xl font-extrabold text-white drop-shadow-lg mb-2">
           Welcome, {teacher?.name}!
         </h1>
-        <p className="text-gray-700 font-semibold">
+        <p className="font-semibold text-lg" style={{ color: '#e1b382' }}>
           Department: {teacher?.department || 'Not specified'} | Designation:{' '}
           {teacher?.designation || 'Teacher'}
         </p>
@@ -123,8 +124,8 @@ const TeacherDashboard = () => {
         </div>
 
         {/* ===================== QUICK ACTIONS ===================== */}
-        <div className="bg-white rounded-lg shadow-md p-6 mb-8">
-          <h2 className="text-xl font-bold text-gray-900 mb-4">Quick Actions</h2>
+        <div className="bg-white rounded-lg shadow-xl p-6 mb-8" style={{ borderTop: '4px solid #e1b382' }}>
+          <h2 className="text-xl font-bold mb-4" style={{ color: '#2d545e' }}>Quick Actions</h2>
 
           <div className="grid grid-cols-2 md:grid-cols-6 gap-4">
 
@@ -248,6 +249,7 @@ const TeacherDashboard = () => {
         onClose={() => setShowMaterialModal(false)}
         teacherId={teacherId}
       />
+      <Footer />
     </div>
   );
 };
@@ -258,47 +260,54 @@ export default TeacherDashboard;
 // REUSABLE COMPONENTS
 // =================================================================
 
-const DashboardCard = ({ title, value, icon, color }) => (
-  <div className="bg-white rounded-lg shadow-md p-6">
-    <div className="flex items-center">
-      <div className={`p-3 rounded-full bg-${color}-100 text-${color}-600`}>
-        {icon}
-      </div>
-      <div className="ml-4">
-        <p className="text-sm text-gray-700 font-semibold">{title}</p>
-        <p className="text-2xl font-extrabold text-gray-900">{value}</p>
+const DashboardCard = ({ title, value, icon, color }) => {
+  const colors = { blue: '#2d545e', green: '#e1b382', yellow: '#c89666', purple: '#12343b' };
+  return (
+    <div className="bg-white rounded-lg shadow-xl p-6" style={{ borderLeft: `4px solid ${colors[color]}` }}>
+      <div className="flex items-center">
+        <div className="p-3 rounded-full" style={{ backgroundColor: `${colors[color]}20`, color: colors[color] }}>
+          {icon}
+        </div>
+        <div className="ml-4">
+          <p className="text-sm font-semibold" style={{ color: '#2d545e' }}>{title}</p>
+          <p className="text-2xl font-extrabold" style={{ color: '#12343b' }}>{value}</p>
+        </div>
       </div>
     </div>
-  </div>
-);
+  );
+};
 
 const QuickAction = ({ label, icon, onClick }) => (
   <button
     onClick={onClick}
-    className="flex flex-col items-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+    className="flex flex-col items-center p-4 rounded-lg transition-all transform hover:scale-105 shadow-md hover:shadow-xl"
+    style={{ backgroundColor: '#e1b38220' }}
   >
     {icon}
-    <span className="text-sm font-bold text-gray-800">{label}</span>
+    <span className="text-sm font-bold" style={{ color: '#2d545e' }}>{label}</span>
   </button>
 );
 
 const SectionCard = ({ title, icon, children }) => (
-  <div className="bg-white rounded-lg shadow-md p-6 mb-8">
+  <div className="bg-white rounded-lg shadow-xl p-6 mb-8" style={{ borderTop: '4px solid #c89666' }}>
     <div className="flex items-center justify-between mb-4">
-      <h2 className="text-xl font-bold text-gray-900">{title}</h2>
+      <h2 className="text-xl font-bold" style={{ color: '#2d545e' }}>{title}</h2>
       {icon}
     </div>
     <div className="space-y-4">{children}</div>
   </div>
 );
 
-const ListItem = ({ title, subtitle, extra, color }) => (
-  <div className={`border-l-4 border-${color}-500 pl-4 py-2`}>
-    <p className="font-bold text-gray-900">{title}</p>
-    <p className="text-sm text-gray-700 font-semibold">{subtitle}</p>
-    {extra && <p className="text-xs text-gray-600 font-medium">{extra}</p>}
-  </div>
-);
+const ListItem = ({ title, subtitle, extra, color }) => {
+  const colors = { blue: '#2d545e', green: '#e1b382', purple: '#c89666' };
+  return (
+    <div className="pl-4 py-2" style={{ borderLeft: `4px solid ${colors[color]}` }}>
+      <p className="font-bold" style={{ color: '#12343b' }}>{title}</p>
+      <p className="text-sm font-semibold" style={{ color: '#2d545e' }}>{subtitle}</p>
+      {extra && <p className="text-xs font-medium" style={{ color: '#c89666' }}>{extra}</p>}
+    </div>
+  );
+};
 
 const Empty = ({ message }) => (
   <p classcommon="text-gray-500 text-center py-4">{message}</p>

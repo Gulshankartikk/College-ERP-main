@@ -88,7 +88,7 @@ const AttendanceSchema = new mongoose.Schema({
 
 // Assignment Schema
 const AssignmentSchema = new mongoose.Schema({
-  teacherId: { type: mongoose.Schema.Types.ObjectId, ref: 'Teacher', required: true },
+  teacherId: { type: mongoose.Schema.Types.Mixed, required: true },
   subjectId: { type: mongoose.Schema.Types.ObjectId, ref: 'Subject', required: true },
   title: { type: String, required: true },
   description: { type: String },
@@ -107,7 +107,7 @@ const AssignmentSchema = new mongoose.Schema({
 const MarksSchema = new mongoose.Schema({
   studentId: { type: mongoose.Schema.Types.ObjectId, ref: 'Student', required: true },
   subjectId: { type: mongoose.Schema.Types.ObjectId, ref: 'Subject', required: true },
-  teacherId: { type: mongoose.Schema.Types.ObjectId, ref: 'Teacher', required: true },
+  teacherId: { type: mongoose.Schema.Types.Mixed, required: true },
   marks: { type: Number, required: true },
   totalMarks: { type: Number, required: true },
   examType: { type: String, required: true }
@@ -115,7 +115,7 @@ const MarksSchema = new mongoose.Schema({
 
 // Notice Schema
 const NoticeSchema = new mongoose.Schema({
-  teacherId: { type: mongoose.Schema.Types.ObjectId, ref: 'Teacher', required: true },
+  teacherId: { type: mongoose.Schema.Types.Mixed, required: true },
   courseId: { type: mongoose.Schema.Types.ObjectId, ref: 'Course', required: true },
   title: { type: String, required: true },
   description: { type: String, required: true },
@@ -124,7 +124,7 @@ const NoticeSchema = new mongoose.Schema({
 
 // Study Material Schema
 const StudyMaterialSchema = new mongoose.Schema({
-  teacherId: { type: mongoose.Schema.Types.ObjectId, ref: 'Teacher', required: true },
+  teacherId: { type: mongoose.Schema.Types.Mixed, required: true },
   subjectId: { type: mongoose.Schema.Types.ObjectId, ref: 'Subject', required: true },
   title: { type: String, required: true },
   description: { type: String },
@@ -134,7 +134,7 @@ const StudyMaterialSchema = new mongoose.Schema({
 
 // Notes Schema
 const NotesSchema = new mongoose.Schema({
-  teacherId: { type: mongoose.Schema.Types.ObjectId, ref: 'Teacher', required: true },
+  teacherId: { type: mongoose.Schema.Types.Mixed, required: true },
   subjectId: { type: mongoose.Schema.Types.ObjectId, ref: 'Subject', required: true },
   title: { type: String, required: true },
   description: { type: String },

@@ -12,46 +12,49 @@ const StudentHeader = ({ studentId, studentName }) => {
   };
 
   return (
-    <header className="bg-white shadow-md border-b">
+    <header className="shadow-lg" style={{ background: 'linear-gradient(90deg, #2d545e 0%, #12343b 100%)', borderBottom: '3px solid #e1b382' }}>
       <div className="max-w-7xl mx-auto px-4">
         <div className="flex justify-between items-center py-4">
           <div className="flex items-center space-x-4">
-            <Link to={`/student/${studentId}/dashboard`} className="text-2xl font-bold text-blue-600">
-              College ERP
+            <Link to={`/student/${studentId}/dashboard`} className="text-2xl font-bold" style={{ color: '#e1b382' }}>
+              College Management System
             </Link>
-            <span className="text-sm text-gray-500">Student Portal</span>
+            <span className="text-sm font-semibold" style={{ color: '#c89666' }}>Student Portal</span>
           </div>
 
           <nav className="hidden md:flex items-center space-x-6">
-            <Link to={`/student/${studentId}/dashboard`} className="text-gray-700 hover:text-blue-600 font-semibold">
+            <Link to={`/student/${studentId}/dashboard`} className="font-semibold transition-colors" style={{ color: 'white' }} onMouseEnter={(e) => e.target.style.color = '#e1b382'} onMouseLeave={(e) => e.target.style.color = 'white'}>
               Dashboard
             </Link>
-            <Link to={`/student/${studentId}/profile`} className="text-gray-700 hover:text-blue-600 font-semibold">
+            <Link to={`/student/${studentId}/profile`} className="font-semibold transition-colors" style={{ color: 'white' }} onMouseEnter={(e) => e.target.style.color = '#e1b382'} onMouseLeave={(e) => e.target.style.color = 'white'}>
               Profile
             </Link>
-            <Link to={`/student/${studentId}/notes`} className="text-gray-700 hover:text-blue-600 font-semibold">
+            <Link to={`/student/${studentId}/notes`} className="font-semibold transition-colors" style={{ color: 'white' }} onMouseEnter={(e) => e.target.style.color = '#e1b382'} onMouseLeave={(e) => e.target.style.color = 'white'}>
               Notes
             </Link>
-            <Link to={`/student/${studentId}/materials`} className="text-gray-700 hover:text-blue-600 font-semibold">
+            <Link to={`/student/${studentId}/materials`} className="font-semibold transition-colors" style={{ color: 'white' }} onMouseEnter={(e) => e.target.style.color = '#e1b382'} onMouseLeave={(e) => e.target.style.color = 'white'}>
               Materials
             </Link>
-            <Link to={`/student/${studentId}/assignments`} className="text-gray-700 hover:text-blue-600 font-semibold">
+            <Link to={`/student/${studentId}/assignments`} className="font-semibold transition-colors" style={{ color: 'white' }} onMouseEnter={(e) => e.target.style.color = '#e1b382'} onMouseLeave={(e) => e.target.style.color = 'white'}>
               Assignments
             </Link>
-            <Link to={`/student/${studentId}/attendance`} className="text-gray-700 hover:text-blue-600 font-semibold">
+            <Link to={`/student/${studentId}/attendance`} className="font-semibold transition-colors" style={{ color: 'white' }} onMouseEnter={(e) => e.target.style.color = '#e1b382'} onMouseLeave={(e) => e.target.style.color = 'white'}>
               Attendance
             </Link>
           </nav>
 
           <div className="flex items-center space-x-4">
             <div className="flex items-center space-x-2">
-              <FaGraduationCap className="text-blue-500" />
-              <span className="text-sm font-medium text-gray-700">{studentName || 'Student'}</span>
+              <FaGraduationCap style={{ color: '#e1b382' }} />
+              <span className="text-sm font-medium" style={{ color: 'white' }}>{studentName || 'Student'}</span>
             </div>
 
             <button
               onClick={handleLogout}
-              className="flex items-center space-x-1 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
+              className="flex items-center space-x-1 px-4 py-2 text-white rounded-lg transition-all transform hover:scale-105"
+              style={{ backgroundColor: '#c89666' }}
+              onMouseEnter={(e) => e.target.style.backgroundColor = '#e1b382'}
+              onMouseLeave={(e) => e.target.style.backgroundColor = '#c89666'}
             >
               <FaSignOutAlt />
               <span>Logout</span>

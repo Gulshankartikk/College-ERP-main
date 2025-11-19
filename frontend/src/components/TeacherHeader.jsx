@@ -49,21 +49,25 @@ const TeacherHeader = ({ currentRole = 'teacher' }) => {
   };
 
   return (
-    <div className="bg-white shadow-sm border-b px-6 py-4">
+    <div className="shadow-lg px-6 py-4" style={{ background: 'linear-gradient(90deg, #2d545e 0%, #12343b 100%)', borderBottom: '3px solid #e1b382' }}>
       <div className="flex justify-between items-center">
         <div className="flex items-center space-x-4">
-          <h1 className="text-xl font-semibold text-gray-800">Teacher Portal</h1>
+          <h1 className="text-xl font-semibold" style={{ color: '#e1b382' }}>Teacher Portal</h1>
           {(userRole === 'teacher' || userRole === 'admin') && (
-            <div className="flex items-center space-x-2 bg-gray-100 rounded-lg p-1">
+            <div className="flex items-center space-x-2 rounded-lg p-1" style={{ backgroundColor: 'rgba(225, 179, 130, 0.2)' }}>
               <button
-                className="flex items-center px-3 py-2 rounded-md text-sm font-medium bg-green-500 text-white"
+                className="flex items-center px-3 py-2 rounded-md text-sm font-medium text-white"
+                style={{ backgroundColor: '#e1b382' }}
               >
                 <FaChalkboardTeacher className="mr-2" />
                 Teacher
               </button>
               <button
                 onClick={() => handleRoleSwitch('student')}
-                className="flex items-center px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-200 transition-colors"
+                className="flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                style={{ color: 'white' }}
+                onMouseEnter={(e) => e.target.style.backgroundColor = 'rgba(200, 150, 102, 0.3)'}
+                onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
               >
                 <FaUserGraduate className="mr-2" />
                 Student View
@@ -74,7 +78,10 @@ const TeacherHeader = ({ currentRole = 'teacher' }) => {
         
         <button
           onClick={handleLogout}
-          className="flex items-center px-4 py-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+          className="flex items-center px-4 py-2 text-white rounded-lg transition-all transform hover:scale-105"
+          style={{ backgroundColor: '#c89666' }}
+          onMouseEnter={(e) => e.target.style.backgroundColor = '#e1b382'}
+          onMouseLeave={(e) => e.target.style.backgroundColor = '#c89666'}
         >
           <FaSignOutAlt className="mr-2" />
           Logout

@@ -4,6 +4,7 @@ import axios from 'axios';
 import { BASE_URL } from '../../constants/baseUrl';
 import { FaUser, FaEnvelope, FaPhone, FaIdCard, FaGraduationCap, FaChartLine, FaCalendarAlt } from 'react-icons/fa';
 import Cookies from 'js-cookie';
+import { toast } from 'react-toastify';
 import StudentHeader from '../../components/StudentHeader';
 import BackButton from '../../components/BackButton';
 
@@ -14,6 +15,8 @@ const StudentProfile = () => {
   const [marks, setMarks] = useState([]);
   const [assignments, setAssignments] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editData, setEditData] = useState({ name: '', email: '', phone: '' });
 
   useEffect(() => {
     fetchStudentProfile();
@@ -29,8 +32,35 @@ const StudentProfile = () => {
         headers: { Authorization: `Bearer ${token}` }
       });
       setStudent(response.data.student);
+      setEditData({ name: response.data.student?.name || '', email: response.data.student?.email || '', phone: response.data.student?.phone || '' });
     } catch (error) {
       console.error('Error fetching profile:', error);
+    }
+  };
+
+  const handleEditToggle = () => {
+    setIsEditing(!isEditing);
+    if (!isEditing) {
+      setEditData({ name: student?.name || '', email: student?.email || '', phone: student?.phone || '' });
+    }
+  };
+
+  const handleInputChange = (e) => {
+    setEditData({ ...editData, [e.target.name]: e.target.value });
+  };
+
+  const handleSaveProfile = async () => {
+    try {
+      const token = Cookies.get('token');
+      await axios.put(`${BASE_URL}/api/student/${studentId}/profile`, editData, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setStudent({ ...student, ...editData });
+      setIsEditing(false);
+      toast.success('Profile updated successfully!');
+    } catch (error) {
+      console.error('Error updating profile:', error);
+      toast.error('Failed to update profile');
     }
   };
 
@@ -92,7 +122,16 @@ const StudentProfile = () => {
         <div className="max-w-7xl mx-auto px-4">
           <BackButton />
           
-          <h1 className="text-4xl font-extrabold text-gray-900 mb-8">Student Profile</h1>
+          <div className="flex justify-between items-center mb-8">
+            <h1 className="text-4xl font-extrabold text-gray-900">Student Profile</h1>
+            <button
+              onClick={handleEditToggle}
+              className="px-6 py-3 rounded-lg font-bold transition-all transform hover:scale-105 shadow-lg"
+              style={{ backgroundColor: isEditing ? '#c89666' : '#2d545e', color: 'white' }}
+            >
+              {isEditing ? 'Cancel' : 'Edit Profile'}
+            </button>
+          </div>
 
           {/* Personal Information */}
           <div className="bg-white rounded-lg shadow-md p-6 mb-6">
@@ -100,14 +139,71 @@ const StudentProfile = () => {
               <FaUser className="mr-3 text-blue-500" />
               Personal Information
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <InfoItem icon={<FaUser />} label="Full Name" value={student?.name} />
-              <InfoItem icon={<FaIdCard />} label="Roll Number" value={student?.rollNo} />
-              <InfoItem icon={<FaEnvelope />} label="Email" value={student?.email} />
-              <InfoItem icon={<FaPhone />} label="Phone" value={student?.phone || 'N/A'} />
-              <InfoItem icon={<FaGraduationCap />} label="Course" value={student?.courseId?.courseName} />
-              <InfoItem icon={<FaCalendarAlt />} label="Joined" value={new Date(student?.createdAt).toLocaleDateString()} />
-            </div>
+            {isEditing ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label className="block font-bold mb-2 text-sm" style={{ color: '#2d545e' }}>Full Name</label>
+                  <input
+                    type="text"
+                    name="name"
+                    value={editData.name}
+                    onChange={handleInputChange}
+                    className="w-full py-3 px-4 rounded-lg border-2 focus:outline-none"
+                    style={{ borderColor: '#e1b382' }}
+                  />
+                </div>
+                <div>
+                  <label className="block font-bold mb-2 text-sm" style={{ color: '#2d545e' }}>Roll Number</label>
+                  <input
+                    type="text"
+                    value={student?.rollNo}
+                    disabled
+                    className="w-full py-3 px-4 rounded-lg border-2 bg-gray-100"
+                    style={{ borderColor: '#e1b382' }}
+                  />
+                </div>
+                <div>
+                  <label className="block font-bold mb-2 text-sm" style={{ color: '#2d545e' }}>Email</label>
+                  <input
+                    type="email"
+                    name="email"
+                    value={editData.email}
+                    onChange={handleInputChange}
+                    className="w-full py-3 px-4 rounded-lg border-2 focus:outline-none"
+                    style={{ borderColor: '#e1b382' }}
+                  />
+                </div>
+                <div>
+                  <label className="block font-bold mb-2 text-sm" style={{ color: '#2d545e' }}>Phone</label>
+                  <input
+                    type="tel"
+                    name="phone"
+                    value={editData.phone}
+                    onChange={handleInputChange}
+                    className="w-full py-3 px-4 rounded-lg border-2 focus:outline-none"
+                    style={{ borderColor: '#e1b382' }}
+                  />
+                </div>
+                <div className="md:col-span-2">
+                  <button
+                    onClick={handleSaveProfile}
+                    className="w-full py-3 px-6 rounded-lg font-bold transition-all transform hover:scale-105 shadow-lg"
+                    style={{ backgroundColor: '#2d545e', color: 'white' }}
+                  >
+                    Save Changes
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <InfoItem icon={<FaUser />} label="Full Name" value={student?.name} />
+                <InfoItem icon={<FaIdCard />} label="Roll Number" value={student?.rollNo} />
+                <InfoItem icon={<FaEnvelope />} label="Email" value={student?.email} />
+                <InfoItem icon={<FaPhone />} label="Phone" value={student?.phone || 'N/A'} />
+                <InfoItem icon={<FaGraduationCap />} label="Course" value={student?.courseId?.courseName} />
+                <InfoItem icon={<FaCalendarAlt />} label="Joined" value={new Date(student?.createdAt).toLocaleDateString()} />
+              </div>
+            )}
           </div>
 
           {/* Academic Overview */}

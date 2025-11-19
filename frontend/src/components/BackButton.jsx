@@ -26,13 +26,18 @@ const BackButton = ({ className = '' }) => {
   }
 
   return (
-    <button
-      onClick={() => navigate(-1)}
-      className={`flex items-center space-x-2 px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors ${className}`}
-    >
-      <FaArrowLeft />
-      <span>Back</span>
-    </button>
+    <div className={`fixed top-4 right-4 z-50 ${className}`}>
+      <button
+        onClick={() => navigate(-1)}
+        className="flex items-center space-x-2 px-4 py-2 rounded-lg transition-all transform hover:scale-105 shadow-lg"
+        style={{ backgroundColor: '#2d545e', color: 'white' }}
+        onMouseEnter={(e) => e.target.style.backgroundColor = '#e1b382'}
+        onMouseLeave={(e) => e.target.style.backgroundColor = '#2d545e'}
+      >
+        <FaArrowLeft />
+        <span className="font-semibold">Back</span>
+      </button>
+    </div>
   );
 };
 

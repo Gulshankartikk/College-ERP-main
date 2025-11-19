@@ -74,81 +74,93 @@ const Login = () => {
 
 
   return (
-    <div className="flex font-oswald">
-      {/* College logo */}
-      <div className="w-[50%] h-screen hidden lg:block">
-        <img
-          className="h-[100%] w-[100%]"
-          src={collegeImage}
-          alt="college image"
-        />
+    <div className="flex font-oswald min-h-screen" style={{ background: 'linear-gradient(135deg, #2d545e 0%, #12343b 100%)' }}>
+      {/* Decorative Side Panel */}
+      <div className="w-[40%] h-screen hidden lg:flex flex-col items-center justify-center relative" style={{ background: 'linear-gradient(180deg, rgba(225, 179, 130, 0.15) 0%, rgba(200, 150, 102, 0.15) 100%)' }}>
+        <div className="text-center px-8">
+          <h1 className="text-6xl font-extrabold mb-6" style={{ color: '#e1b382' }}>College</h1>
+          <p className="text-2xl font-semibold mb-4" style={{ color: 'white' }}>Management System</p>
+          <div className="w-32 h-1 mx-auto mb-6" style={{ backgroundColor: '#c89666' }}></div>
+          <p className="text-lg font-medium" style={{ color: '#e1b382' }}>Streamlining Educational Excellence</p>
+        </div>
+        <div className="absolute bottom-10 left-0 right-0 flex justify-center space-x-4">
+          <div className="w-3 h-3 rounded-full" style={{ backgroundColor: '#e1b382' }}></div>
+          <div className="w-3 h-3 rounded-full" style={{ backgroundColor: '#c89666' }}></div>
+          <div className="w-3 h-3 rounded-full" style={{ backgroundColor: '#e1b382' }}></div>
+        </div>
       </div>
 
       {/* Form area */}
-      <div className="w-screen lg:w-[50%] h-screen bg-white flex items-center justify-center flex-col gap-5">
-        {/* Logo */}
-        <div className="w-[100%] flex items-center justify-center">
-          <img
-            className="w-[50%]"
-            src={logo}
-            alt="Dr. Ambedkar Institute of Technology for Handicapped Kanpur"
-          />
+      <div className="w-screen lg:w-[60%] h-screen flex items-center justify-center flex-col gap-5 px-4">
+        {/* Welcome Header */}
+        <div className="text-center mb-8">
+          <h2 className="text-4xl font-extrabold mb-2" style={{ color: '#e1b382' }}>Welcome Back</h2>
+          <p className="text-lg font-semibold" style={{ color: '#c89666' }}>Sign in to continue to your portal</p>
         </div>
 
         {/* Form */}
-        <div className="w-screen lg:w-[100%] px-10 lg:px-[5rem] xl:px-[10rem]">
+        <div className="w-full max-w-md">
           <form
             method="post"
             onSubmit={handleSubmit}
-            className="flex flex-col justify-between gap-2 border-2 border-black rounded-lg px-3 py-3"
+            className="flex flex-col justify-between gap-6 rounded-2xl px-8 py-8 shadow-2xl backdrop-blur-sm"
+            style={{ backgroundColor: 'rgba(255, 255, 255, 0.95)', border: '3px solid #e1b382' }}
           >
             {/* Role options */}
-            <div className="w-full flex justify-evenly px-5 mb-4">
+            <div className="w-full flex gap-3 mb-6">
               <button
                 type="button"
-                className={`font-bold ${
-                  role === "student" ? "text-blue-500" : "text-gray-500"
-                }`}
+                className="flex-1 py-3 px-4 rounded-lg font-bold transition-all transform hover:scale-105"
+                style={{ 
+                  backgroundColor: role === "student" ? "#2d545e" : "transparent",
+                  color: role === "student" ? "white" : "#2d545e",
+                  border: `2px solid ${role === "student" ? "#2d545e" : "#c89666"}`
+                }}
                 onClick={() => setRole("student")}
               >
                 Student
               </button>
-              <div className="bg-black w-1"></div>
               <button
                 type="button"
-                className={`font-bold ${
-                  role === "teacher" ? "text-blue-500" : "text-gray-500"
-                }`}
+                className="flex-1 py-3 px-4 rounded-lg font-bold transition-all transform hover:scale-105"
+                style={{ 
+                  backgroundColor: role === "teacher" ? "#2d545e" : "transparent",
+                  color: role === "teacher" ? "white" : "#2d545e",
+                  border: `2px solid ${role === "teacher" ? "#2d545e" : "#c89666"}`
+                }}
                 onClick={() => setRole("teacher")}
               >
                 Teacher
               </button>
-              <div className="bg-black w-1"></div>
               <button
                 type="button"
-                className={`font-bold ${
-                  role === "admin" ? "text-blue-500" : "text-gray-500"
-                }`}
+                className="flex-1 py-3 px-4 rounded-lg font-bold transition-all transform hover:scale-105"
+                style={{ 
+                  backgroundColor: role === "admin" ? "#2d545e" : "transparent",
+                  color: role === "admin" ? "white" : "#2d545e",
+                  border: `2px solid ${role === "admin" ? "#2d545e" : "#c89666"}`
+                }}
                 onClick={() => setRole("admin")}
               >
                 Admin
               </button>
             </div>
-            <hr className="border-t-2 border-black" />
 
             {/* Input fields */}
-            <div className="flex flex-col gap-4 mt-4">
+            <div className="flex flex-col gap-5">
               <div className="flex flex-col">
                 <label
-                  className="block text-gray-700 font-bold mb-2"
+                  className="block font-bold mb-2 text-sm"
                   htmlFor="username"
+                  style={{ color: '#2d545e' }}
                 >
                   {role === "student" ? "Email/Username/Phone/Roll No" : role === "teacher" ? "Email/Username" : "Username"}
                 </label>
                 <input
                   type="text"
                   id="username"
-                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  className="shadow-lg appearance-none rounded-lg w-full py-3 px-4 leading-tight focus:outline-none transition-all"
+                  style={{ border: '2px solid #e1b382', color: '#12343b' }}
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                   placeholder={role === "student" ? "Enter email, username, phone or roll number" : role === "teacher" ? "Enter email or username" : "Enter username"}
@@ -157,15 +169,17 @@ const Login = () => {
               </div>
               <div className="flex flex-col">
                 <label
-                  className="block text-gray-700 font-bold mb-2"
+                  className="block font-bold mb-2 text-sm"
                   htmlFor="password"
+                  style={{ color: '#2d545e' }}
                 >
                   Password
                 </label>
                 <input
                   type="password"
                   id="password"
-                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  className="shadow-lg appearance-none rounded-lg w-full py-3 px-4 leading-tight focus:outline-none transition-all"
+                  style={{ border: '2px solid #e1b382', color: '#12343b' }}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
@@ -173,7 +187,7 @@ const Login = () => {
               </div>
             </div>
 
-            <div className="mt-1 flex justify-between">
+            <div className="flex justify-between items-center">
               <Link
                 to={
                   role === "student"
@@ -199,9 +213,12 @@ const Login = () => {
             <div className="flex justify-center mt-4 w-[100%]">
               <button
                 type="submit"
-                className="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                className="w-full text-white font-bold py-3 px-6 rounded-lg focus:outline-none shadow-xl transition-all transform hover:scale-105 hover:shadow-2xl"
+                style={{ backgroundColor: '#2d545e' }}
+                onMouseEnter={(e) => e.target.style.backgroundColor = '#12343b'}
+                onMouseLeave={(e) => e.target.style.backgroundColor = '#2d545e'}
               >
-                Login
+                Sign In
               </button>
             </div>
           </form>

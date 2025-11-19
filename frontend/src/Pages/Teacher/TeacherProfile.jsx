@@ -4,6 +4,7 @@ import axios from 'axios';
 import { BASE_URL } from '../../constants/baseUrl';
 import { FaUser, FaEnvelope, FaPhone, FaChalkboardTeacher, FaBook, FaClipboardList, FaTasks, FaBell } from 'react-icons/fa';
 import Cookies from 'js-cookie';
+import { toast } from 'react-toastify';
 import TeacherHeader from '../../components/TeacherHeader';
 import BackButton from '../../components/BackButton';
 
@@ -14,6 +15,8 @@ const TeacherProfile = () => {
   const [materials, setMaterials] = useState([]);
   const [notices, setNotices] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editData, setEditData] = useState({ name: '', email: '', phone: '', department: '', designation: '' });
 
   useEffect(() => {
     fetchTeacherProfile();
@@ -29,8 +32,47 @@ const TeacherProfile = () => {
         headers: { Authorization: `Bearer ${token}` }
       });
       setTeacher(response.data.teacher);
+      setEditData({ 
+        name: response.data.teacher?.name || '', 
+        email: response.data.teacher?.email || '', 
+        phone: response.data.teacher?.phone || '',
+        department: response.data.teacher?.department || '',
+        designation: response.data.teacher?.designation || ''
+      });
     } catch (error) {
       console.error('Error fetching profile:', error);
+    }
+  };
+
+  const handleEditToggle = () => {
+    setIsEditing(!isEditing);
+    if (!isEditing) {
+      setEditData({ 
+        name: teacher?.name || '', 
+        email: teacher?.email || '', 
+        phone: teacher?.phone || '',
+        department: teacher?.department || '',
+        designation: teacher?.designation || ''
+      });
+    }
+  };
+
+  const handleInputChange = (e) => {
+    setEditData({ ...editData, [e.target.name]: e.target.value });
+  };
+
+  const handleSaveProfile = async () => {
+    try {
+      const token = Cookies.get('token');
+      await axios.put(`${BASE_URL}/api/teacher/${teacherId}/profile`, editData, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setTeacher({ ...teacher, ...editData });
+      setIsEditing(false);
+      toast.success('Profile updated successfully!');
+    } catch (error) {
+      console.error('Error updating profile:', error);
+      toast.error('Failed to update profile');
     }
   };
 
@@ -88,7 +130,16 @@ const TeacherProfile = () => {
         <div className="max-w-7xl mx-auto px-4">
           <BackButton />
           
-          <h1 className="text-4xl font-extrabold text-gray-900 mb-8">Teacher Profile</h1>
+          <div className="flex justify-between items-center mb-8">
+            <h1 className="text-4xl font-extrabold text-gray-900">Teacher Profile</h1>
+            <button
+              onClick={handleEditToggle}
+              className="px-6 py-3 rounded-lg font-bold transition-all transform hover:scale-105 shadow-lg"
+              style={{ backgroundColor: isEditing ? '#c89666' : '#2d545e', color: 'white' }}
+            >
+              {isEditing ? 'Cancel' : 'Edit Profile'}
+            </button>
+          </div>
 
           {/* Personal Information */}
           <div className="bg-white rounded-lg shadow-md p-6 mb-6">
@@ -96,14 +147,83 @@ const TeacherProfile = () => {
               <FaUser className="mr-3 text-blue-500" />
               Personal Information
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <InfoItem icon={<FaUser />} label="Full Name" value={teacher?.name} />
-              <InfoItem icon={<FaEnvelope />} label="Email" value={teacher?.email} />
-              <InfoItem icon={<FaPhone />} label="Phone" value={teacher?.phone || 'N/A'} />
-              <InfoItem icon={<FaChalkboardTeacher />} label="Department" value={teacher?.department || 'N/A'} />
-              <InfoItem icon={<FaChalkboardTeacher />} label="Designation" value={teacher?.designation || 'N/A'} />
-              <InfoItem icon={<FaBook />} label="Username" value={teacher?.username || 'N/A'} />
-            </div>
+            {isEditing ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label className="block font-bold mb-2 text-sm" style={{ color: '#2d545e' }}>Full Name</label>
+                  <input
+                    type="text"
+                    name="name"
+                    value={editData.name}
+                    onChange={handleInputChange}
+                    className="w-full py-3 px-4 rounded-lg border-2 focus:outline-none"
+                    style={{ borderColor: '#e1b382' }}
+                  />
+                </div>
+                <div>
+                  <label className="block font-bold mb-2 text-sm" style={{ color: '#2d545e' }}>Email</label>
+                  <input
+                    type="email"
+                    name="email"
+                    value={editData.email}
+                    onChange={handleInputChange}
+                    className="w-full py-3 px-4 rounded-lg border-2 focus:outline-none"
+                    style={{ borderColor: '#e1b382' }}
+                  />
+                </div>
+                <div>
+                  <label className="block font-bold mb-2 text-sm" style={{ color: '#2d545e' }}>Phone</label>
+                  <input
+                    type="tel"
+                    name="phone"
+                    value={editData.phone}
+                    onChange={handleInputChange}
+                    className="w-full py-3 px-4 rounded-lg border-2 focus:outline-none"
+                    style={{ borderColor: '#e1b382' }}
+                  />
+                </div>
+                <div>
+                  <label className="block font-bold mb-2 text-sm" style={{ color: '#2d545e' }}>Department</label>
+                  <input
+                    type="text"
+                    name="department"
+                    value={editData.department}
+                    onChange={handleInputChange}
+                    className="w-full py-3 px-4 rounded-lg border-2 focus:outline-none"
+                    style={{ borderColor: '#e1b382' }}
+                  />
+                </div>
+                <div>
+                  <label className="block font-bold mb-2 text-sm" style={{ color: '#2d545e' }}>Designation</label>
+                  <input
+                    type="text"
+                    name="designation"
+                    value={editData.designation}
+                    onChange={handleInputChange}
+                    className="w-full py-3 px-4 rounded-lg border-2 focus:outline-none"
+                    style={{ borderColor: '#e1b382' }}
+                  />
+                </div>
+                <div className="md:col-span-2">
+                  <button
+                    onClick={handleSaveProfile}
+                    className="w-full py-3 px-6 rounded-lg font-bold transition-all transform hover:scale-105 shadow-lg"
+                    style={{ backgroundColor: '#2d545e', color: 'white' }}
+                  >
+                    Save Changes
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <InfoItem icon={<FaUser />} label="Full Name" value={teacher?.name} />
+                <InfoItem icon={<FaEnvelope />} label="Email" value={teacher?.email} />
+                <InfoItem icon={<FaPhone />} label="Phone" value={teacher?.phone || 'N/A'} />
+                <InfoItem icon={<FaChalkboardTeacher />} label="Department" value={teacher?.department || 'N/A'} />
+                <InfoItem icon={<FaChalkboardTeacher />} label="Designation" value={teacher?.designation || 'N/A'} />
+                <InfoItem icon={<FaBook />} label="Username" value={teacher?.username || 'N/A'} />
+              </div>
+            )}
           </div>
 
           {/* Teaching Overview */}

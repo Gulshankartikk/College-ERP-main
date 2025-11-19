@@ -21,6 +21,7 @@ import Cookies from 'js-cookie';
 import { toast } from 'react-toastify';
 import StudentHeader from '../../components/StudentHeader';
 import BackButton from '../../components/BackButton';
+import Footer from '../../components/Footer';
 
 const StudentDashboard = () => {
   const { studentId } = useParams();
@@ -77,73 +78,73 @@ const StudentDashboard = () => {
     {
       title: "My Profile",
       description: "View your complete profile",
-      icon: <FaUser className="text-3xl text-blue-500" />,
+      icon: <FaUser className="text-3xl" style={{ color: '#2d545e' }} />,
       link: `/student/${studentId}/profile`,
-      color: "bg-blue-50 hover:bg-blue-100 border-blue-200"
+      borderColor: '#e1b382'
     },
     {
       title: "Notes",
       description: "Access your class notes",
-      icon: <FaFileAlt className="text-3xl text-green-500" />,
+      icon: <FaFileAlt className="text-3xl" style={{ color: '#2d545e' }} />,
       link: `/student/${studentId}/notes`,
-      color: "bg-green-50 hover:bg-green-100 border-green-200"
+      borderColor: '#c89666'
     },
     {
       title: "Study Materials",
       description: "Download study materials",
-      icon: <FaBook className="text-3xl text-yellow-500" />,
+      icon: <FaBook className="text-3xl" style={{ color: '#12343b' }} />,
       link: `/student/${studentId}/materials`,
-      color: "bg-yellow-50 hover:bg-yellow-100 border-yellow-200"
+      borderColor: '#e1b382'
     },
     {
       title: "Assignments",
       description: "View and submit assignments",
-      icon: <FaTasks className="text-3xl text-purple-500" />,
+      icon: <FaTasks className="text-3xl" style={{ color: '#2d545e' }} />,
       link: `/student/${studentId}/assignments`,
-      color: "bg-purple-50 hover:bg-purple-100 border-purple-200"
+      borderColor: '#c89666'
     },
     {
       title: "Attendance",
       description: "Check your attendance record",
-      icon: <FaClipboardList className="text-3xl text-orange-500" />,
+      icon: <FaClipboardList className="text-3xl" style={{ color: '#12343b' }} />,
       link: `/student/${studentId}/attendance`,
-      color: "bg-orange-50 hover:bg-orange-100 border-orange-200"
+      borderColor: '#e1b382'
     }
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen" style={{ background: 'linear-gradient(135deg, #2d545e 0%, #12343b 100%)' }}>
       <StudentHeader studentId={studentId} studentName={student?.name} />
       
       <div className="py-8">
         <div className="max-w-7xl mx-auto px-4">
           {/* Welcome Section */}
-          <div className="bg-white rounded-lg shadow-md p-8 mb-8">
+          <div className="bg-white rounded-lg shadow-xl p-8 mb-8" style={{ borderTop: '4px solid #e1b382' }}>
             <BackButton className="mb-4" />
             <div className="flex items-center space-x-4 mb-6">
-              <div className="bg-blue-100 p-3 rounded-full">
-                <FaGraduationCap className="text-3xl text-blue-600" />
+              <div className="p-3 rounded-full" style={{ backgroundColor: '#e1b38230' }}>
+                <FaGraduationCap className="text-3xl" style={{ color: '#2d545e' }} />
               </div>
               <div>
-                <h1 className="text-3xl font-extrabold text-gray-900">
+                <h1 className="text-3xl font-extrabold" style={{ color: '#12343b' }}>
                   Welcome, {student?.name || "Student"}
                 </h1>
-                <p className="text-gray-700 font-semibold">Ready to learn something new today?</p>
+                <p className="font-semibold" style={{ color: '#2d545e' }}>Ready to learn something new today?</p>
               </div>
             </div>
             
             {/* Student Info */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 bg-gray-50 p-4 rounded-lg">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 rounded-lg" style={{ backgroundColor: '#e1b38215' }}>
               <div className="flex items-center space-x-2">
-                <FaUser className="text-gray-500" />
-                <span className="text-gray-800 font-semibold">Roll No: {student?.rollNo}</span>
+                <FaUser style={{ color: '#2d545e' }} />
+                <span className="font-semibold" style={{ color: '#12343b' }}>Roll No: {student?.rollNo}</span>
               </div>
               <div className="flex items-center space-x-2">
-                <span className="text-gray-800 font-semibold">Email: {student?.email}</span>
+                <span className="font-semibold" style={{ color: '#12343b' }}>Email: {student?.email}</span>
               </div>
               <div className="flex items-center space-x-2">
-                <FaGraduationCap className="text-gray-500" />
-                <span className="text-gray-800 font-semibold">Course: {student?.courseId?.courseName}</span>
+                <FaGraduationCap style={{ color: '#2d545e' }} />
+                <span className="font-semibold" style={{ color: '#12343b' }}>Course: {student?.courseId?.courseName}</span>
               </div>
             </div>
           </div>
@@ -154,18 +155,20 @@ const StudentDashboard = () => {
               <Link
                 key={index}
                 to={action.link}
-                className={`${action.color} border-2 p-6 rounded-lg transition-all duration-200 hover:shadow-md`}
+                className="bg-white p-6 rounded-lg transition-all duration-200 hover:shadow-2xl transform hover:scale-105 shadow-xl"
+                style={{ borderTop: `4px solid ${action.borderColor}` }}
               >
                 <div className="text-center">
                   <div className="mb-4">{action.icon}</div>
-                  <h3 className="text-lg font-bold text-gray-900 mb-2">{action.title}</h3>
-                  <p className="text-gray-700 text-sm font-semibold">{action.description}</p>
+                  <h3 className="text-lg font-bold mb-2" style={{ color: '#12343b' }}>{action.title}</h3>
+                  <p className="text-sm font-semibold" style={{ color: '#2d545e' }}>{action.description}</p>
                 </div>
               </Link>
             ))}
           </div>
         </div>
       </div>
+      <Footer />
     </div>
   );
 };

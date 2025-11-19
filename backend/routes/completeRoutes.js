@@ -28,6 +28,27 @@ router.post('/teacher/login', teacherController.teacherLogin);
 
 // Dashboard + subjects + courses
 router.get('/teacher/:teacherId/dashboard', verifyToken, teacherController.getTeacherDashboard);
+router.put('/teacher/:teacherId/profile', verifyToken, async (req, res) => {
+  try {
+    const { teacherId } = req.params;
+    const { name, email, phone, department, designation } = req.body;
+    const { Teacher } = require('../models/CompleteModels');
+    
+    const updatedTeacher = await Teacher.findByIdAndUpdate(
+      teacherId,
+      { name, email, phone, department, designation },
+      { new: true }
+    );
+    
+    if (!updatedTeacher) {
+      return res.status(404).json({ success: false, msg: 'Teacher not found' });
+    }
+    
+    res.json({ success: true, teacher: updatedTeacher });
+  } catch (error) {
+    res.status(500).json({ success: false, msg: error.message });
+  }
+});
 
 // Students by subject
 router.get('/teacher/:teacherId/subjects/:subjectId/students', verifyToken, teacherController.getStudentsBySubject);
@@ -62,6 +83,27 @@ router.post('/student/login', studentController.studentLogin);
 
 router.get('/student/:studentId/dashboard', verifyToken, studentController.getStudentDashboard);
 router.get('/student/:studentId/profile', verifyToken, studentController.getStudentProfile);
+router.put('/student/:studentId/profile', verifyToken, async (req, res) => {
+  try {
+    const { studentId } = req.params;
+    const { name, email, phone } = req.body;
+    const { Student } = require('../models/CompleteModels');
+    
+    const updatedStudent = await Student.findByIdAndUpdate(
+      studentId,
+      { name, email, phone },
+      { new: true }
+    );
+    
+    if (!updatedStudent) {
+      return res.status(404).json({ success: false, msg: 'Student not found' });
+    }
+    
+    res.json({ success: true, student: updatedStudent });
+  } catch (error) {
+    res.status(500).json({ success: false, msg: error.message });
+  }
+});
 router.get('/student/:studentId/attendance', verifyToken, studentController.getStudentAttendance);
 router.get('/student/:studentId/subjects', verifyToken, studentController.getStudentSubjects);
 router.get('/student/:studentId/notes', verifyToken, studentController.getNotesBySubject);
