@@ -9,7 +9,7 @@
     "frontend": "cd frontend && npm run dev",
     "dev": "concurrently \"npm run backend\" \"npm run frontend\"",
     "install-all": "npm install && cd backend && npm install && cd ../frontend && npm install",
-    "build": "cd frontend && npm run build",
+    "build": "cd frontend && npm install && npm run build",
     "setup": "npm run install-all && npm run setup-env",
     "setup-env": "node scripts/setupCompleteERP.js",
     "health-check": "node scripts/health-check.js",
