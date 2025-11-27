@@ -202,11 +202,7 @@ const Login = () => {
                   <u className="cursor-pointer text-blue-500">Create Account</u>
                 </Link>
               )}
-              {role === "teacher" && (
-                <Link to="/teacher-register">
-                  <u className="cursor-pointer text-blue-500">Create Account</u>
-                </Link>
-              )}
+
             </div>
 
             {/* Submit button */}

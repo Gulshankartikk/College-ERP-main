@@ -15,7 +15,7 @@ import Layout from "./Layout";
 import ErrorBoundary from "./components/ErrorBoundary";
 import Login from "./Pages/Common/Login";
 import Register from "./Pages/Common/Register";
-import TeacherRegister from "./Pages/Common/TeacherRegister";
+
 import AdminRegister from "./Pages/Common/AdminRegister";
 import StudentManagement from "./Pages/admin/StudentManagement";
 import AddSubject from "./Pages/admin/AddSubject";
@@ -58,7 +58,7 @@ const router = createBrowserRouter(
       <Route index element={<Login />} />
       <Route path="login" element={<Login />} />
       <Route path="register" element={<Register />} />
-      <Route path="teacher-register" element={<TeacherRegister />} />
+
       {/* student routes */}
       <Route path="student/:studentId">
         <Route path="dashboard" element={<StudentDashboard />} />
