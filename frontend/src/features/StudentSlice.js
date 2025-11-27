@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
-import { BASE_URL } from "../services/api";
+import { BASE_URL } from "../constants/api";
 
 let init = {
   attendance: {

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { BASE_URL } from "../../services/api";
+import { BASE_URL } from "../../constants/api";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";

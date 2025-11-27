@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { BASE_URL } from '../services/api';
+import { BASE_URL } from '../constants/api';
 import { toast } from 'react-toastify';
 import Cookies from 'js-cookie';
 

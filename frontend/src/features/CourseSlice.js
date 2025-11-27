@@ -3,7 +3,7 @@ import {
   createAsyncThunk,
   createSlice,
 } from "@reduxjs/toolkit";
-import { BASE_URL } from "../services/api";
+import { BASE_URL } from "../constants/api";
 import axios from "axios";
 
 let init = {

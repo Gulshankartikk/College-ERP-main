@@ -4,25 +4,10 @@
   "description": "College ERP Management System",
   "main": "start-server.js",
   "scripts": {
-    "start": "node scripts/start-server.js",
+    "start": "concurrently \"npm run backend\" \"npm run frontend\"",
     "backend": "cd backend && npm start",
     "frontend": "cd frontend && npm run dev",
-    "dev": "concurrently \"npm run backend\" \"npm run frontend\"",
-    "install-all": "npm install && cd backend && npm install && cd ../frontend && npm install",
-    "build": "cd frontend && npm install && npm run build",
-    "setup": "npm run install-all && npm run setup-env",
-    "setup-env": "node scripts/setupCompleteERP.js",
-    "health-check": "node scripts/health-check.js",
-    "clean": "rm -rf node_modules backend/node_modules frontend/node_modules",
-    "clean-logs": "rm -rf logs/* backend/logs/*",
-    "backup-db": "node scripts/backup-database.js",
-    "restore-db": "node scripts/restore-database.js",
-    "test": "npm run test:backend && npm run test:frontend",
-    "test:backend": "cd backend && npm test",
-    "test:frontend": "cd frontend && npm test",
-    "lint": "npm run lint:backend && npm run lint:frontend",
-    "lint:backend": "cd backend && npm run lint",
-    "lint:frontend": "cd frontend && npm run lint"
+    "install-all": "cd backend && npm install && cd ../frontend && npm install"
   },
   "keywords": [
     "college",
