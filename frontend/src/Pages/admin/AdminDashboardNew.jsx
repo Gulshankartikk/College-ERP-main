@@ -10,6 +10,7 @@ import {
   FaExclamationTriangle, FaClock, FaUserCog, FaBookOpen, FaClipboardCheck
 } from 'react-icons/fa';
 import Cookies from 'js-cookie';
+import BackButton from '../../components/BackButton';
 
 const AdminDashboardNew = () => {
   const navigate = useNavigate();
@@ -145,6 +146,7 @@ const AdminDashboardNew = () => {
 
   return (
     <div className="flex min-h-screen bg-gray-50">
+      <BackButton />
       {/* Sidebar */}
       <div className="w-64 bg-gradient-to-b from-gray-900 to-gray-800 text-white fixed h-full overflow-y-auto">
         <div className="p-6">

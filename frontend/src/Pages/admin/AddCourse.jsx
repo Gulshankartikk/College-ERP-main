@@ -4,6 +4,7 @@ import axios from 'axios';
 import { BASE_URL } from '../../constants/api';
 import { toast } from 'react-toastify';
 import Cookies from 'js-cookie';
+import BackButton from '../../components/BackButton';
 
 const AddCourse = () => {
   const navigate = useNavigate();
@@ -47,6 +48,7 @@ const AddCourse = () => {
 
   return (
     <div className="min-h-screen py-8" style={{ background: 'linear-gradient(135deg, #2d545e 0%, #12343b 100%)' }}>
+      <BackButton />
       <div className="max-w-4xl mx-auto px-4">
         <div className="bg-white rounded-lg shadow-xl p-8" style={{ borderTop: '4px solid #c89666' }}>
           <h1 className="text-3xl font-bold mb-8" style={{ color: '#12343b' }}>Add New Course</h1>

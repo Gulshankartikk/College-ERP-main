@@ -8,6 +8,7 @@ import {
   FaCheckCircle, FaClock, FaExclamationTriangle, FaDownload, FaTimes
 } from 'react-icons/fa';
 import Cookies from 'js-cookie';
+import BackButton from '../../components/BackButton';
 
 const StudentDashboardNew = () => {
   const { studentId } = useParams();
@@ -75,6 +76,7 @@ const StudentDashboardNew = () => {
 
   return (
     <div className="flex min-h-screen bg-gray-50">
+      <BackButton />
       {/* Sidebar */}
       <div className="w-64 bg-gradient-to-b from-blue-900 to-blue-800 text-white fixed h-full overflow-y-auto">
         <div className="p-6">

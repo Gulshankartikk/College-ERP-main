@@ -4,6 +4,7 @@ import axios from 'axios';
 import { BASE_URL } from '../../constants/api';
 import { toast } from 'react-toastify';
 import Cookies from 'js-cookie';
+import BackButton from '../../components/BackButton';
 
 const CreateTeacher = () => {
   const navigate = useNavigate();
@@ -86,6 +87,7 @@ const CreateTeacher = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 py-8">
+      <BackButton />
       <div className="max-w-4xl mx-auto px-4">
         <div className="bg-white rounded-lg shadow-md p-8">
           <h1 className="text-3xl font-bold text-gray-800 mb-8">Create Teacher Profile</h1>

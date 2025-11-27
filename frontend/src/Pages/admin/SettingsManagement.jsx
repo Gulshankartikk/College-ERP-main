@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { FaCog, FaSave, FaUser, FaLock, FaBell, FaDatabase } from 'react-icons/fa';
 import AdminHeader from '../../components/AdminHeader';
+import BackButton from '../../components/BackButton';
 
 const SettingsManagement = () => {
   const [activeTab, setActiveTab] = useState('general');
@@ -16,6 +17,7 @@ const SettingsManagement = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       <AdminHeader />
+      <BackButton />
       <div className="max-w-7xl mx-auto px-4 py-8">
         <div className="flex justify-between items-center mb-6">
           <div>

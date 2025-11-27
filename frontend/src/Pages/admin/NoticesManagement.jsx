@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { FaBell, FaPlus, FaEdit, FaTrash, FaEye } from 'react-icons/fa';
 import AdminHeader from '../../components/AdminHeader';
+import BackButton from '../../components/BackButton';
 
 const NoticesManagement = () => {
   const [notices] = useState([
@@ -36,6 +37,7 @@ const NoticesManagement = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       <AdminHeader />
+      <BackButton />
       <div className="max-w-7xl mx-auto px-4 py-8">
         <div className="flex justify-between items-center mb-6">
           <div>
