@@ -1,20 +1,26 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { FaChalkboardTeacher, FaPlus, FaEdit, FaTrash, FaEye } from 'react-icons/fa';
 import AdminHeader from '../../components/AdminHeader';
 import BackButton from '../../components/BackButton';
+import Cookies from 'js-cookie';
 
 const TeacherManagement = () => {
   const [teachers, setTeachers] = useState([]);
+  const navigate = useNavigate();
+  const userRole = localStorage.getItem('role') || sessionStorage.getItem('role');
 
   useEffect(() => {
-    // Mock data - replace with actual API call
+    if (userRole !== 'admin') {
+      navigate('/unauthorized');
+      return;
+    }
     setTeachers([
       { id: 1, name: 'Dr. John Smith', subject: 'Mathematics', email: 'john@college.edu', phone: '9876543210' },
       { id: 2, name: 'Prof. Sarah Johnson', subject: 'Physics', email: 'sarah@college.edu', phone: '9876543211' },
       { id: 3, name: 'Dr. Mike Wilson', subject: 'Chemistry', email: 'mike@college.edu', phone: '9876543212' }
     ]);
-  }, []);
+  }, [userRole, navigate]);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -61,8 +67,12 @@ const TeacherManagement = () => {
                     <td className="px-6 py-4 whitespace-nowrap text-gray-900">{teacher.phone}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
                       <button className="text-blue-600 hover:text-blue-900"><FaEye /></button>
-                      <button className="text-green-600 hover:text-green-900"><FaEdit /></button>
-                      <button className="text-red-600 hover:text-red-900"><FaTrash /></button>
+                      {userRole === 'admin' && (
+                        <>
+                          <button className="text-green-600 hover:text-green-900"><FaEdit /></button>
+                          <button className="text-red-600 hover:text-red-900"><FaTrash /></button>
+                        </>
+                      )}
                     </td>
                   </tr>
                 ))}

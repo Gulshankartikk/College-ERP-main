@@ -49,6 +49,7 @@ import UpdatePass from "./Pages/Common/UpdatePass";
 import ForgetPass from "./Pages/Common/ForgetPassword/ForgetPass";
 import VerifyOtp from "./Pages/Common/ForgetPassword/VerifyOtp";
 import NotFound from "./Pages/Common/NotFound";
+import Unauthorized from "./Pages/Unauthorized";
 
 // Additional Admin Pages
 import TeacherManagement from "./Pages/admin/TeacherManagement";
@@ -123,7 +124,8 @@ const router = createBrowserRouter(
         <Route path="settings" element={<SettingsManagement />} />
         <Route path="notices" element={<NoticesManagement />} />
       </Route>
-      {/* 404 route */}
+      {/* 404 and unauthorized routes */}
+      <Route path="unauthorized" element={<Unauthorized />} />
       <Route path="*" element={<NotFound />} />
     </Route>
   )

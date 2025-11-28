@@ -5,17 +5,17 @@ import BackButton from '../../components/BackButton';
 
 const FeeManagement = () => {
   const [feeRecords, setFeeRecords] = useState([
-    { id: 1, student: 'John Doe', rollNo: 'CS001', course: 'Computer Science', amount: 50000, paid: 30000, due: 20000, status: 'Partial', lastPayment: '2024-01-15' },
-    { id: 2, student: 'Jane Smith', rollNo: 'ME002', course: 'Mechanical Eng.', amount: 55000, paid: 55000, due: 0, status: 'Paid', lastPayment: '2024-01-10' },
-    { id: 3, student: 'Mike Johnson', rollNo: 'BA003', course: 'Business Admin', amount: 45000, paid: 0, due: 45000, status: 'Pending', lastPayment: null },
-    { id: 4, student: 'Sarah Wilson', rollNo: 'CS004', course: 'Computer Science', amount: 50000, paid: 15000, due: 35000, status: 'Partial', lastPayment: '2024-01-20' },
-    { id: 5, student: 'David Brown', rollNo: 'ME005', course: 'Mechanical Eng.', amount: 55000, paid: 10000, due: 45000, status: 'Partial', lastPayment: '2024-01-05' }
+    { id: 1, student: 'Gulshan kumar', rollNo: 'CS001', course: 'Computer Science', amount: 50000, paid: 30000, due: 20000, status: 'Partial', lastPayment: '2024-01-15' },
+    { id: 2, student: 'Aditya kumar', rollNo: 'ME002', course: 'Mechanical Eng.', amount: 55000, paid: 55000, due: 0, status: 'Paid', lastPayment: '2024-01-10' },
+    { id: 3, student: 'Ankita maurya', rollNo: 'BA003', course: 'Business Admin', amount: 45000, paid: 0, due: 45000, status: 'Pending', lastPayment: null },
+    { id: 4, student: 'Abhishek Gond', rollNo: 'CS004', course: 'Computer Science', amount: 50000, paid: 15000, due: 35000, status: 'Partial', lastPayment: '2024-01-20' },
+    { id: 5, student: 'sandy singh', rollNo: 'ME005', course: 'Mechanical Eng.', amount: 55000, paid: 10000, due: 45000, status: 'Partial', lastPayment: '2024-01-05' }
   ]);
 
   const [paymentHistory] = useState([
-    { id: 1, student: 'John Doe', amount: 15000, date: '2024-01-15', method: 'Online', receipt: 'RCP001' },
-    { id: 2, student: 'Jane Smith', amount: 25000, date: '2024-01-10', method: 'Cash', receipt: 'RCP002' },
-    { id: 3, student: 'Sarah Wilson', amount: 15000, date: '2024-01-20', method: 'Cheque', receipt: 'RCP003' }
+    { id: 1, student: 'parmar', amount: 15000, date: '2025-01-15', method: 'Online', receipt: 'RCP001' },
+    { id: 2, student: 'utkarsh', amount: 25000, date: '2025-01-10', method: 'Cash', receipt: 'RCP002' },
+    { id: 3, student: 'abhinav', amount: 15000, date: '2025-01-20', method: 'Cheque', receipt: 'RCP003' }
   ]);
 
   const [showPaymentModal, setShowPaymentModal] = useState(false);

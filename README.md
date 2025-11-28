@@ -5,25 +5,44 @@ A comprehensive Enterprise Resource Planning (ERP) system designed for education
 ## 🚀 Features
 
 ### Admin Panel
-- **Dashboard**: Overview of system statistics
-- **User Management**: Create and manage students and teachers
-- **Course Management**: Add courses and subjects
-- **Assignment Tracking**: Monitor teacher activities
-- **Attendance Reports**: Comprehensive attendance analytics
+- **Dashboard**: Real-time system statistics and analytics
+- **User Management**: Full CRUD operations for students and teachers
+- **Course Management**: Create and manage courses with subjects
+- **Subject Management**: Add subjects with semester, branch, and credits
+- **Fee Management**: Track payments, dues, and generate reports
+- **Attendance Management**: Monitor attendance across all classes
+- **Exam Management**: Schedule and manage examinations
+- **Library Management**: Manage library resources and books
+- **Timetable Management**: Create and manage class schedules
+- **Notices Management**: Create, edit, and publish institutional notices
+- **Reports**: Generate comprehensive academic and financial reports
+- **Settings**: System configuration and preferences
+- **Role-Based Access Control**: Secure access management
+- **Auto-Logout**: 2-minute inactivity timeout for security
 
 ### Teacher Portal
-- **Dashboard**: Personal teaching overview
-- **Attendance Management**: Mark and track student attendance
-- **Assignment Upload**: Create and manage assignments
+- **Dashboard**: Personal teaching overview with quick actions
+- **Attendance Management**: Mark attendance by subject and date
+- **Assignment Management**: Create, edit, and track assignments
 - **Study Materials**: Upload and share learning resources
-- **Student Progress**: Monitor individual student performance
+- **Marks Management**: Record and manage student marks
+- **Timetable**: View weekly teaching schedule
+- **Notices**: View institutional notices
+- **Leave Management**: Apply for leave requests
+- **Student List**: View students (read-only access)
+- **Profile Management**: Update personal information
 
 ### Student Portal
-- **Dashboard**: Personal academic overview
-- **Attendance Tracking**: View attendance records
-- **Assignments**: Access and submit assignments
-- **Study Materials**: Download course materials
+- **Dashboard**: Personal academic overview and statistics
+- **Attendance Tracking**: View detailed attendance records
+- **Assignments**: Access and view assignments by subject
+- **Study Materials**: Download course materials and resources
 - **Notes**: Access teacher-uploaded notes
+- **Timetable**: View weekly class schedule
+- **Notices**: View institutional announcements
+- **Fee Management**: View fee details and payment history
+- **Leave Management**: Apply for leave requests
+- **Profile Management**: Update personal information
 
 ## 🛠️ Technology Stack
 
@@ -82,15 +101,36 @@ npm start
 
 ### Admin Access
 - **Username**: admin
-- **Password**: admin
+- **Password**: admin123
 
 ### Teacher Access
 - Teachers are created by admin
-- Default password: teacher123
+- **Username**: teacher
+- **Password**: teacher123
 
 ### Student Access
 - Students are created by admin
 - Default password: student123
+
+## 🔑 Role-Based Access Control
+
+### Admin Permissions
+- Full access to all modules
+- Create, read, update, delete operations on all entities
+- Access to teacher and student management pages
+- System configuration and settings
+
+### Teacher Permissions
+- Read-only access to student management
+- Full access to own teaching modules (attendance, assignments, materials, marks)
+- Cannot edit or delete students
+- Cannot access teacher management
+
+### Student Permissions
+- Read-only access to own academic data
+- View attendance, assignments, materials, notices
+- Cannot access management pages
+- Profile update only
 
 ## 📁 Project Structure
 
@@ -169,45 +209,71 @@ npm run lint          # Run linting
 - `POST /api/admin/login` - Admin login
 - `POST /api/teacher/login` - Teacher login
 - `POST /api/student/login` - Student login
+- `POST /api/logout` - Logout (all roles)
 
-### Admin Routes
-- `GET /api/admin/dashboard` - Dashboard data
+### Admin Routes (Protected)
+- `GET /api/admin/dashboard` - Dashboard statistics
+- `GET /api/admin/teachers` - Get all teachers
 - `POST /api/admin/teachers` - Create teacher
+- `PUT /api/admin/teachers/:id` - Update teacher
+- `DELETE /api/admin/teachers/:id` - Delete teacher
+- `GET /api/admin/students` - Get all students
 - `POST /api/admin/students` - Create student
+- `PUT /api/admin/students/:id` - Update student
+- `DELETE /api/admin/students/:id` - Delete student
+- `GET /api/admin/courses` - Get all courses (read-only for authenticated users)
 - `POST /api/admin/courses` - Create course
+- `GET /api/admin/subjects` - Get all subjects (read-only for authenticated users)
 - `POST /api/admin/subjects` - Create subject
 
-### Teacher Routes
+### Teacher Routes (Protected)
 - `GET /api/teacher/dashboard` - Teacher dashboard
 - `POST /api/teacher/attendance` - Mark attendance
+- `GET /api/teacher/attendance` - Get attendance records
 - `POST /api/teacher/assignments` - Create assignment
+- `GET /api/teacher/assignments` - Get assignments
 - `POST /api/teacher/materials` - Upload materials
+- `GET /api/teacher/materials` - Get materials
+- `POST /api/teacher/marks` - Add marks
+- `GET /api/teacher/students` - View students (read-only)
 
-### Student Routes
+### Student Routes (Protected)
 - `GET /api/student/dashboard` - Student dashboard
 - `GET /api/student/attendance` - View attendance
 - `GET /api/student/assignments` - View assignments
 - `GET /api/student/materials` - Access materials
+- `GET /api/student/marks` - View marks
+- `GET /api/student/fees` - View fee details
+- `GET /api/student/notices` - View notices
 
 ## 🔒 Security Features
 
-- **JWT Authentication**: Secure token-based authentication
-- **Role-based Access**: Admin, Teacher, Student roles
-- **Password Hashing**: Bcrypt encryption
-- **Input Validation**: Server-side validation
+- **JWT Authentication**: Secure token-based authentication with HTTP-only cookies
+- **Role-Based Access Control (RBAC)**: Three-tier access system (Admin, Teacher, Student)
+- **Auto-Logout**: 2-minute inactivity timeout with activity tracking
+- **Password Hashing**: Bcrypt encryption for all passwords
+- **Input Validation**: Server-side validation for all inputs
 - **CORS Protection**: Cross-origin request security
+- **Protected Routes**: Frontend and backend route protection
+- **Session Management**: Secure session handling with cookies
+- **Back Button Prevention**: Prevents unauthorized access after logout
 
 ## 📊 Database Schema
 
 ### Core Models
-- **Admin**: System administrators
-- **Teacher**: Faculty members
-- **Student**: Enrolled students
-- **Course**: Academic programs
-- **Subject**: Course subjects
-- **Attendance**: Attendance records
-- **Assignment**: Student assignments
-- **StudyMaterial**: Learning resources
+- **Admin**: System administrators with full access
+- **Teacher**: Faculty members with teaching credentials
+- **Student**: Enrolled students with academic records
+- **Course**: Academic programs (courseName, courseCode, duration)
+- **Subject**: Course subjects (subjectName, subjectCode, semester, branch, credits, isElective)
+- **Attendance**: Daily attendance records with date and status
+- **Assignment**: Student assignments with deadlines and submissions
+- **StudyMaterial**: Learning resources and documents
+- **Marks**: Student performance records
+- **Fee**: Fee structure and payment tracking
+- **Notice**: Institutional announcements with priority levels
+- **Leave**: Leave applications and approvals
+- **Timetable**: Class schedules and time slots
 
 ## 🚀 Deployment
 
@@ -263,16 +329,210 @@ For support and questions:
 - Review the documentation
 - Create an issue in the repository
 
+## ✅ Completed Features
+
+- [x] Role-based access control
+- [x] Auto-logout on inactivity
+- [x] Complete admin panel with all management modules
+- [x] Teacher portal with attendance, assignments, materials, marks
+- [x] Student portal with academic tracking
+- [x] Fee management with payment tracking
+- [x] Notice management with create/edit/delete
+- [x] Timetable management
+- [x] Subject filtering across modules
+- [x] Responsive design for all pages
+- [x] Toast notifications for user feedback
+- [x] Modal-based forms for better UX
+
 ## 🎯 Future Enhancements
 
-- [ ] Email notifications
-- [ ] Advanced reporting
-- [ ] Mobile app
-- [ ] Integration with external systems
-- [ ] Advanced analytics dashboard
-- [ ] Bulk operations
-- [ ] Export functionality
+- [ ] Email notifications for important events
+- [ ] SMS alerts for attendance and fees
+- [ ] Advanced reporting with charts and graphs
+- [ ] Mobile app (React Native)
+- [ ] Integration with payment gateways
+- [ ] Biometric attendance integration
+- [ ] Video conferencing integration
+- [ ] Parent portal
+- [ ] Alumni management
+- [ ] Hostel management
+- [ ] Transport management
+- [ ] Bulk import/export operations
+- [ ] Multi-language support
+- [ ] Dark mode theme
+
+## 📸 Screenshots
+
+### Admin Dashboard
+- Real-time statistics and analytics
+- Quick access to all management modules
+- System health monitoring
+
+### Teacher Dashboard
+- Teaching overview with subject-wise statistics
+- Quick actions for common tasks
+- Recent activities and notifications
+
+### Student Dashboard
+- Academic performance overview
+- Attendance summary
+- Upcoming assignments and deadlines
+
+## 🔄 Recent Updates
+
+### Version 2.0 (Latest)
+- Added role-based access control
+- Implemented auto-logout feature (2-minute timeout)
+- Completed fee management module
+- Added notice management with full CRUD
+- Enhanced teacher pages (attendance, assignments, materials, marks)
+- Enhanced student pages (timetable, notices, fees, leave)
+- Fixed subject validation with semester and branch
+- Added unauthorized access page
+- Improved UI/UX with modals and toast notifications
+- Fixed all 404 errors by creating missing admin pages
+
+## 🔧 Admin Pages Implementation
+
+### Pages Created
+All admin management pages have been implemented with full functionality:
+
+1. **Teacher Management** (`/admin/teachers`)
+   - View all teachers with contact information
+   - Add/edit/delete functionality (admin only)
+   - Subject assignments tracking
+   - Role-based access control
+
+2. **Course Management** (`/admin/courses`)
+   - Course catalog with enrollment numbers
+   - Duration and code information
+   - Student count tracking
+   - Add/edit/delete courses
+
+3. **Fee Management** (`/admin/fees`)
+   - Payment tracking and status
+   - Financial summaries with statistics
+   - Due amount calculations
+   - Export functionality (CSV)
+   - Payment history tracking
+   - Add payment, view details, edit fee modals
+
+4. **Attendance Management** (`/admin/attendance`)
+   - Attendance percentage tracking
+   - Visual progress bars
+   - Status indicators (Good/Average/Poor)
+   - Date range filtering
+   - Export reports
+
+5. **Exam Management** (`/admin/exams`)
+   - Exam scheduling calendar
+   - Status tracking (Scheduled/Completed/Upcoming)
+   - Quick action buttons
+   - Exam details management
+   - Results publishing
+
+6. **Library Management** (`/admin/library`)
+   - Book inventory management
+   - Availability tracking
+   - Category-based organization
+   - Issue/return functionality
+   - Library statistics
+
+7. **Timetable Management** (`/admin/timetable`)
+   - Weekly schedule grid
+   - Teacher assignments
+   - Subject allocation
+   - Time slot management
+   - Class scheduling
+
+8. **Reports Management** (`/admin/reports`)
+   - Multiple report types (Academic, Financial, Attendance, Performance)
+   - Export options (PDF/Excel/CSV)
+   - Recent reports history
+   - Custom date ranges
+   - Report templates
+
+9. **Settings Management** (`/admin/settings`)
+   - Tabbed interface for different settings
+   - System configuration options
+   - Security settings
+   - Notification preferences
+   - User preferences
+
+10. **Notices Management** (`/admin/notices`)
+    - Create, edit, delete notices with modals
+    - Priority levels (Low/Medium/High/Urgent)
+    - Target audience selection
+    - Notice templates
+    - View full notice details
+    - Toast notifications for actions
+
+### Common Features Across All Pages
+- **Consistent Design**: All pages follow the same design pattern with AdminHeader and BackButton
+- **Responsive Layout**: Mobile-friendly responsive design
+- **Interactive Elements**: Buttons, forms, and navigation elements
+- **Search & Filter**: Most pages include search and filtering capabilities
+- **Action Buttons**: Add, edit, delete, and view functionality
+- **Statistics Cards**: Summary information displayed prominently
+- **Tables**: Data displayed in organized, sortable tables
+- **Modal Forms**: Better UX with modal-based forms
+- **Toast Notifications**: User feedback for all actions
+
+### Routing Configuration
+All routes properly configured in `frontend/src/main.jsx`:
+```jsx
+<Route path="admin">
+  <Route path="dashboard" element={<AdminDashboard />} />
+  <Route path="teachers" element={<TeacherManagement />} />
+  <Route path="students" element={<StudentManagement />} />
+  <Route path="courses" element={<CourseManagement />} />
+  <Route path="fees" element={<FeeManagement />} />
+  <Route path="attendance" element={<AttendanceManagement />} />
+  <Route path="exams" element={<ExamManagement />} />
+  <Route path="library" element={<LibraryManagement />} />
+  <Route path="timetable" element={<TimetableManagement />} />
+  <Route path="reports" element={<ReportsManagement />} />
+  <Route path="settings" element={<SettingsManagement />} />
+  <Route path="notices" element={<NoticesManagement />} />
+</Route>
+```
+
+### Files Created
+- `frontend/src/Pages/admin/TeacherManagement.jsx`
+- `frontend/src/Pages/admin/CourseManagement.jsx`
+- `frontend/src/Pages/admin/FeeManagement.jsx`
+- `frontend/src/Pages/admin/AttendanceManagement.jsx`
+- `frontend/src/Pages/admin/ExamManagement.jsx`
+- `frontend/src/Pages/admin/LibraryManagement.jsx`
+- `frontend/src/Pages/admin/TimetableManagement.jsx`
+- `frontend/src/Pages/admin/ReportsManagement.jsx`
+- `frontend/src/Pages/admin/SettingsManagement.jsx`
+- `frontend/src/Pages/admin/NoticesManagement.jsx`
+- `frontend/src/Pages/Unauthorized.jsx`
+
+### Testing Status
+✅ All routes resolve correctly
+✅ No 404 errors from admin dashboard navigation
+✅ All pages load with proper styling and functionality
+✅ Navigation between pages works seamlessly
+✅ Role-based access control implemented
+✅ Back button functionality preserved
+
+## 👥 Team & Support
+
+For support, bug reports, or feature requests:
+- Create an issue in the repository
+- Check existing documentation
+- Review troubleshooting guide
+
+## 🙏 Acknowledgments
+
+- React team for the amazing framework
+- MongoDB team for the robust database
+- All contributors and testers
 
 ---
 
-**College ERP Management System** - Streamlining educational administration with modern technology.
+**College ERP Management System v2.0** - Streamlining educational administration with modern technology.
+
+*Built with ❤️ for educational institutions*

@@ -4,9 +4,11 @@ import { FaChalkboardTeacher, FaUserGraduate, FaSignOutAlt } from 'react-icons/f
 import Cookies from 'js-cookie';
 import axios from 'axios';
 import { BASE_URL } from '../constants/api';
+import useAutoLogout from '../hooks/useAutoLogout';
 
 const TeacherHeader = ({ currentRole = 'teacher' }) => {
   const navigate = useNavigate();
+  const logout = useAutoLogout(120000); // 2 minutes
   const [studentId, setStudentId] = useState(null);
   const [userRole, setUserRole] = useState(null);
 
@@ -44,8 +46,7 @@ const TeacherHeader = ({ currentRole = 'teacher' }) => {
   };
 
   const handleLogout = () => {
-    Cookies.remove('token');
-    navigate('/');
+    logout();
   };
 
   return (

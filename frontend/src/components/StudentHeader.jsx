@@ -2,13 +2,14 @@ import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaSignOutAlt, FaGraduationCap } from 'react-icons/fa';
 import Cookies from 'js-cookie';
+import useAutoLogout from '../hooks/useAutoLogout';
 
 const StudentHeader = ({ studentId, studentName }) => {
   const navigate = useNavigate();
+  const logout = useAutoLogout(120000); // 2 minutes
 
   const handleLogout = () => {
-    Cookies.remove('token');
-    navigate('/login');
+    logout();
   };
 
   return (

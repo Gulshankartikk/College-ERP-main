@@ -6,6 +6,7 @@ import { FaEdit, FaTrash, FaEye, FaPlus } from 'react-icons/fa';
 import AdminHeader from '../../components/AdminHeader';
 import BackButton from '../../components/BackButton';
 import Cookies from 'js-cookie';
+import { useNavigate } from 'react-router-dom';
 
 const StudentManagement = () => {
   const [students, setStudents] = useState([]);
@@ -21,11 +22,19 @@ const StudentManagement = () => {
     rollNo: '',
     password: ''
   });
+  const navigate = useNavigate();
+  const userRole = localStorage.getItem('role') || sessionStorage.getItem('role');
+  const isAdmin = userRole === 'admin';
+  const isTeacher = userRole === 'teacher';
 
   useEffect(() => {
+    if (!isAdmin && !isTeacher) {
+      navigate('/unauthorized');
+      return;
+    }
     fetchStudents();
     fetchCourses();
-  }, []);
+  }, [isAdmin, isTeacher, navigate]);
 
   const fetchStudents = async () => {
     try {
@@ -139,17 +148,19 @@ const StudentManagement = () => {
               <h1 className="text-3xl font-bold text-gray-800">Student Management</h1>
               <p className="text-gray-600 mt-2">Manage all student records</p>
             </div>
-            <button
-              onClick={() => {
-                setEditingStudent(null);
-                setFormData({ name: '', email: '', phone: '', courseId: '', rollNo: '', password: '' });
-                setShowModal(true);
-              }}
-              className="flex items-center space-x-2 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
-            >
-              <FaPlus />
-              <span>Add Student</span>
-            </button>
+            {isAdmin && (
+              <button
+                onClick={() => {
+                  setEditingStudent(null);
+                  setFormData({ name: '', email: '', phone: '', courseId: '', rollNo: '', password: '' });
+                  setShowModal(true);
+                }}
+                className="flex items-center space-x-2 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
+              >
+                <FaPlus />
+                <span>Add Student</span>
+              </button>
+            )}
           </div>
 
           <div className="bg-white rounded-lg shadow-md overflow-hidden">
@@ -190,18 +201,25 @@ const StudentManagement = () => {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                         <div className="flex space-x-2">
-                          <button
-                            onClick={() => handleEdit(student)}
-                            className="text-blue-600 hover:text-blue-900"
-                          >
-                            <FaEdit />
+                          <button className="text-blue-600 hover:text-blue-900">
+                            <FaEye />
                           </button>
-                          <button
-                            onClick={() => handleDelete(student._id)}
-                            className="text-red-600 hover:text-red-900"
-                          >
-                            <FaTrash />
-                          </button>
+                          {isAdmin && (
+                            <>
+                              <button
+                                onClick={() => handleEdit(student)}
+                                className="text-green-600 hover:text-green-900"
+                              >
+                                <FaEdit />
+                              </button>
+                              <button
+                                onClick={() => handleDelete(student._id)}
+                                className="text-red-600 hover:text-red-900"
+                              >
+                                <FaTrash />
+                              </button>
+                            </>
+                          )}
                         </div>
                       </td>
                     </tr>

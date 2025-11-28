@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { FaBell, FaPlus, FaEdit, FaTrash, FaEye } from 'react-icons/fa';
+import { FaBell, FaPlus, FaEdit, FaTrash, FaEye, FaTimes } from 'react-icons/fa';
 import AdminHeader from '../../components/AdminHeader';
 import BackButton from '../../components/BackButton';
+import { toast } from 'react-toastify';
 
 const NoticesManagement = () => {
-  const [notices] = useState([
+  const [notices, setNotices] = useState([
     { 
       id: 1, 
       title: 'Mid-Term Examination Schedule', 
@@ -34,6 +35,70 @@ const NoticesManagement = () => {
     }
   ]);
 
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [showViewModal, setShowViewModal] = useState(false);
+  const [selectedNotice, setSelectedNotice] = useState(null);
+  const [formData, setFormData] = useState({
+    title: '',
+    content: '',
+    priority: 'Medium',
+    audience: 'All Users',
+    expiryDate: ''
+  });
+
+  const handleCreate = () => {
+    if (!formData.title || !formData.content) {
+      toast.error('Please fill all required fields');
+      return;
+    }
+    const newNotice = {
+      id: notices.length + 1,
+      ...formData,
+      date: new Date().toISOString().split('T')[0],
+      status: 'Active'
+    };
+    setNotices([newNotice, ...notices]);
+    setFormData({ title: '', content: '', priority: 'Medium', audience: 'All Users', expiryDate: '' });
+    setShowCreateModal(false);
+    toast.success('Notice created successfully');
+  };
+
+  const handleEdit = () => {
+    if (!formData.title || !formData.content) {
+      toast.error('Please fill all required fields');
+      return;
+    }
+    setNotices(notices.map(n => n.id === selectedNotice.id ? { ...n, ...formData } : n));
+    setShowEditModal(false);
+    setSelectedNotice(null);
+    toast.success('Notice updated successfully');
+  };
+
+  const handleDelete = (id) => {
+    if (window.confirm('Are you sure you want to delete this notice?')) {
+      setNotices(notices.filter(n => n.id !== id));
+      toast.success('Notice deleted successfully');
+    }
+  };
+
+  const openEditModal = (notice) => {
+    setSelectedNotice(notice);
+    setFormData({
+      title: notice.title,
+      content: notice.content,
+      priority: notice.priority,
+      audience: notice.audience,
+      expiryDate: notice.expiryDate || ''
+    });
+    setShowEditModal(true);
+  };
+
+  const openViewModal = (notice) => {
+    setSelectedNotice(notice);
+    setShowViewModal(true);
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       <AdminHeader />
@@ -44,7 +109,10 @@ const NoticesManagement = () => {
             <h1 className="text-3xl font-bold text-gray-800">Notices Management</h1>
             <p className="text-gray-600">Create and manage institutional notices</p>
           </div>
-          <button className="flex items-center space-x-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
+          <button 
+            onClick={() => setShowCreateModal(true)}
+            className="flex items-center space-x-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+          >
             <FaPlus />
             <span>Create Notice</span>
           </button>
@@ -90,67 +158,7 @@ const NoticesManagement = () => {
           </div>
         </div>
 
-        {/* Create Notice Form */}
-        <div className="bg-white rounded-lg shadow-md p-6 mb-8">
-          <h2 className="text-xl font-bold text-gray-800 mb-4">Create New Notice</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Notice Title</label>
-              <input
-                type="text"
-                placeholder="Enter notice title..."
-                className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Priority</label>
-              <select className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                <option>Low</option>
-                <option>Medium</option>
-                <option>High</option>
-                <option>Urgent</option>
-              </select>
-            </div>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Target Audience</label>
-              <select className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                <option>All Users</option>
-                <option>Students</option>
-                <option>Teachers</option>
-                <option>Staff</option>
-                <option>Parents</option>
-              </select>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Expiry Date</label>
-              <input
-                type="date"
-                className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-          </div>
-          <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700 mb-2">Notice Content</label>
-            <textarea
-              rows="4"
-              placeholder="Enter notice content..."
-              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-          <div className="flex space-x-3">
-            <button className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
-              Publish Notice
-            </button>
-            <button className="px-6 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600">
-              Save as Draft
-            </button>
-            <button className="px-6 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600">
-              Schedule
-            </button>
-          </div>
-        </div>
+
 
         {/* Notices List */}
         <div className="bg-white rounded-lg shadow-md overflow-hidden">
@@ -198,9 +206,9 @@ const NoticesManagement = () => {
                       </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
-                      <button className="text-blue-600 hover:text-blue-900"><FaEye /></button>
-                      <button className="text-green-600 hover:text-green-900"><FaEdit /></button>
-                      <button className="text-red-600 hover:text-red-900"><FaTrash /></button>
+                      <button onClick={() => openViewModal(notice)} className="text-blue-600 hover:text-blue-900"><FaEye /></button>
+                      <button onClick={() => openEditModal(notice)} className="text-green-600 hover:text-green-900"><FaEdit /></button>
+                      <button onClick={() => handleDelete(notice.id)} className="text-red-600 hover:text-red-900"><FaTrash /></button>
                     </td>
                   </tr>
                 ))}
@@ -209,24 +217,190 @@ const NoticesManagement = () => {
           </div>
         </div>
 
-        {/* Notice Templates */}
-        <div className="mt-8 bg-white rounded-lg shadow-md p-6">
-          <h2 className="text-xl font-bold text-gray-800 mb-4">Quick Templates</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-blue-500 cursor-pointer">
-              <h3 className="font-medium text-gray-800 mb-2">Exam Notice</h3>
-              <p className="text-sm text-gray-600">Template for examination announcements</p>
-            </div>
-            <div className="p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-blue-500 cursor-pointer">
-              <h3 className="font-medium text-gray-800 mb-2">Holiday Notice</h3>
-              <p className="text-sm text-gray-600">Template for holiday announcements</p>
-            </div>
-            <div className="p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-blue-500 cursor-pointer">
-              <h3 className="font-medium text-gray-800 mb-2">Fee Notice</h3>
-              <p className="text-sm text-gray-600">Template for fee-related notices</p>
+        {/* Create Modal */}
+        {showCreateModal && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white rounded-lg p-6 w-full max-w-2xl">
+              <div className="flex justify-between items-center mb-4">
+                <h2 className="text-2xl font-bold text-gray-800">Create New Notice</h2>
+                <button onClick={() => setShowCreateModal(false)} className="text-gray-500 hover:text-gray-700">
+                  <FaTimes size={24} />
+                </button>
+              </div>
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Notice Title *</label>
+                  <input
+                    type="text"
+                    value={formData.title}
+                    onChange={(e) => setFormData({...formData, title: e.target.value})}
+                    placeholder="Enter notice title..."
+                    className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Priority</label>
+                    <select 
+                      value={formData.priority}
+                      onChange={(e) => setFormData({...formData, priority: e.target.value})}
+                      className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
+                      <option>Low</option>
+                      <option>Medium</option>
+                      <option>High</option>
+                      <option>Urgent</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Target Audience</label>
+                    <select 
+                      value={formData.audience}
+                      onChange={(e) => setFormData({...formData, audience: e.target.value})}
+                      className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
+                      <option>All Users</option>
+                      <option>Students</option>
+                      <option>Teachers</option>
+                      <option>Staff</option>
+                    </select>
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Notice Content *</label>
+                  <textarea
+                    value={formData.content}
+                    onChange={(e) => setFormData({...formData, content: e.target.value})}
+                    rows="4"
+                    placeholder="Enter notice content..."
+                    className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+              </div>
+              <div className="flex justify-end space-x-3 mt-6">
+                <button onClick={() => setShowCreateModal(false)} className="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400">
+                  Cancel
+                </button>
+                <button onClick={handleCreate} className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
+                  Create Notice
+                </button>
+              </div>
             </div>
           </div>
-        </div>
+        )}
+
+        {/* Edit Modal */}
+        {showEditModal && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white rounded-lg p-6 w-full max-w-2xl">
+              <div className="flex justify-between items-center mb-4">
+                <h2 className="text-2xl font-bold text-gray-800">Edit Notice</h2>
+                <button onClick={() => setShowEditModal(false)} className="text-gray-500 hover:text-gray-700">
+                  <FaTimes size={24} />
+                </button>
+              </div>
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Notice Title *</label>
+                  <input
+                    type="text"
+                    value={formData.title}
+                    onChange={(e) => setFormData({...formData, title: e.target.value})}
+                    className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Priority</label>
+                    <select 
+                      value={formData.priority}
+                      onChange={(e) => setFormData({...formData, priority: e.target.value})}
+                      className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
+                      <option>Low</option>
+                      <option>Medium</option>
+                      <option>High</option>
+                      <option>Urgent</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Target Audience</label>
+                    <select 
+                      value={formData.audience}
+                      onChange={(e) => setFormData({...formData, audience: e.target.value})}
+                      className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
+                      <option>All Users</option>
+                      <option>Students</option>
+                      <option>Teachers</option>
+                      <option>Staff</option>
+                    </select>
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Notice Content *</label>
+                  <textarea
+                    value={formData.content}
+                    onChange={(e) => setFormData({...formData, content: e.target.value})}
+                    rows="4"
+                    className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+              </div>
+              <div className="flex justify-end space-x-3 mt-6">
+                <button onClick={() => setShowEditModal(false)} className="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400">
+                  Cancel
+                </button>
+                <button onClick={handleEdit} className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
+                  Update Notice
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* View Modal */}
+        {showViewModal && selectedNotice && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white rounded-lg p-6 w-full max-w-2xl">
+              <div className="flex justify-between items-center mb-4">
+                <h2 className="text-2xl font-bold text-gray-800">Notice Details</h2>
+                <button onClick={() => setShowViewModal(false)} className="text-gray-500 hover:text-gray-700">
+                  <FaTimes size={24} />
+                </button>
+              </div>
+              <div className="space-y-4">
+                <div>
+                  <h3 className="text-xl font-semibold text-gray-800">{selectedNotice.title}</h3>
+                  <p className="text-sm text-gray-500">Posted on: {selectedNotice.date}</p>
+                </div>
+                <div className="flex space-x-4">
+                  <span className={`px-3 py-1 text-sm font-semibold rounded-full ${
+                    selectedNotice.priority === 'High' || selectedNotice.priority === 'Urgent' ? 'bg-red-100 text-red-800' :
+                    selectedNotice.priority === 'Medium' ? 'bg-yellow-100 text-yellow-800' :
+                    'bg-green-100 text-green-800'
+                  }`}>
+                    {selectedNotice.priority} Priority
+                  </span>
+                  <span className="px-3 py-1 text-sm font-semibold rounded-full bg-blue-100 text-blue-800">
+                    {selectedNotice.audience}
+                  </span>
+                  <span className="px-3 py-1 text-sm font-semibold rounded-full bg-green-100 text-green-800">
+                    {selectedNotice.status}
+                  </span>
+                </div>
+                <div className="bg-gray-50 p-4 rounded-lg">
+                  <p className="text-gray-700 whitespace-pre-wrap">{selectedNotice.content}</p>
+                </div>
+              </div>
+              <div className="flex justify-end mt-6">
+                <button onClick={() => setShowViewModal(false)} className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

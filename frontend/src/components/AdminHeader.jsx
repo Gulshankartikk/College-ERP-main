@@ -2,14 +2,14 @@ import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaSignOutAlt, FaUserShield, FaChalkboardTeacher, FaGraduationCap } from 'react-icons/fa';
 import Cookies from 'js-cookie';
+import useAutoLogout from '../hooks/useAutoLogout';
 
 const AdminHeader = ({ currentRole = 'admin' }) => {
   const navigate = useNavigate();
+  const logout = useAutoLogout(120000); // 2 minutes
 
   const handleLogout = () => {
-    Cookies.remove('token');
-    localStorage.removeItem('token');
-    navigate('/login');
+    logout();
   };
 
   const switchRole = (role) => {
