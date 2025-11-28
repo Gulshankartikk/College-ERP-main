@@ -62,6 +62,10 @@ import TimetableManagement from "./Pages/admin/TimetableManagement";
 import ReportsManagement from "./Pages/admin/ReportsManagement";
 import SettingsManagement from "./Pages/admin/SettingsManagement";
 import NoticesManagement from "./Pages/admin/NoticesManagement";
+import AdminUpload from "./Pages/admin/AdminUpload";
+import TeacherUpload from "./Pages/Teacher/TeacherUpload";
+import AttendanceUpload from "./Pages/Teacher/AttendanceUpload";
+import StudentResources from "./Pages/Student/StudentResources";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -83,6 +87,7 @@ const router = createBrowserRouter(
         <Route path="notices" element={<StudentNotices />} />
         <Route path="fees" element={<StudentFees />} />
         <Route path="leave" element={<StudentLeave />} />
+        <Route path="resources" element={<StudentResources />} />
         <Route path="updatePassword" element={<UpdatePass />} />
         <Route path="forgetPassword" element={<ForgetPass />} />
         <Route path="forgetPassword/verifyotp" element={<VerifyOtp />} />
@@ -100,6 +105,8 @@ const router = createBrowserRouter(
         <Route path="timetable" element={<TeacherTimetable />} />
         <Route path="notices" element={<TeacherNotices />} />
         <Route path="leave" element={<TeacherLeave />} />
+        <Route path="upload" element={<TeacherUpload />} />
+        <Route path="attendance/upload" element={<AttendanceUpload />} />
         <Route path="updatePassword" element={<UpdatePass />} />
         <Route path="forgetPassword" element={<ForgetPass />} />
         <Route path="forgetPassword/verifyotp" element={<VerifyOtp />} />
@@ -123,6 +130,8 @@ const router = createBrowserRouter(
         <Route path="reports" element={<ReportsManagement />} />
         <Route path="settings" element={<SettingsManagement />} />
         <Route path="notices" element={<NoticesManagement />} />
+        <Route path="upload" element={<AdminUpload />} />
+        <Route path="register" element={<AdminRegister />} />
       </Route>
       {/* 404 and unauthorized routes */}
       <Route path="unauthorized" element={<Unauthorized />} />

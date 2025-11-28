@@ -13,7 +13,9 @@ const {
   Notices,
   StudyMaterial,
   Fee,
-  Report
+  Report,
+  Library,
+  Timetable
 } = require('../models/CompleteModels');
 const { sendNotification } = require('./notificationController');
 
@@ -459,6 +461,8 @@ const getComprehensiveAttendanceReport = async (req, res) => {
     const courseStats = {};
 
     attendance.forEach(record => {
+      if (!record.student || !record.subject || !record.course) return;
+
       const studentId = record.student._id.toString();
       const subjectId = record.subject._id.toString();
       const courseId = record.course._id.toString();
@@ -794,6 +798,186 @@ const deleteManualReport = async (req, res) => {
   }
 };
 
+// ================= TIMETABLE MANAGEMENT =================
+
+// Add Timetable Entry
+const addTimetable = async (req, res) => {
+  try {
+    const { courseId, semester, day, timeSlot, subjectId, teacherId, roomNo } = req.body;
+
+    const timetable = new Timetable({
+      courseId, semester, day, timeSlot, subjectId, teacherId, roomNo
+    });
+    await timetable.save();
+
+    res.status(201).json({ success: true, msg: 'Timetable entry added', timetable });
+  } catch (error) {
+    res.status(500).json({ success: false, msg: error.message });
+  }
+};
+
+// Get Timetable
+const getTimetable = async (req, res) => {
+  try {
+    const { courseId, semester } = req.query;
+    let query = { isActive: true };
+    if (courseId) query.courseId = courseId;
+    if (semester) query.semester = semester;
+
+    const timetable = await Timetable.find(query)
+      .populate('subjectId', 'subjectName subjectCode')
+      .populate('teacherId', 'name')
+      .populate('courseId', 'courseName')
+      .sort({ day: 1, timeSlot: 1 });
+
+    res.json({ success: true, timetable });
+  } catch (error) {
+    res.status(500).json({ success: false, msg: error.message });
+  }
+};
+
+// Delete Timetable Entry
+const deleteTimetable = async (req, res) => {
+  try {
+    const { id } = req.params;
+    await Timetable.findByIdAndUpdate(id, { isActive: false });
+    res.json({ success: true, msg: 'Timetable entry deleted' });
+  } catch (error) {
+    res.status(500).json({ success: false, msg: error.message });
+  }
+};
+
+// ================= FEE MANAGEMENT =================
+
+// Add Fee Record
+const addFee = async (req, res) => {
+  try {
+    const { studentId, semester, totalAmount, dueAmount, dueDate } = req.body;
+
+    const fee = new Fee({
+      studentId, semester, totalAmount, dueAmount, dueDate
+    });
+    await fee.save();
+
+    res.status(201).json({ success: true, msg: 'Fee record added', fee });
+  } catch (error) {
+    res.status(500).json({ success: false, msg: error.message });
+  }
+};
+
+// Update Fee Record
+const updateFee = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { status, paidAmount, transaction } = req.body;
+
+    const fee = await Fee.findById(id);
+    if (!fee) return res.status(404).json({ success: false, msg: 'Fee record not found' });
+
+    if (paidAmount) {
+      fee.paidAmount += Number(paidAmount);
+      fee.dueAmount -= Number(paidAmount);
+    }
+
+    if (status) fee.status = status;
+
+    if (transaction) {
+      fee.transactions.push(transaction);
+    }
+
+    await fee.save();
+    res.json({ success: true, msg: 'Fee updated', fee });
+  } catch (error) {
+    res.status(500).json({ success: false, msg: error.message });
+  }
+};
+
+// ================= LIBRARY MANAGEMENT =================
+
+// Add Book
+const addBook = async (req, res) => {
+  try {
+    const { bookName, author, isbn, category, quantity } = req.body;
+
+    const book = new Library({
+      bookName, author, isbn, category, quantity, remaining: quantity
+    });
+    await book.save();
+
+    res.status(201).json({ success: true, msg: 'Book added', book });
+  } catch (error) {
+    res.status(500).json({ success: false, msg: error.message });
+  }
+};
+
+// Get All Books
+const getAllBooks = async (req, res) => {
+  try {
+    const books = await Library.find({ isActive: true });
+    res.json({ success: true, books });
+  } catch (error) {
+    res.status(500).json({ success: false, msg: error.message });
+  }
+};
+
+// Issue Book
+const issueBook = async (req, res) => {
+  try {
+    const { bookId, studentId, returnDate } = req.body;
+
+    const book = await Library.findById(bookId);
+    if (!book || book.remaining <= 0) {
+      return res.status(400).json({ success: false, msg: 'Book not available' });
+    }
+
+    book.issuedTo.push({ studentId, returnDate });
+    book.remaining -= 1;
+    await book.save();
+
+    res.json({ success: true, msg: 'Book issued', book });
+  } catch (error) {
+    res.status(500).json({ success: false, msg: error.message });
+  }
+};
+
+// Return Book
+const returnBook = async (req, res) => {
+  try {
+    const { bookId, studentId } = req.body;
+
+    const book = await Library.findById(bookId);
+    if (!book) return res.status(404).json({ success: false, msg: 'Book not found' });
+
+    const issueRecord = book.issuedTo.find(
+      i => i.studentId.toString() === studentId && i.status === 'Issued'
+    );
+
+    if (!issueRecord) {
+      return res.status(400).json({ success: false, msg: 'No active issue record found for this student' });
+    }
+
+    issueRecord.status = 'Returned';
+    issueRecord.returnDate = new Date();
+    book.remaining += 1;
+    await book.save();
+
+    res.json({ success: true, msg: 'Book returned', book });
+  } catch (error) {
+    res.status(500).json({ success: false, msg: error.message });
+  }
+};
+
+// Delete Book
+const deleteBook = async (req, res) => {
+  try {
+    const { id } = req.params;
+    await Library.findByIdAndUpdate(id, { isActive: false });
+    res.json({ success: true, msg: 'Book deleted' });
+  } catch (error) {
+    res.status(500).json({ success: false, msg: error.message });
+  }
+};
+
 module.exports = {
   adminLogin,
   addCourse,
@@ -823,5 +1007,16 @@ module.exports = {
   updateManualReport,
   deleteManualReport,
   getAllStudents,
-  getAllTeachers
+  getAllTeachers,
+  // New Exports
+  addTimetable,
+  getTimetable,
+  deleteTimetable,
+  addFee,
+  updateFee,
+  addBook,
+  getAllBooks,
+  issueBook,
+  returnBook,
+  deleteBook
 };

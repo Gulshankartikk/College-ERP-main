@@ -17,54 +17,54 @@ const TimetableManagement = () => {
   const [timetableData, setTimetableData] = useState({
     'Computer Science': {
       'Monday': [
-        { subject: 'Mathematics', teacher: 'Dr. John Smith', room: 'Room 101' },
-        { subject: 'Physics', teacher: 'Prof. Sarah Johnson', room: 'Room 102' },
-        { subject: 'Programming', teacher: 'Dr. Mike Wilson', room: 'Lab 1' },
+        { subject: 'Mathematics', teacher: 'Dr. Gulshan kumar', room: 'Room 101' },
+        { subject: 'Physics', teacher: 'Prof. sandy', room: 'Room 102' },
+        { subject: 'Programming', teacher: 'Dr. pinky', room: 'Lab 1' },
         { subject: 'Lunch', teacher: '', room: '' },
-        { subject: 'Data Structures', teacher: 'Dr. Mike Wilson', room: 'Room 103' },
-        { subject: 'Lab', teacher: 'Dr. Mike Wilson', room: 'Lab 1' },
-        { subject: 'Lab', teacher: 'Dr. Mike Wilson', room: 'Lab 1' }
+        { subject: 'Data Structures', teacher: 'Dr. ankita', room: 'Room 103' },
+        { subject: 'Lab', teacher: 'Dr. aditya', room: 'Lab 1' },
+        { subject: 'Lab', teacher: 'Dr. krishna', room: 'Lab 1' }
       ],
       'Tuesday': [
-        { subject: 'English', teacher: 'Ms. Emily Davis', room: 'Room 201' },
-        { subject: 'Mathematics', teacher: 'Dr. John Smith', room: 'Room 101' },
-        { subject: 'Physics', teacher: 'Prof. Sarah Johnson', room: 'Room 102' },
+        { subject: 'English', teacher: 'Ms. ankita', room: 'Room 201' },
+        { subject: 'Mathematics', teacher: 'Dr. Gulshan kumar', room: 'Room 101' },
+        { subject: 'Physics', teacher: 'Prof. sandy', room: 'Room 102' },
         { subject: 'Lunch', teacher: '', room: '' },
-        { subject: 'Programming', teacher: 'Dr. Mike Wilson', room: 'Lab 1' },
-        { subject: 'Workshop', teacher: 'Prof. Lisa Brown', room: 'Workshop' },
-        { subject: 'Workshop', teacher: 'Prof. Lisa Brown', room: 'Workshop' }
+        { subject: 'Programming', teacher: 'Dr. rajan', room: 'Lab 1' },
+        { subject: 'Workshop', teacher: 'Prof. raju', room: 'Workshop' },
+        { subject: 'Workshop', teacher: 'Prof. dilip', room: 'Workshop' }
       ],
       'Wednesday': [
-        { subject: 'Physics', teacher: 'Prof. Sarah Johnson', room: 'Room 102' },
-        { subject: 'Mathematics', teacher: 'Dr. John Smith', room: 'Room 101' },
-        { subject: 'English', teacher: 'Ms. Emily Davis', room: 'Room 201' },
+        { subject: 'Physics', teacher: 'Prof. sandy', room: 'Room 102' },
+        { subject: 'Mathematics', teacher: 'Dr. krishna', room: 'Room 101' },
+        { subject: 'English', teacher: 'Ms. abhishek', room: 'Room 201' },
         { subject: 'Lunch', teacher: '', room: '' },
-        { subject: 'Database', teacher: 'Prof. Lisa Brown', room: 'Room 104' },
-        { subject: 'Lab', teacher: 'Prof. Lisa Brown', room: 'Lab 2' },
-        { subject: 'Lab', teacher: 'Prof. Lisa Brown', room: 'Lab 2' }
+        { subject: 'Database', teacher: 'Prof. aditya', room: 'Room 104' },
+        { subject: 'Lab', teacher: 'Prof. aditya', room: 'Lab 2' },
+        { subject: 'Lab', teacher: 'Prof. aditya', room: 'Lab 2' }
       ],
       'Thursday': [
-        { subject: 'Programming', teacher: 'Dr. Mike Wilson', room: 'Lab 1' },
-        { subject: 'Physics', teacher: 'Prof. Sarah Johnson', room: 'Room 102' },
-        { subject: 'Mathematics', teacher: 'Dr. John Smith', room: 'Room 101' },
+        { subject: 'Programming', teacher: 'Dr. pinky', room: 'Lab 1' },
+        { subject: 'Physics', teacher: 'Prof. sandy', room: 'Room 102' },
+        { subject: 'Mathematics', teacher: 'Dr. krishna', room: 'Room 101' },
         { subject: 'Lunch', teacher: '', room: '' },
-        { subject: 'Networks', teacher: 'Dr. David Lee', room: 'Room 105' },
-        { subject: 'Theory', teacher: 'Dr. David Lee', room: 'Room 105' },
-        { subject: 'Theory', teacher: 'Dr. David Lee', room: 'Room 105' }
+        { subject: 'Networks', teacher: 'Dr. aditya', room: 'Room 105' },
+        { subject: 'Theory', teacher: 'Dr. aditya', room: 'Room 105' },
+        { subject: 'Theory', teacher: 'Dr. aditya', room: 'Room 105' }
       ],
       'Friday': [
-        { subject: 'Database', teacher: 'Prof. Lisa Brown', room: 'Room 104' },
-        { subject: 'English', teacher: 'Ms. Emily Davis', room: 'Room 201' },
-        { subject: 'Programming', teacher: 'Dr. Mike Wilson', room: 'Lab 1' },
+        { subject: 'Database', teacher: 'Prof. aditya', room: 'Room 104' },
+        { subject: 'English', teacher: 'Ms. abhishek', room: 'Room 201' },
+        { subject: 'Programming', teacher: 'Dr. pinky', room: 'Lab 1' },
         { subject: 'Lunch', teacher: '', room: '' },
         { subject: 'Project', teacher: 'All Faculty', room: 'Project Hall' },
         { subject: 'Project', teacher: 'All Faculty', room: 'Project Hall' },
         { subject: 'Project', teacher: 'All Faculty', room: 'Project Hall' }
       ],
       'Saturday': [
-        { subject: 'Mathematics', teacher: 'Dr. John Smith', room: 'Room 101' },
-        { subject: 'Physics', teacher: 'Prof. Sarah Johnson', room: 'Room 102' },
-        { subject: 'English', teacher: 'Ms. Emily Davis', room: 'Room 201' },
+        { subject: 'Mathematics', teacher: 'Dr. ', room: 'Room 101' },
+        { subject: 'Physics', teacher: 'Prof. sandy', room: 'Room 102' },
+        { subject: 'English', teacher: 'Ms. abhishek', room: 'Room 201' },
         { subject: 'Lunch', teacher: '', room: '' },
         { subject: 'Seminar', teacher: 'Guest Faculty', room: 'Auditorium' },
         { subject: 'Library', teacher: 'Librarian', room: 'Library' },
@@ -75,7 +75,7 @@ const TimetableManagement = () => {
 
   const courses = ['Computer Science', 'Mechanical Engineering', 'Business Administration'];
   const subjects = ['Mathematics', 'Physics', 'Programming', 'Database', 'Networks', 'English', 'Workshop', 'Lab', 'Project', 'Seminar', 'Library', 'Sports'];
-  const teachers = ['Dr. John Smith', 'Prof. Sarah Johnson', 'Dr. Mike Wilson', 'Prof. Lisa Brown', 'Dr. David Lee', 'Ms. Emily Davis'];
+  const teachers = ['Dr. ', 'Prof. sandy', 'Dr. pinky', 'Prof. raju', 'Prof. dilip', 'Ms. abhishek'];
   const rooms = ['Room 101', 'Room 102', 'Room 103', 'Room 104', 'Room 105', 'Room 201', 'Lab 1', 'Lab 2', 'Workshop', 'Auditorium', 'Library', 'Ground'];
 
   const [newSlot, setNewSlot] = useState({

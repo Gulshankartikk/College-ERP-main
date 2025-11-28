@@ -239,10 +239,28 @@ const ReportSchema = new mongoose.Schema({
   isActive: { type: Boolean, default: true }
 }, { timestamps: true });
 
+// Library Schema
+const LibrarySchema = new mongoose.Schema({
+  bookName: { type: String, required: true },
+  author: { type: String, required: true },
+  isbn: { type: String, unique: true, sparse: true },
+  category: { type: String },
+  quantity: { type: Number, default: 1 },
+  remaining: { type: Number, default: 1 },
+  issuedTo: [{
+    studentId: { type: mongoose.Schema.Types.ObjectId, ref: 'Student' },
+    issueDate: { type: Date, default: Date.now },
+    returnDate: { type: Date },
+    status: { type: String, enum: ['Issued', 'Returned'], default: 'Issued' }
+  }],
+  isActive: { type: Boolean, default: true }
+}, { timestamps: true });
+
 const Timetable = mongoose.model('Timetable', TimetableSchema);
 const Leave = mongoose.model('Leave', LeaveSchema);
 const Fee = mongoose.model('Fee', FeeSchema);
 const Report = mongoose.model('Report', ReportSchema);
+const Library = mongoose.model('Library', LibrarySchema);
 
 module.exports = {
   Course,
@@ -261,5 +279,6 @@ module.exports = {
   Timetable,
   Leave,
   Fee,
-  Report
+  Report,
+  Library
 };

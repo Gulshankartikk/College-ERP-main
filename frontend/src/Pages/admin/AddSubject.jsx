@@ -4,6 +4,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { toast } from "react-toastify";
 import BackButton from "../../components/BackButton";
+import { useNavigate } from "react-router-dom";
 
 const AddSubject = () => {
   const [courses, setCourses] = useState([]);
@@ -27,17 +28,25 @@ const AddSubject = () => {
   const subjectTypes = ["Theory", "Practical", "Lab"];
   const creditOptions = [1, 2, 3, 4, 5, 6];
 
+  const navigate = useNavigate();
   const token = Cookies.get("token");
-  
+
   useEffect(() => {
     const role = localStorage.getItem('role') || sessionStorage.getItem('role');
     setUserRole(role);
-  }, []);
+
+    if (!token) {
+      toast.error("Session expired. Please login again.");
+      navigate("/login");
+    }
+  }, [token, navigate]);
 
   useEffect(() => {
-    fetchCourses();
-    fetchTeachers();
-  }, []);
+    if (token) {
+      fetchCourses();
+      fetchTeachers();
+    }
+  }, [token]);
 
   const fetchCourses = async () => {
     try {
@@ -47,6 +56,10 @@ const AddSubject = () => {
       setCourses(response.data.courses || []);
     } catch (error) {
       console.error("Error fetching courses:", error);
+      if (error.response?.status === 401) {
+        toast.error("Session expired. Please login again.");
+        navigate("/login");
+      }
       setCourses([]);
     }
   };
@@ -59,6 +72,9 @@ const AddSubject = () => {
       setTeachers(response.data.teachers || []);
     } catch (error) {
       console.error("Error fetching teachers:", error);
+      if (error.response?.status === 401) {
+        // Already handled by other calls or useEffect, but good to be safe
+      }
       setTeachers([]);
     }
   };
@@ -73,6 +89,12 @@ const AddSubject = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!token) {
+      toast.error("Session expired. Please login again.");
+      navigate("/login");
+      return;
+    }
 
     if (
       !formData.subject_name ||
@@ -125,7 +147,10 @@ const AddSubject = () => {
     } catch (error) {
       console.error("Error adding subject:", error);
       if (error.response?.status === 403) {
-        toast.error("Access denied. Only admins can add subjects. Please login as admin.");
+        toast.error("Access denied. Only admins can add subjects.");
+      } else if (error.response?.status === 401) {
+        toast.error("Session expired. Please login again.");
+        navigate("/login");
       } else {
         toast.error(error.response?.data?.msg || error.response?.data?.message || "Failed to add subject");
       }

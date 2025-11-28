@@ -391,7 +391,11 @@ For support and questions:
 - Added unauthorized access page
 - Improved UI/UX with modals and toast notifications
 - Fixed all 404 errors by creating missing admin pages
-
+- Fixed all 404 errors by creating missing admin pages
+- Linked Teacher features to Student Dashboard (Notices, Assignments, Materials)
+- Added file upload capabilities for Admins and Teachers
+- Implemented Student Resources page
+- Fixed "Internal Server Error" on Teacher Dashboard
 ## 🔧 Admin Pages Implementation
 
 ### Pages Created

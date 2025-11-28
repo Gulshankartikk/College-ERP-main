@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { BASE_URL } from '../../constants/api';
 import axios from 'axios';
 import { toast } from 'react-toastify';
-import { FaChalkboardTeacher, FaPlus, FaEdit, FaTrash, FaEye } from 'react-icons/fa';
+import { FaChalkboardTeacher, FaPlus, FaEdit, FaTrash, FaEye, FaGraduationCap } from 'react-icons/fa';
 import AdminHeader from '../../components/AdminHeader';
 import BackButton from '../../components/BackButton';
 import Cookies from 'js-cookie';
@@ -139,17 +139,22 @@ const TeacherManagement = () => {
               <p className="text-gray-600 mt-2">Manage all teachers and faculty members</p>
             </div>
             {isAdmin && (
-              <button
-                onClick={() => {
-                  setEditingTeacher(null);
-                  setFormData({ name: '', email: '', phone: '', department: '', designation: '', password: '' });
-                  setShowModal(true);
-                }}
-                className="flex items-center space-x-2 bg-sand-tan text-night-blue-shadow px-6 py-2 rounded-lg hover:bg-sand-tan-shadow transition-colors font-bold shadow-md"
-              >
-                <FaPlus />
-                <span>Add Teacher</span>
-              </button>
+              <div className="flex space-x-4">
+                <button
+                  onClick={() => navigate('/admin/students')}
+                  className="flex items-center space-x-2 bg-white text-night-blue border border-night-blue px-6 py-2 rounded-lg hover:bg-gray-50 transition-colors font-bold shadow-sm"
+                >
+                  <FaGraduationCap />
+                  <span>Manage Students</span>
+                </button>
+                <button
+                  onClick={() => navigate('/admin/create-teacher')}
+                  className="flex items-center space-x-2 bg-sand-tan text-night-blue-shadow px-6 py-2 rounded-lg hover:bg-sand-tan-shadow transition-colors font-bold shadow-md"
+                >
+                  <FaPlus />
+                  <span>Add Teacher</span>
+                </button>
+              </div>
             )}
           </div>
 

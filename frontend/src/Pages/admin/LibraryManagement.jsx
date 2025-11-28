@@ -13,9 +13,9 @@ const LibraryManagement = () => {
   ]);
 
   const [issuedBooks] = useState([
-    { id: 1, bookTitle: 'Data Structures & Algorithms', student: 'John Doe', rollNo: 'CS001', issueDate: '2024-01-15', dueDate: '2024-02-15', status: 'Active' },
-    { id: 2, bookTitle: 'Engineering Mechanics', student: 'Jane Smith', rollNo: 'ME002', issueDate: '2024-01-10', dueDate: '2024-02-10', status: 'Overdue' },
-    { id: 3, bookTitle: 'Business Management', student: 'Mike Johnson', rollNo: 'BA003', issueDate: '2024-01-20', dueDate: '2024-02-20', status: 'Active' }
+    { id: 1, bookTitle: 'Data Structures & Algorithms', student: 'Gulshan kumar', rollNo: 'CS001', issueDate: '2024-01-15', dueDate: '2024-02-15', status: 'Active' },
+    { id: 2, bookTitle: 'Engineering Mechanics', student: 'Ankita maurya', rollNo: 'ME002', issueDate: '2024-01-10', dueDate: '2024-02-10', status: 'Overdue' },
+    { id: 3, bookTitle: 'Business Management', student: 'Aditya kumar', rollNo: 'BA003', issueDate: '2024-01-20', dueDate: '2024-02-20', status: 'Active' }
   ]);
 
   const [showAddModal, setShowAddModal] = useState(false);

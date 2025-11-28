@@ -141,17 +141,26 @@ const StudentManagement = () => {
               <p className="text-gray-600 mt-2">Manage all student records and enrollments</p>
             </div>
             {isAdmin && (
-              <button
-                onClick={() => {
-                  setEditingStudent(null);
-                  setFormData({ name: '', email: '', phone: '', rollNo: '', courseId: '', semester: '', password: '' });
-                  setShowModal(true);
-                }}
-                className="flex items-center space-x-2 bg-sand-tan text-night-blue-shadow px-6 py-2 rounded-lg hover:bg-sand-tan-shadow transition-colors font-bold shadow-md"
-              >
-                <FaPlus />
-                <span>Add Student</span>
-              </button>
+              <div className="flex space-x-4">
+                <button
+                  onClick={() => navigate('/admin/teachers')}
+                  className="flex items-center space-x-2 bg-white text-night-blue border border-night-blue px-6 py-2 rounded-lg hover:bg-gray-50 transition-colors font-bold shadow-sm"
+                >
+                  <FaChalkboardTeacher />
+                  <span>Manage Teachers</span>
+                </button>
+                <button
+                  onClick={() => {
+                    setEditingStudent(null);
+                    setFormData({ name: '', email: '', phone: '', rollNo: '', courseId: '', semester: '', password: '' });
+                    setShowModal(true);
+                  }}
+                  className="flex items-center space-x-2 bg-sand-tan text-night-blue-shadow px-6 py-2 rounded-lg hover:bg-sand-tan-shadow transition-colors font-bold shadow-md"
+                >
+                  <FaPlus />
+                  <span>Add Student</span>
+                </button>
+              </div>
             )}
           </div>
 

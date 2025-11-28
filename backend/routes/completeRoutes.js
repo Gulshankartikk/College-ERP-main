@@ -232,6 +232,22 @@ router.get('/admin/manual-reports', verifyToken, isAdmin, adminController.getAll
 router.put('/admin/manual-reports/:reportId', verifyToken, isAdmin, adminController.updateManualReport);
 router.delete('/admin/manual-reports/:reportId', verifyToken, isAdmin, adminController.deleteManualReport);
 
+// ================= TIMETABLE ROUTES =================
+router.post('/admin/timetable', verifyToken, isAdmin, adminController.addTimetable);
+router.get('/admin/timetable', verifyToken, isAdmin, adminController.getTimetable);
+router.delete('/admin/timetable/:id', verifyToken, isAdmin, adminController.deleteTimetable);
+
+// ================= FEE ROUTES =================
+router.post('/admin/fees', verifyToken, isAdmin, adminController.addFee);
+router.put('/admin/fees/:id', verifyToken, isAdmin, adminController.updateFee);
+
+// ================= LIBRARY ROUTES =================
+router.post('/admin/library/books', verifyToken, isAdmin, adminController.addBook);
+router.get('/admin/library/books', verifyToken, isAdmin, adminController.getAllBooks);
+router.post('/admin/library/issue', verifyToken, isAdmin, adminController.issueBook);
+router.post('/admin/library/return', verifyToken, isAdmin, adminController.returnBook);
+router.delete('/admin/library/books/:id', verifyToken, isAdmin, adminController.deleteBook);
+
 // Delete operations
 router.delete('/admin/assignments/:assignmentId', verifyToken, isAdmin, adminController.deleteAssignment);
 router.delete('/admin/notices/:noticeId', verifyToken, isAdmin, adminController.deleteNotice);
