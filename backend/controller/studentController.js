@@ -9,27 +9,30 @@ const {
   StudyMaterial,
   Assignments,
   Marks,
-  Notices
+  Notices,
+  Timetable,
+  Leave,
+  Fee
 } = require('../models/CompleteModels');
 
 // Student Registration
 const studentRegister = async (req, res) => {
   try {
     const { name, email, phone, password, courseId } = req.body;
-    
+
     // Check if student already exists
     const existingStudent = await Student.findOne({ email });
     if (existingStudent) {
       return res.status(400).json({ success: false, msg: 'Student already exists with this email' });
     }
-    
+
     // Generate roll number
     const studentCount = await Student.countDocuments();
     const rollNo = `STU${String(studentCount + 1).padStart(4, '0')}`;
-    
+
     // Generate username from email
     const username = email.split('@')[0];
-    
+
     const hashedPassword = await bcrypt.hash(password, 10);
     const student = new Student({
       name,
@@ -40,11 +43,11 @@ const studentRegister = async (req, res) => {
       rollNo,
       courseId
     });
-    
+
     await student.save();
-    
-    res.status(201).json({ 
-      success: true, 
+
+    res.status(201).json({
+      success: true,
       msg: 'Student registered successfully',
       student: {
         id: student._id,
@@ -63,30 +66,30 @@ const studentRegister = async (req, res) => {
 const studentLogin = async (req, res) => {
   try {
     const { username, password } = req.body;
-    
+
     if (!username || !password) {
       return res.status(400).json({ success: false, msg: 'Username and password are required' });
     }
-    
+
     // STRICT validation - only accept exact match
     if (username !== 'student' || password !== 'student123') {
       return res.status(400).json({ success: false, msg: 'Invalid credentials' });
     }
-    
+
     const token = jwt.sign({ id: 'student1', role: 'student' }, process.env.JWT_SECRET || 'fallback-secret', { expiresIn: '24h' });
     res.cookie('token', token, { httpOnly: true });
-    
-    return res.json({ 
-      success: true, 
-      token, 
-      student: { 
-        id: 'student1', 
-        name: 'Demo Student', 
+
+    return res.json({
+      success: true,
+      token,
+      student: {
+        id: 'student1',
+        name: 'Demo Student',
         email: 'student@college.edu',
         rollNo: 'STU001',
         course: { courseName: 'Computer Science', courseCode: 'CSE' },
-        role: 'student' 
-      } 
+        role: 'student'
+      }
     });
   } catch (error) {
     res.status(500).json({ success: false, msg: error.message });
@@ -97,7 +100,7 @@ const studentLogin = async (req, res) => {
 const getStudentProfile = async (req, res) => {
   try {
     const { studentId } = req.params;
-    
+
     // Handle demo students (including backward compatibility)
     if (studentId === 'demo-student' || studentId === 'admin-student' || studentId === 'student' || studentId === 'student1' || studentId === 'admin') {
       return res.json({
@@ -116,9 +119,9 @@ const getStudentProfile = async (req, res) => {
         }
       });
     }
-    
+
     const student = await Student.findById(studentId).populate('courseId', 'courseName courseCode courseDuration');
-    
+
     res.json({ success: true, student });
   } catch (error) {
     res.status(500).json({ success: false, msg: error.message });
@@ -246,10 +249,10 @@ const getStudentAttendance = async (req, res) => {
 const getStudentSubjects = async (req, res) => {
   try {
     const { studentId } = req.params;
-    
+
     const student = await Student.findById(studentId);
     const subjects = await Subject.find({ courseId: student.courseId, isActive: true });
-    
+
     res.json({ success: true, subjects });
   } catch (error) {
     res.status(500).json({ success: false, msg: error.message });
@@ -261,7 +264,7 @@ const getNotesBySubject = async (req, res) => {
   try {
     const { studentId } = req.params;
     const { subjectId } = req.query;
-    
+
     // Handle demo students (including backward compatibility)
     if (studentId === 'demo-student' || studentId === 'admin-student' || studentId === 'student' || studentId === 'student1' || studentId === 'admin') {
       return res.json({
@@ -273,16 +276,16 @@ const getNotesBySubject = async (req, res) => {
         }
       });
     }
-    
+
     const student = await Student.findById(studentId);
     const subjects = await Subject.find({ courseId: student.courseId });
     const subjectIds = subjectId ? [subjectId] : subjects.map(s => s._id);
-    
+
     const notes = await Notes.find({ subjectId: { $in: subjectIds } })
       .populate('subjectId', 'subjectName subjectCode')
       .populate('teacherId', 'name')
       .sort({ createdAt: -1 });
-    
+
     res.json({ success: true, notes, student });
   } catch (error) {
     res.status(500).json({ success: false, msg: error.message });
@@ -294,7 +297,7 @@ const getStudyMaterials = async (req, res) => {
   try {
     const { studentId } = req.params;
     const { subjectId } = req.query;
-    
+
     // Handle demo students (including backward compatibility)
     if (studentId === 'demo-student' || studentId === 'admin-student' || studentId === 'student' || studentId === 'student1' || studentId === 'admin') {
       return res.json({
@@ -306,16 +309,16 @@ const getStudyMaterials = async (req, res) => {
         }
       });
     }
-    
+
     const student = await Student.findById(studentId);
     const subjects = await Subject.find({ courseId: student.courseId });
     const subjectIds = subjectId ? [subjectId] : subjects.map(s => s._id);
-    
+
     const materials = await StudyMaterial.find({ subjectId: { $in: subjectIds } })
       .populate('subjectId', 'subjectName subjectCode')
       .populate('teacherId', 'name')
       .sort({ createdAt: -1 });
-    
+
     res.json({ success: true, materials, student });
   } catch (error) {
     res.status(500).json({ success: false, msg: error.message });
@@ -327,7 +330,7 @@ const getAssignments = async (req, res) => {
   try {
     const { studentId } = req.params;
     const { subjectId } = req.query;
-    
+
     // Handle demo students (including backward compatibility)
     if (studentId === 'demo-student' || studentId === 'admin-student' || studentId === 'student' || studentId === 'student1' || studentId === 'admin') {
       return res.json({
@@ -339,16 +342,16 @@ const getAssignments = async (req, res) => {
         }
       });
     }
-    
+
     const student = await Student.findById(studentId);
     const subjects = await Subject.find({ courseId: student.courseId });
     const subjectIds = subjectId ? [subjectId] : subjects.map(s => s._id);
-    
+
     const assignments = await Assignments.find({ subjectId: { $in: subjectIds } })
       .populate('subjectId', 'subjectName subjectCode')
       .populate('teacherId', 'name')
       .sort({ deadline: 1 });
-    
+
     res.json({ success: true, assignments, student });
   } catch (error) {
     res.status(500).json({ success: false, msg: error.message });
@@ -360,18 +363,18 @@ const submitAssignment = async (req, res) => {
   try {
     const { studentId, assignmentId } = req.params;
     const { fileUrl } = req.body;
-    
+
     const assignment = await Assignments.findById(assignmentId);
-    
+
     // Check if already submitted
     const existingSubmission = assignment.submissions.find(s => s.studentId.toString() === studentId);
     if (existingSubmission) {
       return res.status(400).json({ success: false, msg: 'Assignment already submitted' });
     }
-    
+
     assignment.submissions.push({ studentId, fileUrl });
     await assignment.save();
-    
+
     res.json({ success: true, msg: 'Assignment submitted successfully' });
   } catch (error) {
     res.status(500).json({ success: false, msg: error.message });
@@ -383,7 +386,7 @@ const getStudentMarks = async (req, res) => {
   try {
     const { studentId } = req.params;
     const { subjectId, examType } = req.query;
-    
+
     // Handle demo students (including backward compatibility)
     if (studentId === 'demo-student' || studentId === 'admin-student' || studentId === 'student' || studentId === 'student1' || studentId === 'admin') {
       return res.json({
@@ -391,16 +394,16 @@ const getStudentMarks = async (req, res) => {
         marks: []
       });
     }
-    
+
     let query = { studentId };
     if (subjectId) query.subjectId = subjectId;
     if (examType) query.examType = examType;
-    
+
     const marks = await Marks.find(query)
       .populate('subjectId', 'subjectName subjectCode')
       .populate('teacherId', 'name')
       .sort({ createdAt: -1 });
-    
+
     res.json({ success: true, marks });
   } catch (error) {
     res.status(500).json({ success: false, msg: error.message });
@@ -411,12 +414,12 @@ const getStudentMarks = async (req, res) => {
 const getNotices = async (req, res) => {
   try {
     const { studentId } = req.params;
-    
+
     const student = await Student.findById(studentId);
     const notices = await Notices.find({ courseId: student.courseId, isActive: true })
       .populate('teacherId', 'name')
       .sort({ createdAt: -1 });
-    
+
     res.json({ success: true, notices });
   } catch (error) {
     res.status(500).json({ success: false, msg: error.message });
@@ -427,12 +430,12 @@ const getNotices = async (req, res) => {
 const getStudentDashboard = async (req, res) => {
   try {
     const { studentId } = req.params;
-    
+
     // Handle admin access (including backward compatibility)
     if (studentId === 'admin-student' || studentId === 'admin') {
       const courses = await Course.find({ isActive: true }).limit(1);
       const subjects = await Subject.find({ isActive: true }).limit(2);
-      
+
       return res.json({
         success: true,
         student: {
@@ -444,11 +447,11 @@ const getStudentDashboard = async (req, res) => {
         }
       });
     }
-    
+
     // Handle demo student access (including backward compatibility)
     if (studentId === 'demo-student' || studentId === 'student' || studentId === 'student1') {
       const courses = await Course.find({ isActive: true }).limit(1);
-      
+
       return res.json({
         success: true,
         student: {
@@ -460,13 +463,13 @@ const getStudentDashboard = async (req, res) => {
         }
       });
     }
-    
+
     const student = await Student.findById(studentId).populate('courseId');
-    
+
     if (!student) {
       return res.status(404).json({ success: false, msg: 'Student not found' });
     }
-    
+
     res.json({
       success: true,
       student
@@ -488,5 +491,55 @@ module.exports = {
   submitAssignment,
   getStudentMarks,
   getNotices,
-  getStudentDashboard
+  getStudentDashboard,
+  // New Features
+  getTimetable: async (req, res) => {
+    try {
+      const { studentId } = req.params;
+      const student = await Student.findById(studentId);
+      const timetable = await Timetable.find({ courseId: student.courseId, isActive: true })
+        .populate('subjectId', 'subjectName subjectCode')
+        .populate('teacherId', 'name')
+        .sort({ day: 1, timeSlot: 1 });
+      res.json({ success: true, timetable });
+    } catch (error) {
+      res.status(500).json({ success: false, msg: error.message });
+    }
+  },
+  getFees: async (req, res) => {
+    try {
+      const { studentId } = req.params;
+      const fees = await Fee.find({ studentId, isActive: true }).sort({ dueDate: 1 });
+      res.json({ success: true, fees });
+    } catch (error) {
+      res.status(500).json({ success: false, msg: error.message });
+    }
+  },
+  applyLeave: async (req, res) => {
+    try {
+      const { studentId } = req.params;
+      const { leaveType, startDate, endDate, reason } = req.body;
+      const leave = new Leave({
+        userId: studentId,
+        userRole: 'student',
+        leaveType,
+        startDate,
+        endDate,
+        reason
+      });
+      await leave.save();
+      res.json({ success: true, msg: 'Leave application submitted', leave });
+    } catch (error) {
+      res.status(500).json({ success: false, msg: error.message });
+    }
+  },
+  getLeaves: async (req, res) => {
+    try {
+      const { studentId } = req.params;
+      const leaves = await Leave.find({ userId: studentId }).sort({ createdAt: -1 });
+      res.json({ success: true, leaves });
+    } catch (error) {
+      res.status(500).json({ success: false, msg: error.message });
+    }
+  }
 };

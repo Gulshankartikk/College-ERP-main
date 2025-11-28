@@ -28,22 +28,22 @@ router.post('/teacher/login', teacherController.teacherLogin);
 
 // Dashboard + subjects + courses
 router.get('/teacher/:teacherId/dashboard', verifyToken, teacherController.getTeacherDashboard);
-router.put('/teacher/:teacherId/profile', verifyToken, async (req, res) => {
+router.put('/teacher/:teacherId/profile', verifyToken, isAdmin, async (req, res) => {
   try {
     const { teacherId } = req.params;
     const { name, email, phone, department, designation } = req.body;
     const { Teacher } = require('../models/CompleteModels');
-    
+
     const updatedTeacher = await Teacher.findByIdAndUpdate(
       teacherId,
       { name, email, phone, department, designation },
       { new: true }
     );
-    
+
     if (!updatedTeacher) {
       return res.status(404).json({ success: false, msg: 'Teacher not found' });
     }
-    
+
     res.json({ success: true, teacher: updatedTeacher });
   } catch (error) {
     res.status(500).json({ success: false, msg: error.message });
@@ -78,6 +78,11 @@ router.get('/teacher/:teacherId/notes', verifyToken, teacherController.getTeache
 router.get('/teacher/:teacherId/materials', verifyToken, teacherController.getTeacherMaterials);
 router.get('/teacher/:teacherId/notices', verifyToken, teacherController.getTeacherNotices);
 
+// Timetable + Leave
+router.get('/teacher/:teacherId/timetable', verifyToken, teacherController.getTimetable);
+router.post('/teacher/:teacherId/leave', verifyToken, teacherController.applyLeave);
+router.get('/teacher/:teacherId/leaves', verifyToken, teacherController.getLeaves);
+
 
 // ======================================================
 //                      STUDENT ROUTES
@@ -87,22 +92,22 @@ router.post('/student/login', studentController.studentLogin);
 
 router.get('/student/:studentId/dashboard', verifyToken, studentController.getStudentDashboard);
 router.get('/student/:studentId/profile', verifyToken, studentController.getStudentProfile);
-router.put('/student/:studentId/profile', verifyToken, async (req, res) => {
+router.put('/student/:studentId/profile', verifyToken, isAdmin, async (req, res) => {
   try {
     const { studentId } = req.params;
     const { name, email, phone } = req.body;
     const { Student } = require('../models/CompleteModels');
-    
+
     const updatedStudent = await Student.findByIdAndUpdate(
       studentId,
       { name, email, phone },
       { new: true }
     );
-    
+
     if (!updatedStudent) {
       return res.status(404).json({ success: false, msg: 'Student not found' });
     }
-    
+
     res.json({ success: true, student: updatedStudent });
   } catch (error) {
     res.status(500).json({ success: false, msg: error.message });
@@ -116,6 +121,12 @@ router.get('/student/:studentId/assignments', verifyToken, studentController.get
 router.post('/student/:studentId/assignments/:assignmentId/submit', verifyToken, studentController.submitAssignment);
 router.get('/student/:studentId/marks', verifyToken, studentController.getStudentMarks);
 router.get('/student/:studentId/notices', verifyToken, studentController.getNotices);
+
+// Timetable + Fees + Leave
+router.get('/student/:studentId/timetable', verifyToken, studentController.getTimetable);
+router.get('/student/:studentId/fees', verifyToken, studentController.getFees);
+router.post('/student/:studentId/leave', verifyToken, studentController.applyLeave);
+router.get('/student/:studentId/leaves', verifyToken, studentController.getLeaves);
 
 
 // ======================================================
@@ -139,7 +150,7 @@ router.get('/admin/students', verifyToken, async (req, res) => {
   }
 });
 router.post('/admin/students', verifyToken, isAdmin, adminController.addStudent);
-router.put('/admin/students/:studentId', verifyToken, adminController.updateStudent);
+router.put('/admin/students/:studentId', verifyToken, isAdmin, adminController.updateStudent);
 router.delete('/admin/students/:studentId', verifyToken, isAdmin, adminController.deleteStudent);
 router.get('/admin/students/:studentId', verifyToken, adminController.getStudentDetails);
 
@@ -230,8 +241,8 @@ router.get('/teacher/admin/dashboard', verifyToken, teacherController.getTeacher
 
 // Teacher student management
 router.get('/teacher/students/:studentId', verifyToken, adminController.getStudentDetails);
-router.put('/teacher/students/:studentId', verifyToken, adminController.updateStudent);
-router.delete('/teacher/students/:studentId', verifyToken, adminController.deleteStudent);
+router.put('/teacher/students/:studentId', verifyToken, isAdmin, adminController.updateStudent);
+router.delete('/teacher/students/:studentId', verifyToken, isAdmin, adminController.deleteStudent);
 
 
 // ======================================================

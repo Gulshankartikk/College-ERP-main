@@ -186,6 +186,53 @@ const TeacherSubjectAssignment = mongoose.model('TeacherSubjectAssignment', Teac
 const Admin = mongoose.model('Admin', AdminSchema);
 const Notification = mongoose.model('Notification', NotificationSchema);
 
+// Timetable Schema
+const TimetableSchema = new mongoose.Schema({
+  courseId: { type: mongoose.Schema.Types.ObjectId, ref: 'Course', required: true },
+  semester: { type: Number, required: true },
+  day: { type: String, required: true }, // Monday, Tuesday...
+  timeSlot: { type: String, required: true }, // 9:00-10:00
+  subjectId: { type: mongoose.Schema.Types.ObjectId, ref: 'Subject', required: true },
+  teacherId: { type: mongoose.Schema.Types.ObjectId, ref: 'Teacher', required: true },
+  roomNo: { type: String },
+  isActive: { type: Boolean, default: true }
+}, { timestamps: true });
+
+// Leave Schema
+const LeaveSchema = new mongoose.Schema({
+  userId: { type: mongoose.Schema.Types.ObjectId, required: true },
+  userRole: { type: String, enum: ['student', 'teacher'], required: true },
+  leaveType: { type: String, required: true },
+  startDate: { type: Date, required: true },
+  endDate: { type: Date, required: true },
+  reason: { type: String, required: true },
+  status: { type: String, enum: ['Pending', 'Approved', 'Rejected'], default: 'Pending' },
+  approvedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'Admin' },
+  isActive: { type: Boolean, default: true }
+}, { timestamps: true });
+
+// Fee Schema
+const FeeSchema = new mongoose.Schema({
+  studentId: { type: mongoose.Schema.Types.ObjectId, ref: 'Student', required: true },
+  semester: { type: Number, required: true },
+  totalAmount: { type: Number, required: true },
+  paidAmount: { type: Number, default: 0 },
+  dueAmount: { type: Number, required: true },
+  dueDate: { type: Date, required: true },
+  status: { type: String, enum: ['Paid', 'Pending', 'Overdue', 'Partial'], default: 'Pending' },
+  transactions: [{
+    amount: { type: Number },
+    date: { type: Date, default: Date.now },
+    method: { type: String },
+    transactionId: { type: String }
+  }],
+  isActive: { type: Boolean, default: true }
+}, { timestamps: true });
+
+const Timetable = mongoose.model('Timetable', TimetableSchema);
+const Leave = mongoose.model('Leave', LeaveSchema);
+const Fee = mongoose.model('Fee', FeeSchema);
+
 module.exports = {
   Course,
   Subject,
@@ -199,5 +246,8 @@ module.exports = {
   Marks,
   Notices,
   Admin,
-  Notification
+  Notification,
+  Timetable,
+  Leave,
+  Fee
 };

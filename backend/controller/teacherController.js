@@ -12,7 +12,10 @@ const {
   StudyMaterial,
   Assignments,
   Marks,
-  Notices
+  Notices,
+  Timetable,
+  Leave,
+  Fee
 } = require('../models/CompleteModels');
 const sendNotification = async (type, data) => {
   try {
@@ -44,7 +47,7 @@ const buildFileUrl = (req, file) => {
 const teacherLogin = async (req, res) => {
   try {
     const { username, password } = req.body;
-    
+
     if (!username || !password) {
       return res.status(400).json({ success: false, msg: 'Username and password required' });
     }
@@ -234,7 +237,7 @@ const markAttendance = async (req, res) => {
 
     const actualTeacherId = teacherId === 'admin' ? 'admin' : teacherId;
     const attendanceDate = new Date(date);
-    
+
     if (isNaN(attendanceDate.getTime())) {
       return res.status(400).json({ success: false, msg: 'Invalid date format' });
     }
@@ -245,8 +248,8 @@ const markAttendance = async (req, res) => {
     endOfDay.setHours(23, 59, 59, 999);
 
     // Delete existing attendance for that subject & date
-    const deleteResult = await Attendance.deleteMany({ 
-      subjectId, 
+    const deleteResult = await Attendance.deleteMany({
+      subjectId,
       date: {
         $gte: startOfDay,
         $lt: endOfDay
@@ -722,5 +725,45 @@ module.exports = {
   getTeacherNotes,
   getTeacherMaterials,
   getTeacherAssignments,
-  getTeacherNotices
+  getTeacherNotices,
+  // New Features
+  getTimetable: async (req, res) => {
+    try {
+      const { teacherId } = req.params;
+      const timetable = await Timetable.find({ teacherId, isActive: true })
+        .populate('subjectId', 'subjectName subjectCode')
+        .populate('courseId', 'courseName courseCode')
+        .sort({ day: 1, timeSlot: 1 });
+      res.json({ success: true, timetable });
+    } catch (error) {
+      res.status(500).json({ success: false, msg: error.message });
+    }
+  },
+  applyLeave: async (req, res) => {
+    try {
+      const { teacherId } = req.params;
+      const { leaveType, startDate, endDate, reason } = req.body;
+      const leave = new Leave({
+        userId: teacherId,
+        userRole: 'teacher',
+        leaveType,
+        startDate,
+        endDate,
+        reason
+      });
+      await leave.save();
+      res.json({ success: true, msg: 'Leave application submitted', leave });
+    } catch (error) {
+      res.status(500).json({ success: false, msg: error.message });
+    }
+  },
+  getLeaves: async (req, res) => {
+    try {
+      const { teacherId } = req.params;
+      const leaves = await Leave.find({ userId: teacherId }).sort({ createdAt: -1 });
+      res.json({ success: true, leaves });
+    } catch (error) {
+      res.status(500).json({ success: false, msg: error.message });
+    }
+  }
 };
