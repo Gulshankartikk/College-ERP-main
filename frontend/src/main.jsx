@@ -30,6 +30,10 @@ import StudentNotes from "./Pages/Student/StudentNotes";
 import StudentMaterials from "./Pages/Student/StudentMaterials";
 import StudentAssignments from "./Pages/Student/StudentAssignments";
 import StudentAttendance from "./Pages/Student/StudentAttendance";
+import StudentTimetable from "./Pages/Student/StudentTimetable";
+import StudentNotices from "./Pages/Student/StudentNotices";
+import StudentFees from "./Pages/Student/StudentFees";
+import StudentLeave from "./Pages/Student/StudentLeave";
 import TeacherDashboard from "./Pages/Teacher/TeacherDashboardNew";
 import StudentList from "./Pages/Teacher/StudentList";
 import StudentProfile from "./Pages/Student/StudentProfile";
@@ -38,6 +42,9 @@ import TeacherAttendance from "./Pages/Teacher/TeacherAttendance";
 import TeacherAssignments from "./Pages/Teacher/TeacherAssignments";
 import TeacherMaterials from "./Pages/Teacher/TeacherMaterials";
 import TeacherMarks from "./Pages/Teacher/TeacherMarks";
+import TeacherTimetable from "./Pages/Teacher/TeacherTimetable";
+import TeacherNotices from "./Pages/Teacher/TeacherNotices";
+import TeacherLeave from "./Pages/Teacher/TeacherLeave";
 import UpdatePass from "./Pages/Common/UpdatePass";
 import ForgetPass from "./Pages/Common/ForgetPassword/ForgetPass";
 import VerifyOtp from "./Pages/Common/ForgetPassword/VerifyOtp";
@@ -71,6 +78,10 @@ const router = createBrowserRouter(
         <Route path="materials" element={<StudentMaterials />} />
         <Route path="assignments" element={<StudentAssignments />} />
         <Route path="attendance" element={<StudentAttendance />} />
+        <Route path="timetable" element={<StudentTimetable />} />
+        <Route path="notices" element={<StudentNotices />} />
+        <Route path="fees" element={<StudentFees />} />
+        <Route path="leave" element={<StudentLeave />} />
         <Route path="updatePassword" element={<UpdatePass />} />
         <Route path="forgetPassword" element={<ForgetPass />} />
         <Route path="forgetPassword/verifyotp" element={<VerifyOtp />} />
@@ -85,6 +96,9 @@ const router = createBrowserRouter(
         <Route path="assignments" element={<TeacherAssignments />} />
         <Route path="materials" element={<TeacherMaterials />} />
         <Route path="marks" element={<TeacherMarks />} />
+        <Route path="timetable" element={<TeacherTimetable />} />
+        <Route path="notices" element={<TeacherNotices />} />
+        <Route path="leave" element={<TeacherLeave />} />
         <Route path="updatePassword" element={<UpdatePass />} />
         <Route path="forgetPassword" element={<ForgetPass />} />
         <Route path="forgetPassword/verifyotp" element={<VerifyOtp />} />

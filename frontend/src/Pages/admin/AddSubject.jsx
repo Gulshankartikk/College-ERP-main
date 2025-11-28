@@ -9,6 +9,7 @@ const AddSubject = () => {
   const [courses, setCourses] = useState([]);
   const [teachers, setTeachers] = useState([]);
   const [selectedCourse, setSelectedCourse] = useState("");
+  const [userRole, setUserRole] = useState(null);
   const [formData, setFormData] = useState({
     selectedCourse: "",
     subject_name: "",
@@ -27,6 +28,11 @@ const AddSubject = () => {
   const creditOptions = [1, 2, 3, 4, 5, 6];
 
   const token = Cookies.get("token");
+  
+  useEffect(() => {
+    const role = localStorage.getItem('role') || sessionStorage.getItem('role');
+    setUserRole(role);
+  }, []);
 
   useEffect(() => {
     fetchCourses();
@@ -92,6 +98,8 @@ const AddSubject = () => {
         courseId: selectedCourse || null,
       };
 
+      console.log('Submitting payload:', payload);
+
       await axios.post(`${BASE_URL}/api/admin/subjects`, payload, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -116,9 +124,25 @@ const AddSubject = () => {
 
     } catch (error) {
       console.error("Error adding subject:", error);
-      toast.error(error.response?.data?.message || "Failed to add subject");
+      if (error.response?.status === 403) {
+        toast.error("Access denied. Only admins can add subjects. Please login as admin.");
+      } else {
+        toast.error(error.response?.data?.msg || error.response?.data?.message || "Failed to add subject");
+      }
     }
   };
+
+  if (userRole && userRole !== 'admin') {
+    return (
+      <div className="flex flex-col w-full min-h-[100vh] pb-10 items-center justify-center" style={{ background: 'linear-gradient(135deg, #2d545e 0%, #12343b 100%)' }}>
+        <div className="bg-white p-8 rounded-lg shadow-xl text-center">
+          <h2 className="text-2xl font-bold mb-4" style={{ color: '#2d545e' }}>Access Denied</h2>
+          <p className="text-gray-600 mb-4">Only administrators can add subjects.</p>
+          <p className="text-sm text-gray-500">Please login as admin to access this page.</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col w-full min-h-[100vh] pb-10" style={{ background: 'linear-gradient(135deg, #2d545e 0%, #12343b 100%)' }}>

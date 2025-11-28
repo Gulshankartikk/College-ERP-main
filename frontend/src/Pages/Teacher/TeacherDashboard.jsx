@@ -174,6 +174,24 @@ const TeacherDashboard = () => {
             />
 
             <QuickAction
+              label="Timetable"
+              icon={<FaCalendarAlt className="text-pink-500 mb-2" size={24} />}
+              onClick={() => navigate(`/teacher/${teacherId}/timetable`)}
+            />
+
+            <QuickAction
+              label="Notices"
+              icon={<FaBell className="text-red-500 mb-2" size={24} />}
+              onClick={() => navigate(`/teacher/${teacherId}/notices`)}
+            />
+
+            <QuickAction
+              label="Leave"
+              icon={<FaCalendarAlt className="text-cyan-500 mb-2" size={24} />}
+              onClick={() => navigate(`/teacher/${teacherId}/leave`)}
+            />
+
+            <QuickAction
               label="Quick Upload"
               icon={<FaPlus className="text-teal-500 mb-2" size={24} />}
               onClick={() => setShowMaterialModal(true)}

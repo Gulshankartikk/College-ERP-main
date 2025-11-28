@@ -55,13 +55,28 @@ const addCourse = async (req, res) => {
 // Add Subject
 const addSubject = async (req, res) => {
   try {
-    const { subjectName, subjectCode, courseId, subjectDescription } = req.body;
+    const { subjectName, subjectCode, courseId, subjectType, credits, semester, branch, isElective, teacherId } = req.body;
     
-    const subject = new Subject({ subjectName, subjectCode, courseId, subjectDescription });
+    if (!subjectName || !subjectCode || !semester || !branch) {
+      return res.status(400).json({ success: false, msg: 'Subject name, code, semester, and branch are required' });
+    }
+    
+    const subject = new Subject({ 
+      subjectName, 
+      subjectCode, 
+      courseId: courseId || null,
+      subjectType: subjectType || 'Theory',
+      credits: credits || 0,
+      semester,
+      branch,
+      isElective: isElective || false,
+      teacherId: teacherId || null
+    });
     await subject.save();
     
     res.status(201).json({ success: true, msg: 'Subject added successfully', subject });
   } catch (error) {
+    console.error('Add subject error:', error);
     res.status(500).json({ success: false, msg: error.message });
   }
 };

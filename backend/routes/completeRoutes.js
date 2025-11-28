@@ -158,8 +158,17 @@ router.put('/admin/teachers/:teacherId', verifyToken, isAdmin, adminController.u
 router.delete('/admin/teachers/:teacherId', verifyToken, isAdmin, adminController.deleteTeacher);
 router.get('/admin/teachers/:teacherId', verifyToken, isAdmin, adminController.getTeacherDetails);
 
-// Courses
+// Courses (public read, admin write)
 router.get('/courses', async (req, res) => {
+  try {
+    const { Course } = require('../models/CompleteModels');
+    const courses = await Course.find({ isActive: true });
+    res.json({ success: true, courses });
+  } catch (error) {
+    res.status(500).json({ success: false, msg: error.message });
+  }
+});
+router.get('/admin/courses', verifyToken, async (req, res) => {
   try {
     const { Course } = require('../models/CompleteModels');
     const courses = await Course.find({ isActive: true });

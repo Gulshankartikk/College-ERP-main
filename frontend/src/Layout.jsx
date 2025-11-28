@@ -1,12 +1,15 @@
 import React from "react";
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import Footer from "./components/Footer";
 
 const Layout = () => {
+  const location = useLocation();
+  const hideFooter = location.pathname === '/' || location.pathname === '/login' || location.pathname === '/register';
+
   return (
     <>
       <Outlet />
-      <Footer />
+      {!hideFooter && <Footer />}
     </>
   );
 };
