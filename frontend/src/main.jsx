@@ -17,6 +17,7 @@ import ErrorBoundary from "./components/ErrorBoundary";
 import Login from "./Pages/Common/Login";
 import Register from "./Pages/Common/Register";
 import LandingPage from "./Pages/LandingPage";
+import StudentAchievers from "./Pages/Common/StudentAchievers";
 
 import AdminRegister from "./Pages/Common/AdminRegister";
 import StudentManagement from "./Pages/admin/StudentManagement";
@@ -41,6 +42,7 @@ import StudentSubjects from "./Pages/Student/StudentSubjects";
 import TeacherDashboard from "./Pages/Teacher/TeacherDashboardNew";
 import StudentList from "./Pages/Teacher/StudentList";
 import StudentProfile from "./Pages/Student/StudentProfile";
+import StudentLibrary from "./Pages/Student/StudentLibrary";
 import TeacherProfile from "./Pages/Teacher/TeacherProfile";
 import TeacherAttendance from "./Pages/Teacher/TeacherAttendance";
 import TeacherAssignments from "./Pages/Teacher/TeacherAssignments";
@@ -81,6 +83,7 @@ const router = createBrowserRouter(
       <Route index element={<LandingPage />} />
       <Route path="login" element={<Login />} />
       <Route path="register" element={<Register />} />
+      <Route path="achievers" element={<StudentAchievers />} />
 
       {/* student routes */}
       <Route element={<RequireAuth allowedRoles={['admin', 'teacher', 'student']} />}>
@@ -97,6 +100,7 @@ const router = createBrowserRouter(
           <Route path="leave" element={<StudentLeave />} />
           <Route path="subjects" element={<StudentSubjects />} />
           <Route path="resources" element={<StudentResources />} />
+          <Route path="library" element={<StudentLibrary />} />
           <Route path="marks" element={<StudentMarks />} />
           <Route path="updatePassword" element={<UpdatePass />} />
           <Route path="forgetPassword" element={<ForgetPass />} />

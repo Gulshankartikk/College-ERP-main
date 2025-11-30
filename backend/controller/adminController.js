@@ -56,6 +56,28 @@ const addCourse = async (req, res) => {
   }
 };
 
+// Update Course
+const updateCourse = async (req, res) => {
+  try {
+    const { courseId } = req.params;
+    const { courseName, courseCode, courseDuration, courseDescription } = req.body;
+
+    const course = await Course.findByIdAndUpdate(
+      courseId,
+      { courseName, courseCode, courseDuration, courseDescription },
+      { new: true }
+    );
+
+    if (!course) {
+      return res.status(404).json({ success: false, msg: 'Course not found' });
+    }
+
+    res.json({ success: true, msg: 'Course updated successfully', course });
+  } catch (error) {
+    res.status(500).json({ success: false, msg: error.message });
+  }
+};
+
 // Add Subject
 const addSubject = async (req, res) => {
   try {
@@ -1030,7 +1052,7 @@ module.exports = {
   getAllBooks,
   issueBook,
   returnBook,
-  returnBook,
   deleteBook,
-  getAllNotices
+  getAllNotices,
+  updateCourse
 };

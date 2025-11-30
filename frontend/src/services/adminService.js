@@ -92,7 +92,19 @@ class AdminService {
 
   // Reports
   async generateReport(reportType, filters = {}) {
-    const response = await axios.post(`${BASE_URL}/api/admin/reports/${reportType}`, filters, this.getAuthHeaders());
+    let url = `${BASE_URL}/api/admin/reports/${reportType}`;
+
+    // Handle special case for attendance report
+    if (reportType === 'attendance') {
+      url = `${BASE_URL}/api/admin/attendance-report`;
+    }
+
+    const config = {
+      ...this.getAuthHeaders(),
+      params: filters
+    };
+
+    const response = await axios.get(url, config);
     return response.data;
   }
 

@@ -58,10 +58,25 @@ const TeacherSchema = new mongoose.Schema({
   username: { type: String, unique: true, sparse: true },
   password: { type: String, required: true },
   phone: { type: String },
+  gender: { type: String, enum: ['Male', 'Female', 'Other'] },
+  dob: { type: Date },
+  profilePhoto: { type: String }, // URL to photo
+
+  // Professional
+  employeeId: { type: String, unique: true, sparse: true },
   department: { type: String },
   designation: { type: String },
+  qualifications: { type: String }, // e.g., "M.Tech, PhD"
+  specialization: { type: String },
+  experience: { type: Number, default: 0 }, // Years
+  researchInterests: { type: String }, // Comma separated or description
+  joinDate: { type: Date },
+  cvUrl: { type: String },
+
+  // Responsibilities
   assignedCourse: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Course' }],
   assignedSubjects: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Subject' }],
+
   isActive: { type: Boolean, default: true }
 }, { timestamps: true });
 
@@ -71,9 +86,27 @@ const StudentSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
   username: { type: String, unique: true, sparse: true },
   password: { type: String, required: true },
+
+  // Academic
   rollNo: { type: String, required: true, unique: true },
-  phone: { type: String },
   courseId: { type: mongoose.Schema.Types.ObjectId, ref: 'Course', required: true },
+  branch: { type: String },
+  semester: { type: Number },
+  section: { type: String },
+
+  // Personal
+  phone: { type: String },
+  gender: { type: String, enum: ['Male', 'Female', 'Other'] },
+  dob: { type: Date },
+  profilePhoto: { type: String },
+
+  // Additional
+  hostelInfo: { type: String }, // e.g., "Block A, Room 101"
+  transportInfo: { type: String }, // e.g., "Bus Route 5"
+
+  cvUrl: { type: String },
+  achievements: [{ type: String }],
+
   isDemo: { type: Boolean, default: false },
   passwordChanged: { type: Boolean, default: false },
   isActive: { type: Boolean, default: true }

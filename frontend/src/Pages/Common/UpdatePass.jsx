@@ -32,28 +32,33 @@ const UpdatePass = () => {
     e.preventDefault();
 
     try {
+      const payload = {
+        oldPassword: data.currpass,
+        newPassword: data.newpass
+      };
+
       let res =
         role === "teacher"
-          ? await axios.put(
-              `${BASE_URL}/teacher/updatePassword/${id}`,
-              data,
-              {
-                headers: {
-                  "Content-Type": "application/json",
-                  Authorization: `Bearer ${Cookies.get("token")}`,
-                },
-              }
-            )
-          : await axios.put(
-              `${BASE_URL}/student/updatePass/${id}`,
-              data,
-              {
-                headers: {
-                  "Content-Type": "application/json",
-                  Authorization: `Bearer ${Cookies.get("token")}`,
-                },
-              }
-            );
+          ? await axios.post(
+            `${BASE_URL}/api/teacher/${id}/change-password`,
+            payload,
+            {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${Cookies.get("token")}`,
+              },
+            }
+          )
+          : await axios.post(
+            `${BASE_URL}/api/student/${id}/change-password`,
+            payload,
+            {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${Cookies.get("token")}`,
+              },
+            }
+          );
 
       // let res = await axios.put(
       //   `http://localhost:4000/student/updatePass/${id}`,

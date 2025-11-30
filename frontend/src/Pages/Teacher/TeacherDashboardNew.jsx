@@ -98,7 +98,7 @@ const TeacherDashboardNew = () => {
       </div>
 
       {/* Summary Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
         {summaryCards.map((card, index) => (
           <Card key={index} className="border-none shadow-sm">
             <CardContent className="flex items-center justify-between p-6">
@@ -112,6 +112,19 @@ const TeacherDashboardNew = () => {
             </CardContent>
           </Card>
         ))}
+        <Card className="border-none shadow-sm cursor-pointer hover:shadow-md transition-shadow bg-yellow-50">
+          <CardContent className="flex items-center justify-between p-6">
+            <Link to="/achievers" className="w-full flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-text-grey">Hall of Fame</p>
+                <p className="text-lg font-bold text-navy mt-2">Achievers</p>
+              </div>
+              <div className="p-4 rounded-xl bg-yellow-100">
+                <span className="text-2xl">🏆</span>
+              </div>
+            </Link>
+          </CardContent>
+        </Card>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">

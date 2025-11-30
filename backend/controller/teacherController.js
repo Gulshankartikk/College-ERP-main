@@ -777,6 +777,30 @@ module.exports = {
       res.status(500).json({ success: false, msg: error.message });
     }
   },
+  changePassword: async (req, res) => {
+    try {
+      const { teacherId } = req.params;
+      const { oldPassword, newPassword } = req.body;
+
+      const teacher = await Teacher.findById(teacherId);
+      if (!teacher) {
+        return res.status(404).json({ success: false, msg: 'Teacher not found' });
+      }
+
+      const isMatch = await bcrypt.compare(oldPassword, teacher.password);
+      if (!isMatch) {
+        return res.status(400).json({ success: false, msg: 'Incorrect old password' });
+      }
+
+      const hashedPassword = await bcrypt.hash(newPassword, 10);
+      teacher.password = hashedPassword;
+      await teacher.save();
+
+      res.json({ success: true, msg: 'Password updated successfully' });
+    } catch (error) {
+      res.status(500).json({ success: false, msg: error.message });
+    }
+  },
   getLeaves: async (req, res) => {
     try {
       const { teacherId } = req.params;

@@ -134,7 +134,7 @@ const StudentDashboardNew = () => {
       </div>
 
       {/* Quick Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         <Card className="p-6 border-l-4 border-sky-blue">
           <div className="flex justify-between items-start">
             <div>
@@ -171,6 +171,17 @@ const StudentDashboardNew = () => {
             </div>
             <div className="p-3 bg-navy/10 rounded-lg text-navy">
               <Bell size={24} />
+            </div>
+          </div>
+        </Card>
+        <Card className="p-6 border-l-4 border-yellow-500 cursor-pointer hover:shadow-md transition-shadow" onClick={() => navigate('/achievers')}>
+          <div className="flex justify-between items-start">
+            <div>
+              <p className="text-text-grey text-sm font-medium">Hall of Fame</p>
+              <h3 className="text-lg font-bold text-navy mt-2">Student Achievers</h3>
+            </div>
+            <div className="p-3 bg-yellow-100 rounded-lg text-yellow-600">
+              <span className="text-2xl">🏆</span>
             </div>
           </div>
         </Card>

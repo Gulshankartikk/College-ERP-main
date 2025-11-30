@@ -1,10 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
 import { BASE_URL } from '../../constants/api';
-import { FaUser, FaEnvelope, FaPhone, FaChalkboardTeacher, FaBook, FaClipboardList, FaTasks, FaBell } from 'react-icons/fa';
+import {
+  FaUser, FaEnvelope, FaPhone, FaChalkboardTeacher, FaBook, FaClipboardList,
+  FaTasks, FaBell, FaBriefcase, FaCalendarAlt, FaFilePdf, FaUpload, FaGraduationCap,
+  FaFlask, FaChartLine, FaEdit, FaSave, FaTimes, FaBuilding, FaIdBadge
+} from 'react-icons/fa';
 import Cookies from 'js-cookie';
 import { toast } from 'react-toastify';
+import Button from '../../components/ui/Button';
+import Card, { CardContent } from '../../components/ui/Card';
+import Badge from '../../components/ui/Badge';
 
 const TeacherProfile = () => {
   const { id: teacherId } = useParams();
@@ -14,7 +21,12 @@ const TeacherProfile = () => {
   const [notices, setNotices] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
-  const [editData, setEditData] = useState({ name: '', email: '', phone: '', department: '', designation: '' });
+
+  const [editData, setEditData] = useState({
+    name: '', email: '', phone: '', department: '', designation: '',
+    experience: '', joinDate: '', cvUrl: '', gender: '', dob: '',
+    qualifications: '', specialization: '', researchInterests: '', employeeId: ''
+  });
 
   useEffect(() => {
     fetchTeacherProfile();
@@ -29,13 +41,23 @@ const TeacherProfile = () => {
       const response = await axios.get(`${BASE_URL}/api/teacher/${teacherId}/dashboard`, {
         headers: { Authorization: `Bearer ${token}` }
       });
-      setTeacher(response.data.teacher);
+      const tData = response.data.teacher;
+      setTeacher(tData);
       setEditData({
-        name: response.data.teacher?.name || '',
-        email: response.data.teacher?.email || '',
-        phone: response.data.teacher?.phone || '',
-        department: response.data.teacher?.department || '',
-        designation: response.data.teacher?.designation || ''
+        name: tData?.name || '',
+        email: tData?.email || '',
+        phone: tData?.phone || '',
+        department: tData?.department || '',
+        designation: tData?.designation || '',
+        experience: tData?.experience || '',
+        joinDate: tData?.joinDate ? new Date(tData.joinDate).toISOString().split('T')[0] : '',
+        cvUrl: tData?.cvUrl || '',
+        gender: tData?.gender || '',
+        dob: tData?.dob ? new Date(tData.dob).toISOString().split('T')[0] : '',
+        qualifications: tData?.qualifications || '',
+        specialization: tData?.specialization || '',
+        researchInterests: tData?.researchInterests || '',
+        employeeId: tData?.employeeId || ''
       });
     } catch (error) {
       console.error('Error fetching profile:', error);
@@ -44,13 +66,22 @@ const TeacherProfile = () => {
 
   const handleEditToggle = () => {
     setIsEditing(!isEditing);
-    if (!isEditing) {
+    if (!isEditing && teacher) {
       setEditData({
-        name: teacher?.name || '',
-        email: teacher?.email || '',
-        phone: teacher?.phone || '',
-        department: teacher?.department || '',
-        designation: teacher?.designation || ''
+        name: teacher.name || '',
+        email: teacher.email || '',
+        phone: teacher.phone || '',
+        department: teacher.department || '',
+        designation: teacher.designation || '',
+        experience: teacher.experience || '',
+        joinDate: teacher.joinDate ? new Date(teacher.joinDate).toISOString().split('T')[0] : '',
+        cvUrl: teacher.cvUrl || '',
+        gender: teacher.gender || '',
+        dob: teacher.dob ? new Date(teacher.dob).toISOString().split('T')[0] : '',
+        qualifications: teacher.qualifications || '',
+        specialization: teacher.specialization || '',
+        researchInterests: teacher.researchInterests || '',
+        employeeId: teacher.employeeId || ''
       });
     }
   };
@@ -121,234 +152,287 @@ const TeacherProfile = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="py-8">
-        <div className="max-w-7xl mx-auto px-4">
-
-          <div className="flex justify-between items-center mb-8">
-            <h1 className="text-4xl font-extrabold text-navy">Teacher Profile</h1>
-            <button
-              onClick={handleEditToggle}
-              className={`px-6 py-3 rounded-lg font-bold transition-all transform hover:scale-105 shadow-lg text-white ${isEditing ? 'bg-sky-blue' : 'bg-navy'}`}
-            >
-              {isEditing ? 'Cancel' : 'Edit Profile'}
-            </button>
-          </div>
-
-          {/* Personal Information */}
-          <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-            <h2 className="text-2xl font-bold text-navy mb-6 flex items-center">
-              <FaUser className="mr-3 text-sky-blue" />
-              Personal Information
-            </h2>
-            {isEditing ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <label className="block font-bold mb-2 text-sm text-navy">Full Name</label>
-                  <input
-                    type="text"
-                    name="name"
-                    value={editData.name}
-                    onChange={handleInputChange}
-                    className="w-full py-3 px-4 rounded-lg border-2 border-soft-grey focus:border-sky-blue focus:outline-none"
-                  />
-                </div>
-                <div>
-                  <label className="block font-bold mb-2 text-sm text-navy">Email</label>
-                  <input
-                    type="email"
-                    name="email"
-                    value={editData.email}
-                    onChange={handleInputChange}
-                    className="w-full py-3 px-4 rounded-lg border-2 border-soft-grey focus:border-sky-blue focus:outline-none"
-                  />
-                </div>
-                <div>
-                  <label className="block font-bold mb-2 text-sm text-navy">Phone</label>
-                  <input
-                    type="tel"
-                    name="phone"
-                    value={editData.phone}
-                    onChange={handleInputChange}
-                    className="w-full py-3 px-4 rounded-lg border-2 border-soft-grey focus:border-sky-blue focus:outline-none"
-                  />
-                </div>
-                <div>
-                  <label className="block font-bold mb-2 text-sm text-navy">Department</label>
-                  <input
-                    type="text"
-                    name="department"
-                    value={editData.department}
-                    onChange={handleInputChange}
-                    className="w-full py-3 px-4 rounded-lg border-2 border-soft-grey focus:border-sky-blue focus:outline-none"
-                  />
-                </div>
-                <div>
-                  <label className="block font-bold mb-2 text-sm text-navy">Designation</label>
-                  <input
-                    type="text"
-                    name="designation"
-                    value={editData.designation}
-                    onChange={handleInputChange}
-                    className="w-full py-3 px-4 rounded-lg border-2 border-soft-grey focus:border-sky-blue focus:outline-none"
-                  />
-                </div>
-                <div className="md:col-span-2">
-                  <button
-                    onClick={handleSaveProfile}
-                    className="w-full py-3 px-6 rounded-lg font-bold transition-all transform hover:scale-105 shadow-lg bg-navy text-white"
-                  >
-                    Save Changes
-                  </button>
-                </div>
+    <div className="min-h-screen bg-background pb-12">
+      <div className="bg-navy text-white py-12">
+        <div className="max-w-7xl mx-auto px-4 flex flex-col md:flex-row justify-between items-end">
+          <div className="flex items-center gap-6">
+            <div className="w-24 h-24 rounded-full bg-white/10 flex items-center justify-center text-4xl border-4 border-white/20">
+              <FaUser />
+            </div>
+            <div>
+              <h1 className="text-4xl font-bold mb-2">{teacher?.name}</h1>
+              <div className="flex gap-4 text-sm text-gray-300">
+                <span className="flex items-center gap-1"><FaBuilding /> {teacher?.department || 'Department N/A'}</span>
+                <span className="flex items-center gap-1"><FaIdBadge /> {teacher?.designation || 'Designation N/A'}</span>
               </div>
-            ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <InfoItem icon={<FaUser />} label="Full Name" value={teacher?.name} />
-                <InfoItem icon={<FaEnvelope />} label="Email" value={teacher?.email} />
-                <InfoItem icon={<FaPhone />} label="Phone" value={teacher?.phone || 'N/A'} />
-                <InfoItem icon={<FaChalkboardTeacher />} label="Department" value={teacher?.department || 'N/A'} />
-                <InfoItem icon={<FaChalkboardTeacher />} label="Designation" value={teacher?.designation || 'N/A'} />
-                <InfoItem icon={<FaBook />} label="Username" value={teacher?.username || 'N/A'} />
-              </div>
-            )}
+            </div>
           </div>
+          <Button
+            onClick={handleEditToggle}
+            className={`mt-4 md:mt-0 flex items-center gap-2 ${isEditing ? 'bg-red-500 hover:bg-red-600' : 'bg-sky-blue hover:bg-sky-600'}`}
+          >
+            {isEditing ? <><FaTimes /> Cancel Editing</> : <><FaEdit /> Edit Profile</>}
+          </Button>
+        </div>
+      </div>
 
-          {/* Teaching Overview */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
-            <StatCard title="Assigned Courses" value={teacher?.assignedCourse?.length || 0} color="sky-blue" />
-            <StatCard title="Assigned Subjects" value={teacher?.assignedSubjects?.length || 0} color="navy" />
-            <StatCard title="Total Assignments" value={assignments.length} color="sky-blue" />
-            <StatCard title="Study Materials" value={materials.length} color="navy" />
-          </div>
+      <div className="max-w-7xl mx-auto px-4 mt-8 grid grid-cols-1 lg:grid-cols-3 gap-8">
 
-          {/* Assigned Courses */}
-          <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-            <h2 className="text-2xl font-bold text-navy mb-6 flex items-center">
-              <FaBook className="mr-3 text-sky-blue" />
-              Assigned Courses
-            </h2>
-            {teacher?.assignedCourse?.length > 0 ? (
+        {/* Left Column - Detailed Info */}
+        <div className="lg:col-span-2 space-y-8">
+
+          {/* 1. Basic Information */}
+          <Card>
+            <CardContent className="p-6">
+              <h2 className="text-xl font-bold text-navy mb-4 flex items-center gap-2 border-b pb-2">
+                <FaUser className="text-sky-blue" /> Basic Information
+              </h2>
+              {isEditing ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <InputGroup label="Full Name" name="name" value={editData.name} onChange={handleInputChange} />
+                  <InputGroup label="Employee ID" name="employeeId" value={editData.employeeId} onChange={handleInputChange} />
+                  <InputGroup label="Email" name="email" value={editData.email} onChange={handleInputChange} />
+                  <InputGroup label="Phone" name="phone" value={editData.phone} onChange={handleInputChange} />
+                  <InputGroup label="Gender" name="gender" value={editData.gender} onChange={handleInputChange} placeholder="Male/Female/Other" />
+                  <InputGroup label="Date of Birth" name="dob" type="date" value={editData.dob} onChange={handleInputChange} />
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-8">
+                  <InfoRow label="Full Name" value={teacher?.name} />
+                  <InfoRow label="Employee ID" value={teacher?.employeeId} />
+                  <InfoRow label="Email" value={teacher?.email} />
+                  <InfoRow label="Phone" value={teacher?.phone} />
+                  <InfoRow label="Gender" value={teacher?.gender} />
+                  <InfoRow label="Date of Birth" value={teacher?.dob ? new Date(teacher.dob).toLocaleDateString() : 'N/A'} />
+                  <InfoRow label="Joining Date" value={teacher?.joinDate ? new Date(teacher.joinDate).toLocaleDateString() : 'N/A'} />
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
+          {/* 2. Academic & Professional Details */}
+          <Card>
+            <CardContent className="p-6">
+              <h2 className="text-xl font-bold text-navy mb-4 flex items-center gap-2 border-b pb-2">
+                <FaGraduationCap className="text-sky-blue" /> Academic & Professional Details
+              </h2>
+              {isEditing ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <InputGroup label="Qualifications" name="qualifications" value={editData.qualifications} onChange={handleInputChange} placeholder="e.g. PhD, M.Tech" />
+                  <InputGroup label="Specialization" name="specialization" value={editData.specialization} onChange={handleInputChange} />
+                  <InputGroup label="Experience (Years)" name="experience" type="number" value={editData.experience} onChange={handleInputChange} />
+                  <InputGroup label="Department" name="department" value={editData.department} onChange={handleInputChange} />
+                  <InputGroup label="Designation" name="designation" value={editData.designation} onChange={handleInputChange} />
+                  <div className="md:col-span-2">
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Research Areas / Skills</label>
+                    <textarea
+                      name="researchInterests"
+                      value={editData.researchInterests}
+                      onChange={handleInputChange}
+                      className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-sky-blue outline-none"
+                      rows="3"
+                    />
+                  </div>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-8">
+                    <InfoRow label="Qualifications" value={teacher?.qualifications} />
+                    <InfoRow label="Specialization" value={teacher?.specialization} />
+                    <InfoRow label="Experience" value={teacher?.experience ? `${teacher.experience} Years` : 'N/A'} />
+                    <InfoRow label="Designation" value={teacher?.designation} />
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-500 font-medium">Research Areas / Skills</p>
+                    <p className="text-navy font-medium mt-1">{teacher?.researchInterests || 'N/A'}</p>
+                  </div>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
+          {/* 3. CV / Resume Section */}
+          <Card>
+            <CardContent className="p-6">
+              <h2 className="text-xl font-bold text-navy mb-4 flex items-center gap-2 border-b pb-2">
+                <FaFilePdf className="text-sky-blue" /> CV / Resume
+              </h2>
+              {isEditing ? (
+                <div>
+                  <InputGroup label="CV URL (Public Link)" name="cvUrl" value={editData.cvUrl} onChange={handleInputChange} placeholder="https://drive.google.com/..." />
+                </div>
+              ) : (
+                <div className="flex items-center justify-between bg-gray-50 p-4 rounded-lg border border-gray-100">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 bg-red-100 rounded text-red-600"><FaFilePdf size={24} /></div>
+                    <div>
+                      <p className="font-bold text-navy">Curriculum Vitae</p>
+                      <p className="text-xs text-gray-500">PDF Document</p>
+                    </div>
+                  </div>
+                  {teacher?.cvUrl ? (
+                    <a href={teacher.cvUrl} target="_blank" rel="noopener noreferrer">
+                      <Button size="sm" variant="outline">View CV</Button>
+                    </a>
+                  ) : (
+                    <span className="text-sm text-gray-400 italic">No CV Uploaded</span>
+                  )}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
+          {isEditing && (
+            <div className="flex justify-end">
+              <Button onClick={handleSaveProfile} className="flex items-center gap-2 text-lg px-8">
+                <FaSave /> Save All Changes
+              </Button>
+            </div>
+          )}
+
+          {/* 4. Teaching Responsibilities (Read Only) */}
+          <Card>
+            <CardContent className="p-6">
+              <h2 className="text-xl font-bold text-navy mb-4 flex items-center gap-2 border-b pb-2">
+                <FaChalkboardTeacher className="text-sky-blue" /> Teaching Responsibilities
+              </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {teacher.assignedCourse.map((course, index) => (
-                  <div key={index} className="p-4 bg-sky-blue/10 rounded-lg border-l-4 border-sky-blue">
-                    <p className="font-bold text-navy text-lg">{course.courseName}</p>
-                    <p className="text-sm font-semibold text-text-grey">Code: {course.courseCode}</p>
-                    <p className="text-sm font-medium text-text-grey">Duration: {course.courseDuration}</p>
-                  </div>
-                ))}
+                <div className="bg-sky-50 p-4 rounded-lg border border-sky-100">
+                  <h3 className="font-bold text-navy mb-2">Assigned Subjects</h3>
+                  {teacher?.assignedSubjects?.length > 0 ? (
+                    <ul className="list-disc list-inside text-sm text-gray-700 space-y-1">
+                      {teacher.assignedSubjects.map((sub, idx) => (
+                        <li key={idx}>{sub.subjectName} ({sub.subjectCode})</li>
+                      ))}
+                    </ul>
+                  ) : <p className="text-sm text-gray-500">No subjects assigned.</p>}
+                </div>
+                <div className="bg-blue-50 p-4 rounded-lg border border-blue-100">
+                  <h3 className="font-bold text-navy mb-2">Assigned Courses</h3>
+                  {teacher?.assignedCourse?.length > 0 ? (
+                    <ul className="list-disc list-inside text-sm text-gray-700 space-y-1">
+                      {teacher.assignedCourse.map((course, idx) => (
+                        <li key={idx}>{course.courseName}</li>
+                      ))}
+                    </ul>
+                  ) : <p className="text-sm text-gray-500">No courses assigned.</p>}
+                </div>
               </div>
-            ) : (
-              <p className="text-text-grey text-center py-4 font-semibold">No courses assigned</p>
-            )}
+            </CardContent>
+          </Card>
+
+        </div>
+
+        {/* Right Column - Dashboard Widgets */}
+        <div className="space-y-6">
+
+          {/* Quick Stats */}
+          <div className="grid grid-cols-2 gap-4">
+            <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 text-center">
+              <p className="text-3xl font-bold text-sky-blue">{assignments.length}</p>
+              <p className="text-xs text-gray-500 uppercase font-bold mt-1">Assignments</p>
+            </div>
+            <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 text-center">
+              <p className="text-3xl font-bold text-navy">{materials.length}</p>
+              <p className="text-xs text-gray-500 uppercase font-bold mt-1">Materials</p>
+            </div>
           </div>
 
-          {/* Assigned Subjects */}
-          <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-            <h2 className="text-2xl font-bold text-navy mb-6 flex items-center">
-              <FaClipboardList className="mr-3 text-navy" />
-              Assigned Subjects
-            </h2>
-            {teacher?.assignedSubjects?.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                {teacher.assignedSubjects.map((subject, index) => (
-                  <div key={index} className="p-4 bg-navy/10 rounded-lg border-l-4 border-navy">
-                    <p className="font-bold text-navy">{subject.subjectName}</p>
-                    <p className="text-sm font-semibold text-text-grey">Code: {subject.subjectCode}</p>
-                  </div>
-                ))}
+          {/* Administrative Controls */}
+          <Card>
+            <CardContent className="p-6">
+              <h3 className="font-bold text-navy mb-4 flex items-center gap-2">
+                <FaTasks className="text-sky-blue" /> Admin Controls
+              </h3>
+              <div className="space-y-2">
+                <Link to={`/teacher/${teacherId}/assignments`} className="block w-full text-left px-4 py-2 rounded-lg hover:bg-gray-50 text-sm font-medium text-gray-700 transition-colors">
+                  • Upload Assignments
+                </Link>
+                <Link to={`/teacher/${teacherId}/materials`} className="block w-full text-left px-4 py-2 rounded-lg hover:bg-gray-50 text-sm font-medium text-gray-700 transition-colors">
+                  • Upload Study Materials
+                </Link>
+                <Link to={`/teacher/${teacherId}/marks`} className="block w-full text-left px-4 py-2 rounded-lg hover:bg-gray-50 text-sm font-medium text-gray-700 transition-colors">
+                  • Manage Marks
+                </Link>
+                <Link to={`/teacher/${teacherId}/attendance`} className="block w-full text-left px-4 py-2 rounded-lg hover:bg-gray-50 text-sm font-medium text-gray-700 transition-colors">
+                  • Mark Attendance
+                </Link>
               </div>
-            ) : (
-              <p className="text-text-grey text-center py-4 font-semibold">No subjects assigned</p>
-            )}
-          </div>
+            </CardContent>
+          </Card>
 
-          {/* Recent Assignments */}
-          <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-            <h2 className="text-2xl font-bold text-navy mb-6 flex items-center">
-              <FaTasks className="mr-3 text-sky-blue" />
-              Recent Assignments
-            </h2>
-            {assignments.length > 0 ? (
-              <div className="overflow-x-auto">
-                <table className="min-w-full divide-y divide-gray-200">
-                  <thead className="bg-background">
-                    <tr>
-                      <th className="px-6 py-3 text-left text-xs font-bold text-text-grey uppercase">Title</th>
-                      <th className="px-6 py-3 text-left text-xs font-bold text-text-grey uppercase">Subject</th>
-                      <th className="px-6 py-3 text-left text-xs font-bold text-text-grey uppercase">Deadline</th>
-                      <th className="px-6 py-3 text-left text-xs font-bold text-text-grey uppercase">Submissions</th>
-                    </tr>
-                  </thead>
-                  <tbody className="bg-white divide-y divide-gray-200">
-                    {assignments.slice(0, 5).map((assignment, index) => (
-                      <tr key={index}>
-                        <td className="px-6 py-4 whitespace-nowrap font-semibold text-navy">{assignment.title}</td>
-                        <td className="px-6 py-4 whitespace-nowrap font-semibold text-text-grey">{assignment.subjectId?.subjectName}</td>
-                        <td className="px-6 py-4 whitespace-nowrap font-semibold text-text-grey">
-                          {new Date(assignment.deadline).toLocaleDateString()}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <span className="px-3 py-1 bg-sky-blue/10 text-sky-blue rounded-full text-sm font-bold">
-                            {assignment.submittedCount || 0}/{assignment.totalStudents || 0}
-                          </span>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+          {/* Student Interaction */}
+          <Card>
+            <CardContent className="p-6">
+              <h3 className="font-bold text-navy mb-4 flex items-center gap-2">
+                <FaUser className="text-sky-blue" /> Student Interaction
+              </h3>
+              <div className="space-y-2">
+                <button className="w-full text-left px-4 py-2 rounded-lg hover:bg-gray-50 text-sm font-medium text-gray-700 transition-colors">
+                  • View Leave Requests <Badge variant="warning" className="ml-2 text-xs">2 New</Badge>
+                </button>
+                <button className="w-full text-left px-4 py-2 rounded-lg hover:bg-gray-50 text-sm font-medium text-gray-700 transition-colors">
+                  • Student Queries
+                </button>
               </div>
-            ) : (
-              <p className="text-text-grey text-center py-4 font-semibold">No assignments created yet</p>
-            )}
-          </div>
+            </CardContent>
+          </Card>
 
-          {/* Recent Notices */}
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <h2 className="text-2xl font-bold text-navy mb-6 flex items-center">
-              <FaBell className="mr-3 text-navy" />
-              Recent Notices
-            </h2>
-            {notices.length > 0 ? (
+          {/* Performance */}
+          <Card>
+            <CardContent className="p-6">
+              <h3 className="font-bold text-navy mb-4 flex items-center gap-2">
+                <FaChartLine className="text-sky-blue" /> Performance
+              </h3>
               <div className="space-y-4">
-                {notices.slice(0, 5).map((notice, index) => (
-                  <div key={index} className="p-4 bg-navy/10 rounded-lg border-l-4 border-navy">
-                    <p className="font-bold text-navy text-lg">{notice.title}</p>
-                    <p className="text-sm font-semibold text-text-grey mt-2">{notice.description}</p>
-                    <p className="text-xs font-medium text-text-grey/70 mt-2">
-                      Posted: {new Date(notice.createdAt).toLocaleDateString()}
-                    </p>
+                <div>
+                  <div className="flex justify-between text-sm mb-1">
+                    <span className="text-gray-600">Attendance</span>
+                    <span className="font-bold text-navy">92%</span>
                   </div>
-                ))}
+                  <div className="w-full bg-gray-100 rounded-full h-2">
+                    <div className="bg-green-500 h-2 rounded-full" style={{ width: '92%' }}></div>
+                  </div>
+                </div>
+                <div>
+                  <div className="flex justify-between text-sm mb-1">
+                    <span className="text-gray-600">Syllabus Covered</span>
+                    <span className="font-bold text-navy">75%</span>
+                  </div>
+                  <div className="w-full bg-gray-100 rounded-full h-2">
+                    <div className="bg-sky-blue h-2 rounded-full" style={{ width: '75%' }}></div>
+                  </div>
+                </div>
               </div>
-            ) : (
-              <p className="text-text-grey text-center py-4 font-semibold">No notices posted yet</p>
-            )}
-          </div>
+            </CardContent>
+          </Card>
+
         </div>
       </div>
     </div>
   );
 };
 
-const InfoItem = ({ icon, label, value }) => (
-  <div className="flex items-center space-x-3 p-4 bg-background rounded-lg">
-    <div className="text-sky-blue text-xl">{icon}</div>
-    <div>
-      <p className="text-sm font-semibold text-text-grey">{label}</p>
-      <p className="text-lg font-bold text-navy">{value || 'N/A'}</p>
-    </div>
+// Helper Components
+const InfoRow = ({ label, value }) => (
+  <div className="border-b border-gray-50 pb-2 last:border-0">
+    <p className="text-xs text-gray-400 uppercase font-bold tracking-wider">{label}</p>
+    <p className="text-navy font-medium text-base mt-0.5">{value || 'N/A'}</p>
   </div>
 );
 
-const StatCard = ({ title, value, color }) => {
-  const borderColor = color === 'sky-blue' ? 'border-sky-blue' : 'border-navy';
-  return (
-    <div className={`bg-white rounded-lg shadow-md p-6 border-l-4 ${borderColor}`}>
-      <p className="text-sm font-semibold text-text-grey mb-2">{title}</p>
-      <p className="text-3xl font-extrabold text-navy">{value}</p>
-    </div>
-  );
-};
+const InputGroup = ({ label, name, value, onChange, type = "text", placeholder }) => (
+  <div>
+    <label className="block text-sm font-medium text-gray-700 mb-1">{label}</label>
+    <input
+      type={type}
+      name={name}
+      value={value}
+      onChange={onChange}
+      placeholder={placeholder}
+      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-blue focus:border-sky-blue outline-none transition-all"
+    />
+  </div>
+);
 
 export default TeacherProfile;

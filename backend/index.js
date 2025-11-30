@@ -15,7 +15,7 @@ const app = express();
 // middlewares
 app.use(
   cors({
-    origin: function(origin, callback) {
+    origin: function (origin, callback) {
       if (!origin || origin.startsWith('http://localhost:')) {
         callback(null, true);
       } else {
@@ -28,6 +28,7 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use('/uploads', express.static('uploads'));
 
 app.get("/", (req, res) => {
   res.send("Welcome to the server");

@@ -35,6 +35,7 @@ router.post('/student/login', (req, res, next) => { req.body.role = 'student'; a
 
 // Dashboard + subjects + courses
 router.get('/teacher/:teacherId/dashboard', verifyToken, teacherController.getTeacherDashboard);
+router.post('/teacher/:teacherId/change-password', verifyToken, teacherController.changePassword);
 router.put('/teacher/:teacherId/profile', verifyToken, isAdmin, async (req, res) => {
   try {
     const { teacherId } = req.params;
@@ -202,6 +203,7 @@ router.get('/admin/courses', verifyToken, async (req, res) => {
   }
 });
 router.post('/admin/courses', verifyToken, isAdmin, adminController.addCourse);
+router.put('/admin/courses/:courseId', verifyToken, isAdmin, adminController.updateCourse);
 router.delete('/admin/courses/:courseId', verifyToken, isAdmin, adminController.deleteCourse);
 
 // Subjects (public read, admin write)

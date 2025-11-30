@@ -1,12 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
 import { BASE_URL } from '../../constants/api';
-import { FaUser, FaEnvelope, FaPhone, FaIdCard, FaGraduationCap, FaChartLine, FaCalendarAlt } from 'react-icons/fa';
+import {
+  FaUser, FaEnvelope, FaPhone, FaIdCard, FaGraduationCap, FaChartLine,
+  FaCalendarAlt, FaFilePdf, FaBus, FaBuilding, FaBook, FaMoneyBillWave,
+  FaEdit, FaSave, FaTimes, FaClipboardList, FaBell
+} from 'react-icons/fa';
 import Cookies from 'js-cookie';
 import { toast } from 'react-toastify';
-import StudentHeader from '../../components/StudentHeader';
-import BackButton from '../../components/BackButton';
+import Button from '../../components/ui/Button';
+import Card, { CardContent } from '../../components/ui/Card';
+import Badge from '../../components/ui/Badge';
 
 const StudentProfile = () => {
   const { studentId } = useParams();
@@ -16,7 +21,11 @@ const StudentProfile = () => {
   const [assignments, setAssignments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
-  const [editData, setEditData] = useState({ name: '', email: '', phone: '' });
+
+  const [editData, setEditData] = useState({
+    name: '', email: '', phone: '', cvUrl: '',
+    gender: '', dob: '', hostelInfo: '', transportInfo: ''
+  });
 
   useEffect(() => {
     fetchStudentProfile();
@@ -31,8 +40,18 @@ const StudentProfile = () => {
       const response = await axios.get(`${BASE_URL}/api/student/${studentId}/profile`, {
         headers: { Authorization: `Bearer ${token}` }
       });
-      setStudent(response.data.student);
-      setEditData({ name: response.data.student?.name || '', email: response.data.student?.email || '', phone: response.data.student?.phone || '' });
+      const sData = response.data.student;
+      setStudent(sData);
+      setEditData({
+        name: sData?.name || '',
+        email: sData?.email || '',
+        phone: sData?.phone || '',
+        cvUrl: sData?.cvUrl || '',
+        gender: sData?.gender || '',
+        dob: sData?.dob ? new Date(sData.dob).toISOString().split('T')[0] : '',
+        hostelInfo: sData?.hostelInfo || '',
+        transportInfo: sData?.transportInfo || ''
+      });
     } catch (error) {
       console.error('Error fetching profile:', error);
     }
@@ -40,8 +59,17 @@ const StudentProfile = () => {
 
   const handleEditToggle = () => {
     setIsEditing(!isEditing);
-    if (!isEditing) {
-      setEditData({ name: student?.name || '', email: student?.email || '', phone: student?.phone || '' });
+    if (!isEditing && student) {
+      setEditData({
+        name: student.name || '',
+        email: student.email || '',
+        phone: student.phone || '',
+        cvUrl: student.cvUrl || '',
+        gender: student.gender || '',
+        dob: student.dob ? new Date(student.dob).toISOString().split('T')[0] : '',
+        hostelInfo: student.hostelInfo || '',
+        transportInfo: student.transportInfo || ''
+      });
     }
   };
 
@@ -115,189 +143,288 @@ const StudentProfile = () => {
     : '0.00';
 
   return (
-    <div className="min-h-screen bg-background">
-      <StudentHeader studentId={studentId} studentName={student?.name} />
-
-      <div className="py-8">
-        <div className="max-w-7xl mx-auto px-4">
-          <BackButton />
-
-          <div className="flex justify-between items-center mb-8">
-            <h1 className="text-4xl font-extrabold text-navy">Student Profile</h1>
-            <button
-              onClick={handleEditToggle}
-              className={`px-6 py-3 rounded-lg font-bold transition-all transform hover:scale-105 shadow-lg text-white ${isEditing ? 'bg-soft-grey' : 'bg-navy'}`}
-            >
-              {isEditing ? 'Cancel' : 'Edit Profile'}
-            </button>
-          </div>
-
-          {/* Personal Information */}
-          <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-            <h2 className="text-2xl font-bold text-navy mb-6 flex items-center">
-              <FaUser className="mr-3 text-sky-blue" />
-              Personal Information
-            </h2>
-            {isEditing ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <label className="block font-bold mb-2 text-sm text-navy">Full Name</label>
-                  <input
-                    type="text"
-                    name="name"
-                    value={editData.name}
-                    onChange={handleInputChange}
-                    className="w-full py-3 px-4 rounded-lg border-2 border-soft-grey focus:border-sky-blue focus:outline-none"
-                  />
-                </div>
-                <div>
-                  <label className="block font-bold mb-2 text-sm text-navy">Roll Number</label>
-                  <input
-                    type="text"
-                    value={student?.rollNo}
-                    disabled
-                    className="w-full py-3 px-4 rounded-lg border-2 border-soft-grey bg-background"
-                  />
-                </div>
-                <div>
-                  <label className="block font-bold mb-2 text-sm text-navy">Email</label>
-                  <input
-                    type="email"
-                    name="email"
-                    value={editData.email}
-                    onChange={handleInputChange}
-                    className="w-full py-3 px-4 rounded-lg border-2 border-soft-grey focus:border-sky-blue focus:outline-none"
-                  />
-                </div>
-                <div>
-                  <label className="block font-bold mb-2 text-sm text-navy">Phone</label>
-                  <input
-                    type="tel"
-                    name="phone"
-                    value={editData.phone}
-                    onChange={handleInputChange}
-                    className="w-full py-3 px-4 rounded-lg border-2 border-soft-grey focus:border-sky-blue focus:outline-none"
-                  />
-                </div>
-                <div className="md:col-span-2">
-                  <button
-                    onClick={handleSaveProfile}
-                    className="w-full py-3 px-6 rounded-lg font-bold transition-all transform hover:scale-105 shadow-lg bg-navy text-white hover:bg-navy/90"
-                  >
-                    Save Changes
-                  </button>
-                </div>
+    <div className="min-h-screen bg-background pb-12">
+      {/* Header Section */}
+      <div className="bg-navy text-white py-12">
+        <div className="max-w-7xl mx-auto px-4 flex flex-col md:flex-row justify-between items-end">
+          <div className="flex items-center gap-6">
+            <div className="w-24 h-24 rounded-full bg-white/10 flex items-center justify-center text-4xl border-4 border-white/20">
+              <FaUser />
+            </div>
+            <div>
+              <h1 className="text-4xl font-bold mb-2">{student?.name}</h1>
+              <div className="flex gap-4 text-sm text-gray-300">
+                <span className="flex items-center gap-1"><FaIdCard /> {student?.rollNo || 'Roll No N/A'}</span>
+                <span className="flex items-center gap-1"><FaGraduationCap /> {student?.courseId?.courseName || 'Course N/A'}</span>
               </div>
-            ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <InfoItem icon={<FaUser />} label="Full Name" value={student?.name} />
-                <InfoItem icon={<FaIdCard />} label="Roll Number" value={student?.rollNo} />
-                <InfoItem icon={<FaEnvelope />} label="Email" value={student?.email} />
-                <InfoItem icon={<FaPhone />} label="Phone" value={student?.phone || 'N/A'} />
-                <InfoItem icon={<FaGraduationCap />} label="Course" value={student?.courseId?.courseName} />
-                <InfoItem icon={<FaCalendarAlt />} label="Joined" value={new Date(student?.createdAt).toLocaleDateString()} />
-              </div>
-            )}
+            </div>
           </div>
+          <Button
+            onClick={handleEditToggle}
+            className={`mt-4 md:mt-0 flex items-center gap-2 ${isEditing ? 'bg-red-500 hover:bg-red-600' : 'bg-sky-blue hover:bg-sky-600'}`}
+          >
+            {isEditing ? <><FaTimes /> Cancel Editing</> : <><FaEdit /> Edit Profile</>}
+          </Button>
+        </div>
+      </div>
 
-          {/* Academic Overview */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-            <StatCard title="Overall Attendance" value={`${overallAttendance}%`} color="sky-blue" />
-            <StatCard title="Total Subjects" value={attendance.length} color="navy" />
-            <StatCard title="Assignments Submitted" value={assignments.filter(a => a.submissions?.some(s => s.studentId === studentId)).length} color="sky-blue" />
-          </div>
+      <div className="max-w-7xl mx-auto px-4 mt-8 grid grid-cols-1 lg:grid-cols-3 gap-8">
 
-          {/* Attendance Record */}
-          <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-            <h2 className="text-2xl font-bold text-navy mb-6 flex items-center">
-              <FaChartLine className="mr-3 text-sky-blue" />
-              Attendance Record
-            </h2>
-            <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-soft-grey">
-                <thead className="bg-background">
-                  <tr>
-                    <th className="px-6 py-3 text-left text-xs font-bold text-text-grey uppercase">Subject</th>
-                    <th className="px-6 py-3 text-left text-xs font-bold text-text-grey uppercase">Total Classes</th>
-                    <th className="px-6 py-3 text-left text-xs font-bold text-text-grey uppercase">Present</th>
-                    <th className="px-6 py-3 text-left text-xs font-bold text-text-grey uppercase">Absent</th>
-                    <th className="px-6 py-3 text-left text-xs font-bold text-text-grey uppercase">Percentage</th>
-                  </tr>
-                </thead>
-                <tbody className="bg-white divide-y divide-soft-grey">
-                  {attendance.map((record, index) => (
-                    <tr key={index}>
-                      <td className="px-6 py-4 whitespace-nowrap font-semibold text-navy">{record.subjectName}</td>
-                      <td className="px-6 py-4 whitespace-nowrap font-semibold text-text-grey">{record.totalClasses}</td>
-                      <td className="px-6 py-4 whitespace-nowrap font-semibold text-sky-blue">{record.present}</td>
-                      <td className="px-6 py-4 whitespace-nowrap font-semibold text-red-500">{record.absent}</td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <span className={`px-3 py-1 rounded-full text-sm font-bold ${parseFloat(record.percentage) >= 75 ? 'bg-sky-blue/10 text-sky-blue' : 'bg-red-100 text-red-800'
-                          }`}>
-                          {record.percentage}%
-                        </span>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+        {/* Left Column - Detailed Info */}
+        <div className="lg:col-span-2 space-y-8">
+
+          {/* 1. Basic Information */}
+          <Card>
+            <CardContent className="p-6">
+              <h2 className="text-xl font-bold text-navy mb-4 flex items-center gap-2 border-b pb-2">
+                <FaUser className="text-sky-blue" /> Basic Information
+              </h2>
+              {isEditing ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <InputGroup label="Full Name" name="name" value={editData.name} onChange={handleInputChange} />
+                  <InputGroup label="Email" name="email" value={editData.email} onChange={handleInputChange} />
+                  <InputGroup label="Phone" name="phone" value={editData.phone} onChange={handleInputChange} />
+                  <InputGroup label="Gender" name="gender" value={editData.gender} onChange={handleInputChange} placeholder="Male/Female/Other" />
+                  <InputGroup label="Date of Birth" name="dob" type="date" value={editData.dob} onChange={handleInputChange} />
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-8">
+                  <InfoRow label="Full Name" value={student?.name} />
+                  <InfoRow label="Roll Number" value={student?.rollNo} />
+                  <InfoRow label="Email" value={student?.email} />
+                  <InfoRow label="Phone" value={student?.phone} />
+                  <InfoRow label="Gender" value={student?.gender} />
+                  <InfoRow label="Date of Birth" value={student?.dob ? new Date(student.dob).toLocaleDateString() : 'N/A'} />
+                  <InfoRow label="Course" value={student?.courseId?.courseName} />
+                  <InfoRow label="Joined" value={new Date(student?.createdAt).toLocaleDateString()} />
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
+          {/* 2. Additional Details (Hostel, Transport) */}
+          <Card>
+            <CardContent className="p-6">
+              <h2 className="text-xl font-bold text-navy mb-4 flex items-center gap-2 border-b pb-2">
+                <FaBus className="text-sky-blue" /> Additional Details
+              </h2>
+              {isEditing ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <InputGroup label="Hostel Info" name="hostelInfo" value={editData.hostelInfo} onChange={handleInputChange} placeholder="Block/Room No" />
+                  <InputGroup label="Transport Info" name="transportInfo" value={editData.transportInfo} onChange={handleInputChange} placeholder="Bus Route/Stop" />
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-8">
+                    <InfoRow label="Hostel Info" value={student?.hostelInfo} />
+                    <InfoRow label="Transport Info" value={student?.transportInfo} />
+                  </div>
+                  <div className="pt-2">
+                    <Button variant="outline" className="w-full md:w-auto flex items-center justify-center gap-2" onClick={() => toast.info("ID Card download started...")}>
+                      <FaIdCard /> Download ID Card
+                    </Button>
+                  </div>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
+          {/* 3. CV / Resume Section */}
+          <Card>
+            <CardContent className="p-6">
+              <h2 className="text-xl font-bold text-navy mb-4 flex items-center gap-2 border-b pb-2">
+                <FaFilePdf className="text-sky-blue" /> CV / Resume
+              </h2>
+              {isEditing ? (
+                <div>
+                  <InputGroup label="CV URL (Public Link)" name="cvUrl" value={editData.cvUrl} onChange={handleInputChange} placeholder="https://drive.google.com/..." />
+                </div>
+              ) : (
+                <div className="flex items-center justify-between bg-gray-50 p-4 rounded-lg border border-gray-100">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 bg-red-100 rounded text-red-600"><FaFilePdf size={24} /></div>
+                    <div>
+                      <p className="font-bold text-navy">Curriculum Vitae</p>
+                      <p className="text-xs text-gray-500">PDF Document</p>
+                    </div>
+                  </div>
+                  {student?.cvUrl ? (
+                    <a href={student.cvUrl} target="_blank" rel="noopener noreferrer">
+                      <Button size="sm" variant="outline">View CV</Button>
+                    </a>
+                  ) : (
+                    <span className="text-sm text-gray-400 italic">No CV Uploaded</span>
+                  )}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
+          {isEditing && (
+            <div className="flex justify-end">
+              <Button onClick={handleSaveProfile} className="flex items-center gap-2 text-lg px-8">
+                <FaSave /> Save All Changes
+              </Button>
+            </div>
+          )}
+
+          {/* 4. Academic Performance (Marks) */}
+          <Card>
+            <CardContent className="p-6">
+              <h2 className="text-xl font-bold text-navy mb-4 flex items-center gap-2 border-b pb-2">
+                <FaBook className="text-sky-blue" /> Academic Performance
+              </h2>
+              {marks.length > 0 ? (
+                <div className="overflow-x-auto">
+                  <table className="min-w-full divide-y divide-gray-200">
+                    <thead className="bg-gray-50">
+                      <tr>
+                        <th className="px-4 py-3 text-left text-xs font-bold text-gray-500 uppercase">Subject</th>
+                        <th className="px-4 py-3 text-left text-xs font-bold text-gray-500 uppercase">Exam</th>
+                        <th className="px-4 py-3 text-left text-xs font-bold text-gray-500 uppercase">Score</th>
+                        <th className="px-4 py-3 text-left text-xs font-bold text-gray-500 uppercase">%</th>
+                      </tr>
+                    </thead>
+                    <tbody className="bg-white divide-y divide-gray-200">
+                      {marks.map((mark, index) => (
+                        <tr key={index}>
+                          <td className="px-4 py-3 text-sm font-medium text-navy">{mark.subjectId?.subjectName}</td>
+                          <td className="px-4 py-3 text-sm text-gray-500">{mark.examType}</td>
+                          <td className="px-4 py-3 text-sm font-bold text-sky-blue">{mark.marks} / {mark.totalMarks}</td>
+                          <td className="px-4 py-3 text-sm font-bold text-navy">{((mark.marks / mark.totalMarks) * 100).toFixed(1)}%</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              ) : (
+                <p className="text-gray-500 text-center py-4">No marks recorded yet.</p>
+              )}
+            </CardContent>
+          </Card>
+
+        </div>
+
+        {/* Right Column - Dashboard Widgets */}
+        <div className="space-y-6">
+
+          {/* Quick Stats */}
+          <div className="grid grid-cols-2 gap-4">
+            <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 text-center">
+              <p className="text-3xl font-bold text-sky-blue">{overallAttendance}%</p>
+              <p className="text-xs text-gray-500 uppercase font-bold mt-1">Attendance</p>
+            </div>
+            <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 text-center">
+              <p className="text-3xl font-bold text-navy">{assignments.length}</p>
+              <p className="text-xs text-gray-500 uppercase font-bold mt-1">Assignments</p>
             </div>
           </div>
 
-          {/* Marks Record */}
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <h2 className="text-2xl font-bold text-navy mb-6">Academic Performance</h2>
-            {marks.length > 0 ? (
-              <div className="overflow-x-auto">
-                <table className="min-w-full divide-y divide-soft-grey">
-                  <thead className="bg-background">
-                    <tr>
-                      <th className="px-6 py-3 text-left text-xs font-bold text-text-grey uppercase">Subject</th>
-                      <th className="px-6 py-3 text-left text-xs font-bold text-text-grey uppercase">Exam Type</th>
-                      <th className="px-6 py-3 text-left text-xs font-bold text-text-grey uppercase">Marks Obtained</th>
-                      <th className="px-6 py-3 text-left text-xs font-bold text-text-grey uppercase">Total Marks</th>
-                      <th className="px-6 py-3 text-left text-xs font-bold text-text-grey uppercase">Percentage</th>
-                    </tr>
-                  </thead>
-                  <tbody className="bg-white divide-y divide-soft-grey">
-                    {marks.map((mark, index) => (
-                      <tr key={index}>
-                        <td className="px-6 py-4 whitespace-nowrap font-semibold text-navy">{mark.subjectId?.subjectName}</td>
-                        <td className="px-6 py-4 whitespace-nowrap font-semibold text-text-grey">{mark.examType}</td>
-                        <td className="px-6 py-4 whitespace-nowrap font-bold text-sky-blue">{mark.marks}</td>
-                        <td className="px-6 py-4 whitespace-nowrap font-semibold text-text-grey">{mark.totalMarks}</td>
-                        <td className="px-6 py-4 whitespace-nowrap font-bold text-navy">
-                          {((mark.marks / mark.totalMarks) * 100).toFixed(2)}%
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+          {/* Fee & Financial (Mock) */}
+          <Card>
+            <CardContent className="p-6">
+              <h3 className="font-bold text-navy mb-4 flex items-center gap-2">
+                <FaMoneyBillWave className="text-sky-blue" /> Fee Status
+              </h3>
+              <div className="bg-green-50 border border-green-100 p-4 rounded-lg mb-3">
+                <p className="text-sm text-green-800 font-bold">No Dues Pending</p>
+                <p className="text-xs text-green-600">Last payment: 15th Nov 2024</p>
               </div>
-            ) : (
-              <p className="text-text-grey text-center py-4 font-semibold">No marks recorded yet</p>
-            )}
-          </div>
+              <button className="w-full text-center py-2 border border-navy text-navy rounded-lg hover:bg-navy hover:text-white transition-colors text-sm font-bold">
+                View Receipts
+              </button>
+            </CardContent>
+          </Card>
+
+          {/* Learning Materials */}
+          <Card>
+            <CardContent className="p-6">
+              <h3 className="font-bold text-navy mb-4 flex items-center gap-2">
+                <FaBook className="text-sky-blue" /> Learning Materials
+              </h3>
+              <div className="space-y-2">
+                <Link to={`/student/${studentId}/materials`} className="block w-full text-left px-4 py-2 rounded-lg hover:bg-gray-50 text-sm font-medium text-gray-700 transition-colors">
+                  • Download Notes
+                </Link>
+                <Link to={`/student/${studentId}/assignments`} className="block w-full text-left px-4 py-2 rounded-lg hover:bg-gray-50 text-sm font-medium text-gray-700 transition-colors">
+                  • View Assignments
+                </Link>
+                <button className="block w-full text-left px-4 py-2 rounded-lg hover:bg-gray-50 text-sm font-medium text-gray-700 transition-colors">
+                  • Previous Year Papers
+                </button>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Support & Communication */}
+          <Card>
+            <CardContent className="p-6">
+              <h3 className="font-bold text-navy mb-4 flex items-center gap-2">
+                <FaBell className="text-sky-blue" /> Support
+              </h3>
+              <div className="space-y-2">
+                <button className="w-full text-left px-4 py-2 rounded-lg hover:bg-gray-50 text-sm font-medium text-gray-700 transition-colors">
+                  • Complaint Box
+                </button>
+                <button className="w-full text-left px-4 py-2 rounded-lg hover:bg-gray-50 text-sm font-medium text-gray-700 transition-colors">
+                  • Teacher Chat
+                </button>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Attendance Breakdown */}
+          <Card>
+            <CardContent className="p-6">
+              <h3 className="font-bold text-navy mb-4 flex items-center gap-2">
+                <FaChartLine className="text-sky-blue" /> Attendance
+              </h3>
+              <div className="space-y-3">
+                {attendance.slice(0, 3).map((record, idx) => (
+                  <div key={idx}>
+                    <div className="flex justify-between text-xs mb-1">
+                      <span className="text-gray-600 font-medium">{record.subjectName}</span>
+                      <span className={`font-bold ${parseFloat(record.percentage) < 75 ? 'text-red-500' : 'text-green-600'}`}>
+                        {record.percentage}%
+                      </span>
+                    </div>
+                    <div className="w-full bg-gray-100 rounded-full h-1.5">
+                      <div
+                        className={`h-1.5 rounded-full ${parseFloat(record.percentage) < 75 ? 'bg-red-500' : 'bg-green-500'}`}
+                        style={{ width: `${record.percentage}%` }}
+                      ></div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+
         </div>
       </div>
     </div>
   );
 };
 
-const InfoItem = ({ icon, label, value }) => (
-  <div className="flex items-center space-x-3 p-4 bg-background rounded-lg">
-    <div className="text-sky-blue text-xl">{icon}</div>
-    <div>
-      <p className="text-sm font-semibold text-text-grey">{label}</p>
-      <p className="text-lg font-bold text-navy">{value || 'N/A'}</p>
-    </div>
+// Helper Components
+const InfoRow = ({ label, value }) => (
+  <div className="border-b border-gray-50 pb-2 last:border-0">
+    <p className="text-xs text-gray-400 uppercase font-bold tracking-wider">{label}</p>
+    <p className="text-navy font-medium text-base mt-0.5">{value || 'N/A'}</p>
   </div>
 );
 
-const StatCard = ({ title, value, color }) => (
-  <div className={`bg-white rounded-lg shadow-md p-6 border-l-4 ${color === 'sky-blue' ? 'border-sky-blue' : color === 'navy' ? 'border-navy' : 'border-soft-grey'}`}>
-    <p className="text-sm font-semibold text-text-grey mb-2">{title}</p>
-    <p className="text-3xl font-extrabold text-navy">{value}</p>
+const InputGroup = ({ label, name, value, onChange, type = "text", placeholder }) => (
+  <div>
+    <label className="block text-sm font-medium text-gray-700 mb-1">{label}</label>
+    <input
+      type={type}
+      name={name}
+      value={value}
+      onChange={onChange}
+      placeholder={placeholder}
+      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-blue focus:border-sky-blue outline-none transition-all"
+    />
   </div>
 );
 

@@ -272,14 +272,7 @@ const Login = () => {
           )}
         </form>
 
-        <div className="mt-8 pt-6 border-t border-gray-100">
-          <div className="flex items-start gap-3 p-4 bg-blue-50 rounded-xl">
-            <Info className="w-5 h-5 text-sky-blue flex-shrink-0 mt-0.5" />
-            <p className="text-xs text-text-grey leading-relaxed">
-              <span className="font-semibold text-navy">Note on Concurrent Logins:</span> To log in as multiple users (e.g., Admin and Student) simultaneously on the same device, please use separate <strong>Incognito/Private</strong> windows or different browsers. This ensures session security and prevents data conflicts.
-            </p>
-          </div>
-        </div>
+
 
         <div className="mt-6 text-center">
           <p className="text-xs text-gray-400">© 2024 College ERP System. All rights reserved.</p>
@@ -288,6 +281,16 @@ const Login = () => {
 
       {/* Right Side - Image/Decoration */}
       <div className="hidden lg:block w-1/2 relative overflow-hidden">
+        {/* Top Right Button */}
+        {/* Top Right Button - Removed as per request */}
+        {/* <div className="absolute top-8 right-8 z-30">
+          <Link to="/achievers">
+            <button className="bg-white/20 hover:bg-white/30 backdrop-blur-md border border-white/30 text-white px-6 py-2.5 rounded-full font-semibold transition-all flex items-center gap-2 group shadow-lg">
+              <span className="group-hover:scale-110 transition-transform">🏆</span>
+              Student Achievers
+            </button>
+          </Link>
+        </div> */}
         <div className="absolute inset-0 bg-gradient-to-br from-navy/90 to-black/80 z-10 mix-blend-multiply"></div>
         <div className="absolute inset-0 bg-sky-blue/20 z-10"></div>
         <img
