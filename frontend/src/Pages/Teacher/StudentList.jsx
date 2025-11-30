@@ -3,8 +3,6 @@ import { BASE_URL } from '../../constants/api';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import Cookies from 'js-cookie';
-import TeacherHeader from '../../components/TeacherHeader';
-import BackButton from '../../components/BackButton';
 
 const StudentList = () => {
   const [students, setStudents] = useState([]);
@@ -135,10 +133,8 @@ const StudentList = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <TeacherHeader />
       <div className="py-8">
         <div className="max-w-7xl mx-auto px-4">
-          <BackButton />
 
           <div className="mb-6">
             <h1 className="text-3xl font-bold text-navy">Student Attendance</h1>
@@ -232,8 +228,8 @@ const StudentList = () => {
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap">
                             <span className={`px-3 py-1 rounded-full text-xs font-medium ${student.status === 'Present'
-                                ? 'bg-sky-blue/10 text-sky-blue'
-                                : 'bg-navy/10 text-navy'
+                              ? 'bg-sky-blue/10 text-sky-blue'
+                              : 'bg-navy/10 text-navy'
                               }`}>
                               {student.status}
                             </span>
@@ -243,8 +239,8 @@ const StudentList = () => {
                               <button
                                 onClick={() => handleStatusChange(student._id, 'Present')}
                                 className={`px-3 py-1 rounded text-sm font-medium transition-colors ${student.status === 'Present'
-                                    ? 'bg-sky-blue text-white'
-                                    : 'bg-sky-blue/10 text-sky-blue hover:bg-sky-blue/20'
+                                  ? 'bg-sky-blue text-white'
+                                  : 'bg-sky-blue/10 text-sky-blue hover:bg-sky-blue/20'
                                   }`}
                               >
                                 Present
@@ -252,8 +248,8 @@ const StudentList = () => {
                               <button
                                 onClick={() => handleStatusChange(student._id, 'Absent')}
                                 className={`px-3 py-1 rounded text-sm font-medium transition-colors ${student.status === 'Absent'
-                                    ? 'bg-navy text-white'
-                                    : 'bg-navy/10 text-navy hover:bg-navy/20'
+                                  ? 'bg-navy text-white'
+                                  : 'bg-navy/10 text-navy hover:bg-navy/20'
                                   }`}
                               >
                                 Absent

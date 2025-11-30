@@ -3,8 +3,6 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import { BASE_URL } from '../../constants/api';
-import TeacherHeader from '../../components/TeacherHeader';
-import BackButton from '../../components/BackButton';
 import LoadingSpinner from '../../components/LoadingSpinner';
 import { FaPlus, FaCalendarAlt, FaUsers, FaCheckCircle, FaFileAlt } from 'react-icons/fa';
 import Card, { CardContent } from '../../components/ui/Card';
@@ -120,9 +118,7 @@ const TeacherAssignments = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <TeacherHeader currentRole="teacher" />
       <div className="p-6 max-w-7xl mx-auto">
-        <BackButton className="mb-6" />
 
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
           <div>

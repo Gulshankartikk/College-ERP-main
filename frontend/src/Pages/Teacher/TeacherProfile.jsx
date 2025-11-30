@@ -5,8 +5,6 @@ import { BASE_URL } from '../../constants/api';
 import { FaUser, FaEnvelope, FaPhone, FaChalkboardTeacher, FaBook, FaClipboardList, FaTasks, FaBell } from 'react-icons/fa';
 import Cookies from 'js-cookie';
 import { toast } from 'react-toastify';
-import TeacherHeader from '../../components/TeacherHeader';
-import BackButton from '../../components/BackButton';
 
 const TeacherProfile = () => {
   const { id: teacherId } = useParams();
@@ -124,11 +122,8 @@ const TeacherProfile = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <TeacherHeader currentRole="teacher" />
-
       <div className="py-8">
         <div className="max-w-7xl mx-auto px-4">
-          <BackButton />
 
           <div className="flex justify-between items-center mb-8">
             <h1 className="text-4xl font-extrabold text-navy">Teacher Profile</h1>

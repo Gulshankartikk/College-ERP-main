@@ -5,8 +5,6 @@ import { BASE_URL } from '../../constants/api';
 import Cookies from 'js-cookie';
 import { FaDownload, FaEye, FaUser, FaClock, FaBook } from 'react-icons/fa';
 import { toast } from 'react-toastify';
-import StudentHeader from '../../components/StudentHeader';
-import BackButton from '../../components/BackButton';
 
 const StudentMaterials = () => {
   const { studentId } = useParams();
@@ -44,7 +42,6 @@ const StudentMaterials = () => {
   if (loading) {
     return (
       <div className="min-h-screen bg-background">
-        <StudentHeader studentId={studentId} studentName={studentName} />
         <div className="flex items-center justify-center h-64">
           <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-sky-blue"></div>
         </div>
@@ -54,9 +51,6 @@ const StudentMaterials = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <StudentHeader studentId={studentId} studentName={studentName} />
-      <BackButton />
-
       <div className="py-8">
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex items-center space-x-2 mb-6">

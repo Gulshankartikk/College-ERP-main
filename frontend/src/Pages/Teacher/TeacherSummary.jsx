@@ -10,7 +10,6 @@ import {
 } from "react-icons/fa";
 import { MdAssignment } from "react-icons/md";
 import Cookies from "js-cookie";
-import TeacherHeader from "../../components/TeacherHeader";
 
 const TeacherSummary = () => {
   const { id: teacherId } = useParams();
@@ -145,8 +144,8 @@ const TeacherSummary = () => {
     <button
       onClick={() => setActiveTab(id)}
       className={`flex items-center px-4 py-2 rounded-lg font-medium transition-colors ${activeTab === id
-          ? "bg-sky-blue text-white"
-          : "bg-background text-text-grey hover:bg-soft-grey/20"
+        ? "bg-sky-blue text-white"
+        : "bg-background text-text-grey hover:bg-soft-grey/20"
         }`}
     >
       {icon}
@@ -160,7 +159,6 @@ const TeacherSummary = () => {
   if (loading) {
     return (
       <div className="min-h-screen bg-background">
-        <TeacherHeader currentRole="teacher" />
         <div className="flex items-center justify-center h-64">
           <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-sky-blue"></div>
         </div>
@@ -170,7 +168,6 @@ const TeacherSummary = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <TeacherHeader currentRole="teacher" />
 
       <div className="py-8">
         <div className="max-w-7xl mx-auto px-4">

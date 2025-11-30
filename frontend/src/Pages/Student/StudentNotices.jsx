@@ -3,8 +3,6 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import { BASE_URL } from '../../constants/api';
-import StudentHeader from '../../components/StudentHeader';
-import BackButton from '../../components/BackButton';
 import LoadingSpinner from '../../components/LoadingSpinner';
 import { FaBell, FaCalendarAlt } from 'react-icons/fa';
 
@@ -35,9 +33,7 @@ const StudentNotices = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <StudentHeader currentRole="student" />
       <div className="p-6">
-        <BackButton className="mb-4" />
         <h1 className="text-3xl font-bold text-navy mb-6 flex items-center gap-3">
           <FaBell /> Notices & Announcements
         </h1>
