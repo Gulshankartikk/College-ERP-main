@@ -4,8 +4,10 @@ const router = express.Router();
 // ================= MIDDLEWARES =================
 const { verifyToken, isAdmin, isTeacher } = require('../middleware/Auth');
 const upload = require('../middleware/upload');
+const errorHandler = require('../middleware/errorHandler');
 
 // ================= CONTROLLERS =================
+const authController = require('../controller/authController');
 const adminController = require('../controller/adminController');
 const teacherController = require('../controller/teacherController');
 const studentController = require('../controller/studentController');
@@ -15,16 +17,21 @@ const { Course, Subject, Teacher, Student } = require('../models/CompleteModels'
 
 
 // ======================================================
-//                        ADMIN LOGIN
+//                    UNIFIED AUTH ROUTES
 // ======================================================
-router.post('/admin/login', adminController.adminLogin);
+router.post('/auth/login', authController.login);
+router.post('/auth/logout', authController.logout);
+
+// Legacy Login Routes (Redirect to unified logic or keep for backward compatibility if needed)
+// For now, we point them to the new controller to ensure DB auth works even if frontend isn't updated instantly
+router.post('/admin/login', (req, res, next) => { req.body.role = 'admin'; authController.login(req, res, next); });
+router.post('/teacher/login', (req, res, next) => { req.body.role = 'teacher'; authController.login(req, res, next); });
+router.post('/student/login', (req, res, next) => { req.body.role = 'student'; authController.login(req, res, next); });
 
 
 // ======================================================
 //                      TEACHER ROUTES
 // ======================================================
-
-router.post('/teacher/login', teacherController.teacherLogin);
 
 // Dashboard + subjects + courses
 router.get('/teacher/:teacherId/dashboard', verifyToken, teacherController.getTeacherDashboard);
@@ -88,7 +95,7 @@ router.get('/teacher/:teacherId/leaves', verifyToken, teacherController.getLeave
 //                      STUDENT ROUTES
 // ======================================================
 router.post('/student/register', studentController.studentRegister);
-router.post('/student/login', studentController.studentLogin);
+router.post('/student/:studentId/change-password', verifyToken, studentController.changePassword);
 
 router.get('/student/:studentId/dashboard', verifyToken, studentController.getStudentDashboard);
 router.get('/student/:studentId/profile', verifyToken, studentController.getStudentProfile);
@@ -274,5 +281,7 @@ router.delete('/teacher/students/:studentId', verifyToken, isAdmin, adminControl
 
 
 // ======================================================
-module.exports = router;
+// Error Handler (Must be last)
+router.use(errorHandler);
 
+module.exports = router;

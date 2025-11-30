@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Input = React.forwardRef(({ label, error, className = '', ...props }, ref) => {
+const Input = React.forwardRef(({ label, error, className = '', icon: Icon, ...props }, ref) => {
   return (
     <div className="w-full">
       {label && (

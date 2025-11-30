@@ -74,6 +74,8 @@ const StudentSchema = new mongoose.Schema({
   rollNo: { type: String, required: true, unique: true },
   phone: { type: String },
   courseId: { type: mongoose.Schema.Types.ObjectId, ref: 'Course', required: true },
+  isDemo: { type: Boolean, default: false },
+  passwordChanged: { type: Boolean, default: false },
   isActive: { type: Boolean, default: true }
 }, { timestamps: true });
 

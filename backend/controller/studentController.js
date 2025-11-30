@@ -71,9 +71,6 @@ const studentLogin = async (req, res) => {
       return res.status(400).json({ success: false, msg: 'Roll Number and Password are required' });
     }
 
-    // Find student by Roll Number (username field in login form maps to rollNo here if needed, or we check both)
-    // The user request says "student can own roll number... login"
-    // So we treat 'username' input as Roll Number.
     const student = await Student.findOne({ rollNo: username }).populate('courseId');
 
     if (!student) {
@@ -98,12 +95,40 @@ const studentLogin = async (req, res) => {
         email: student.email,
         rollNo: student.rollNo,
         course: student.courseId,
-        role: 'student'
+        role: 'student',
+        passwordChanged: student.passwordChanged // Return this flag
       }
     });
   } catch (error) {
     console.error("Login Error:", error);
     res.status(500).json({ success: false, msg: 'Internal Server Error' });
+  }
+};
+
+// Change Password
+const changePassword = async (req, res) => {
+  try {
+    const { studentId } = req.params;
+    const { oldPassword, newPassword } = req.body;
+
+    const student = await Student.findById(studentId);
+    if (!student) {
+      return res.status(404).json({ success: false, msg: 'Student not found' });
+    }
+
+    const isMatch = await bcrypt.compare(oldPassword, student.password);
+    if (!isMatch) {
+      return res.status(400).json({ success: false, msg: 'Incorrect old password' });
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    student.password = hashedPassword;
+    student.passwordChanged = true;
+    await student.save();
+
+    res.json({ success: true, msg: 'Password updated successfully' });
+  } catch (error) {
+    res.status(500).json({ success: false, msg: error.message });
   }
 };
 
@@ -503,6 +528,7 @@ module.exports = {
   getStudentMarks,
   getNotices,
   getStudentDashboard,
+  changePassword, // Export this
   // New Features
   getTimetable: async (req, res) => {
     try {

@@ -18,6 +18,14 @@ const Login = () => {
   const [role, setRole] = useState("student");
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+
+  // Password Change State
+  const [showChangePassword, setShowChangePassword] = useState(false);
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [tempToken, setTempToken] = useState("");
+  const [tempStudentId, setTempStudentId] = useState("");
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -25,37 +33,83 @@ const Login = () => {
     e.preventDefault();
     setIsLoading(true);
     try {
-      let endpoint = "/api/student/login";
-      if (role === "teacher") endpoint = "/api/teacher/login";
-      if (role === "admin") endpoint = "/api/admin/login";
+      // UNIFIED AUTH ENDPOINT
+      const endpoint = "/api/auth/login";
 
       const response = await axios.post(`${BASE_URL}${endpoint}`, {
         username,
         password,
+        role, // Pass role to the unified controller
       });
 
-      const { token } = response.data;
-      Cookies.set("token", token);
-      localStorage.setItem("token", token);
-      dispatch(addUserDetails({ token: token }));
+      const { token, user } = response.data; // Response now returns 'user' object
 
-      let decodedToken = jwtDecode(token);
-      localStorage.setItem("userId", decodedToken.id);
-      localStorage.setItem("userRole", decodedToken.role);
-
-      toast.success(`Welcome back, ${decodedToken.role}!`);
-
-      if (decodedToken.role === "admin") {
-        window.location.href = "/admin/dashboard";
-      } else {
-        const path = role === "student"
-          ? `/student/${decodedToken.id}/dashboard`
-          : `/teacher/${decodedToken.id}/dashboard`;
-        navigate(path);
+      // Check for forced password change (only for students)
+      if (role === 'student' && user && user.passwordChanged === false) {
+        setTempToken(token);
+        setTempStudentId(user.id);
+        setShowChangePassword(true);
+        setIsLoading(false);
+        toast.info("Please change your default password to continue.");
+        return;
       }
+
+      loginSuccess(token);
+
     } catch (err) {
       console.error("Login error:", err);
       toast.error(err.response?.data?.message || "Invalid Credentials");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const loginSuccess = (token) => {
+    Cookies.set("token", token);
+    localStorage.setItem("token", token);
+    dispatch(addUserDetails({ token: token }));
+
+    let decodedToken = jwtDecode(token);
+    localStorage.setItem("userId", decodedToken.id);
+    localStorage.setItem("userRole", decodedToken.role);
+
+    toast.success(`Welcome back, ${decodedToken.role}!`);
+
+    if (decodedToken.role === "admin") {
+      window.location.href = "/admin/dashboard";
+    } else {
+      const path = role === "student"
+        ? `/student/${decodedToken.id}/dashboard`
+        : `/teacher/${decodedToken.id}/dashboard`;
+      navigate(path);
+    }
+  };
+
+  const handleChangePassword = async (e) => {
+    e.preventDefault();
+    if (newPassword !== confirmPassword) {
+      toast.error("Passwords do not match");
+      return;
+    }
+    if (newPassword.length < 6) {
+      toast.error("Password must be at least 6 characters");
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+      await axios.post(
+        `${BASE_URL}/api/student/${tempStudentId}/change-password`,
+        { oldPassword: password, newPassword },
+        { headers: { Authorization: `Bearer ${tempToken}` } }
+      );
+
+      toast.success("Password updated successfully!");
+      setShowChangePassword(false);
+      loginSuccess(tempToken); // Proceed to login
+    } catch (err) {
+      console.error("Password change error:", err);
+      toast.error(err.response?.data?.msg || "Failed to update password");
     } finally {
       setIsLoading(false);
     }
@@ -69,6 +123,44 @@ const Login = () => {
       default: return <User size={18} />;
     }
   };
+
+  if (showChangePassword) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
+        <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8">
+          <div className="text-center mb-8">
+            <div className="bg-blue-100 p-3 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+              <Lock className="text-blue-600 w-8 h-8" />
+            </div>
+            <h2 className="text-2xl font-bold text-gray-900">Change Password</h2>
+            <p className="text-gray-500 mt-2">For security, please update your default password.</p>
+          </div>
+
+          <form onSubmit={handleChangePassword} className="space-y-6">
+            <Input
+              label="New Password"
+              type="password"
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+              required
+              placeholder="Enter new password"
+            />
+            <Input
+              label="Confirm Password"
+              type="password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              required
+              placeholder="Confirm new password"
+            />
+            <Button type="submit" className="w-full py-3" isLoading={isLoading}>
+              Update Password & Login
+            </Button>
+          </form>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex bg-gray-50">
@@ -206,4 +298,3 @@ const Login = () => {
 };
 
 export default Login;
-

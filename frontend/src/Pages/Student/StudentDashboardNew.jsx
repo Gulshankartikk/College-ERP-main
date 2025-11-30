@@ -1,348 +1,579 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import Cookies from 'js-cookie';
 import { BASE_URL } from '../../constants/api';
 import {
-  FaClipboardList, FaFileAlt, FaDollarSign, FaChartBar, FaCalendarAlt,
-  FaBell, FaCheckCircle, FaClock, FaDownload, FaArrowRight, FaUserGraduate, FaUniversity
-} from 'react-icons/fa';
-import Cookies from 'js-cookie';
-import Card, { CardHeader, CardTitle, CardContent } from '../../components/ui/Card';
-import Badge from '../../components/ui/Badge';
-import Button from '../../components/ui/Button';
+  User, BookOpen, Calendar, FileText, Bell, Award,
+  LogOut, Menu, X, ChevronRight, Download, Clock, CheckCircle, AlertCircle
+} from 'lucide-react';
+import { toast } from 'react-toastify';
+
+// UI Components
+const Card = ({ children, className = "" }) => (
+  <div className={`bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden ${className}`}>
+    {children}
+  </div>
+);
+
+const Badge = ({ children, type = "primary" }) => {
+  const styles = {
+    primary: "bg-blue-100 text-blue-700",
+    success: "bg-green-100 text-green-700",
+    warning: "bg-yellow-100 text-yellow-700",
+    danger: "bg-red-100 text-red-700",
+    neutral: "bg-gray-100 text-gray-700",
+  };
+  return (
+    <span className={`px-2.5 py-0.5 rounded-full text-xs font-medium ${styles[type] || styles.neutral}`}>
+      {children}
+    </span>
+  );
+};
 
 const StudentDashboardNew = () => {
   const { studentId } = useParams();
-  const [student, setStudent] = useState(null);
+  const navigate = useNavigate();
+  const [activeTab, setActiveTab] = useState('dashboard');
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [attendanceStats, setAttendanceStats] = useState({ percentage: 0, subjectWise: [] });
+
+  // Data States
+  const [student, setStudent] = useState(null);
+  const [attendance, setAttendance] = useState([]);
   const [assignments, setAssignments] = useState([]);
   const [notices, setNotices] = useState([]);
-  const [timetable, setTimetable] = useState([]);
-  const [fees, setFees] = useState([]);
+  const [subjects, setSubjects] = useState([]);
+  const [marks, setMarks] = useState([]);
+  const [materials, setMaterials] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const token = Cookies.get('token') || localStorage.getItem('token');
-        const headers = { Authorization: `Bearer ${token}` };
-
-        // 1. Fetch Student Profile & Dashboard Data
-        const dashboardRes = await axios.get(`${BASE_URL}/api/student/${studentId}/dashboard`, { headers });
-        setStudent(dashboardRes.data.student);
-
-        // 2. Fetch Attendance
-        const attendanceRes = await axios.get(`${BASE_URL}/api/student/${studentId}/attendance`, { headers });
-        if (attendanceRes.data.success) {
-          const { stats, attendance } = attendanceRes.data;
-
-          // Calculate subject-wise attendance
-          const subjectMap = {};
-          attendance.forEach(record => {
-            const subName = record.subjectId?.subjectName || 'Unknown';
-            if (!subjectMap[subName]) subjectMap[subName] = { total: 0, present: 0 };
-            subjectMap[subName].total++;
-            if (record.status === 'Present') subjectMap[subName].present++;
-          });
-
-          const subjectWise = Object.keys(subjectMap).map(sub => ({
-            name: sub,
-            attendance: subjectMap[sub].total > 0
-              ? ((subjectMap[sub].present / subjectMap[sub].total) * 100).toFixed(0) + '%'
-              : '0%',
-            status: (subjectMap[sub].present / subjectMap[sub].total) >= 0.75 ? 'good' : 'warning'
-          }));
-
-          setAttendanceStats({
-            percentage: stats.attendancePercentage,
-            subjectWise
-          });
+        if (!token) {
+          navigate('/login');
+          return;
         }
 
-        // 3. Fetch Assignments
-        const assignmentsRes = await axios.get(`${BASE_URL}/api/student/${studentId}/assignments`, { headers });
+        const headers = { Authorization: `Bearer ${token}` };
+
+        // Parallel data fetching
+        const [
+          profileRes,
+          attendanceRes,
+          assignmentsRes,
+          noticesRes,
+          subjectsRes,
+          marksRes,
+          materialsRes
+        ] = await Promise.all([
+          axios.get(`${BASE_URL}/api/student/${studentId}/profile`, { headers }),
+          axios.get(`${BASE_URL}/api/student/${studentId}/attendance`, { headers }),
+          axios.get(`${BASE_URL}/api/student/${studentId}/assignments`, { headers }),
+          axios.get(`${BASE_URL}/api/student/${studentId}/notices`, { headers }),
+          axios.get(`${BASE_URL}/api/student/${studentId}/subjects`, { headers }),
+          axios.get(`${BASE_URL}/api/student/${studentId}/marks`, { headers }),
+          axios.get(`${BASE_URL}/api/student/${studentId}/materials`, { headers })
+        ]);
+
+        setStudent(profileRes.data.student);
+        setAttendance(attendanceRes.data.attendance || []);
         setAssignments(assignmentsRes.data.assignments || []);
-
-        // 4. Fetch Notices
-        const noticesRes = await axios.get(`${BASE_URL}/api/student/${studentId}/notices`, { headers });
         setNotices(noticesRes.data.notices || []);
-
-        // 5. Fetch Timetable
-        const timetableRes = await axios.get(`${BASE_URL}/api/student/${studentId}/timetable`, { headers });
-        setTimetable(timetableRes.data.timetable || []);
-
-        // 6. Fetch Fees
-        const feesRes = await axios.get(`${BASE_URL}/api/student/${studentId}/fees`, { headers });
-        setFees(feesRes.data.fees || []);
+        setSubjects(subjectsRes.data.subjects || []);
+        setMarks(marksRes.data.marks || []);
+        setMaterials(materialsRes.data.materials || []);
 
       } catch (error) {
-        console.error('Error fetching dashboard data:', error);
+        console.error('Error fetching data:', error);
+        if (error.response?.status === 401) {
+          toast.error("Session expired. Please login again.");
+          navigate('/login');
+        }
       } finally {
         setLoading(false);
       }
     };
 
     fetchData();
-  }, [studentId]);
+  }, [studentId, navigate]);
 
-  // Derived Data for UI
-  const summaryCards = [
-    { title: 'Attendance', value: `${attendanceStats.percentage}%`, icon: FaClipboardList, color: 'text-emerald-600', bg: 'bg-emerald-50 border-emerald-100' },
-    { title: 'Assignments', value: `${assignments.filter(a => a.submissions?.some(s => s.studentId === studentId)).length}/${assignments.length}`, icon: FaFileAlt, color: 'text-blue-600', bg: 'bg-blue-50 border-blue-100' },
-    { title: 'Pending Fees', value: fees.reduce((acc, fee) => acc + (fee.status !== 'Paid' ? fee.amount : 0), 0) > 0 ? 'Due' : 'Clear', icon: FaDollarSign, color: 'text-amber-600', bg: 'bg-amber-50 border-amber-100' }
-  ];
-
-  const getDayName = (dateStr) => {
-    const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-    return days[new Date(dateStr).getDay()];
+  const handleLogout = () => {
+    Cookies.remove('token');
+    localStorage.removeItem('token');
+    localStorage.removeItem('userId');
+    localStorage.removeItem('userRole');
+    navigate('/login');
   };
-
-  const todayDay = getDayName(new Date());
-  const todaysSchedule = timetable.filter(t => t.day === todayDay);
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-screen bg-gray-50">
-        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-blue-600"></div>
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
       </div>
     );
   }
 
-  return (
-    <div className="space-y-8 p-6 bg-gray-50/50 min-h-screen">
-      {/* Header Banner */}
-      <div className="relative bg-gradient-to-r from-blue-800 to-indigo-900 rounded-3xl p-8 text-white shadow-xl overflow-hidden">
-        <div className="absolute top-0 right-0 -mt-10 -mr-10 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-0 left-0 -mb-10 -ml-10 w-40 h-40 bg-blue-500/20 rounded-full blur-2xl"></div>
+  const navItems = [
+    { id: 'dashboard', label: 'Dashboard', icon: <User size={20} /> },
+    { id: 'assignments', label: 'Assignments', icon: <FileText size={20} /> },
+    { id: 'attendance', label: 'Attendance', icon: <Calendar size={20} /> },
+    { id: 'materials', label: 'Study Materials', icon: <BookOpen size={20} /> },
+    { id: 'marks', label: 'Grades & Marks', icon: <Award size={20} /> },
+    { id: 'notices', label: 'Announcements', icon: <Bell size={20} /> },
+  ];
 
-        <div className="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-          <div>
-            <div className="flex items-center gap-3 mb-2">
-              <div className="p-2 bg-white/20 rounded-lg backdrop-blur-sm">
-                <FaUserGraduate size={24} className="text-blue-100" />
-              </div>
-              <span className="px-3 py-1 bg-blue-500/30 rounded-full text-xs font-medium border border-blue-400/30">
-                Student Portal
-              </span>
+  // --- Tab Components ---
+
+  const DashboardTab = () => (
+    <div className="space-y-6">
+      {/* Welcome Banner */}
+      <div className="bg-gradient-to-r from-blue-600 to-indigo-700 rounded-2xl p-8 text-white shadow-lg relative overflow-hidden">
+        <div className="absolute top-0 right-0 p-4 opacity-10">
+          <User size={150} />
+        </div>
+        <div className="relative z-10">
+          <h1 className="text-3xl font-bold mb-2">Welcome back, {student?.name}!</h1>
+          <p className="text-blue-100 text-lg mb-6">
+            Roll No: <span className="font-mono font-semibold bg-white/20 px-2 py-1 rounded">{student?.rollNo}</span>
+          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-3xl">
+            <div className="bg-white/10 backdrop-blur-sm p-4 rounded-xl">
+              <p className="text-blue-200 text-sm">Course</p>
+              <p className="font-semibold text-lg">{student?.courseId?.courseName || 'N/A'}</p>
             </div>
-            <h1 className="text-3xl md:text-4xl font-bold mb-2">Welcome back, {student?.name}</h1>
-            <p className="text-blue-100 text-lg flex items-center gap-2">
-              <FaUniversity className="opacity-70" />
-              {student?.courseId?.courseName || 'Course Not Assigned'} • {student?.rollNo}
-            </p>
-          </div>
-          <div className="text-right hidden md:block">
-            <p className="text-blue-200 text-sm font-medium uppercase tracking-wider">Today is</p>
-            <p className="text-2xl font-bold">
-              {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
-            </p>
+            <div className="bg-white/10 backdrop-blur-sm p-4 rounded-xl">
+              <p className="text-blue-200 text-sm">Email</p>
+              <p className="font-semibold text-lg truncate">{student?.email}</p>
+            </div>
+            <div className="bg-white/10 backdrop-blur-sm p-4 rounded-xl">
+              <p className="text-blue-200 text-sm">Phone</p>
+              <p className="font-semibold text-lg">{student?.phone || 'N/A'}</p>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Summary Cards */}
+      {/* Quick Stats */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {summaryCards.map((card, index) => (
-          <Card key={index} className={`border shadow-sm hover:shadow-md transition-all duration-300 ${card.bg}`}>
-            <CardContent className="flex items-center justify-between p-6">
-              <div>
-                <p className="text-sm font-semibold text-gray-500 uppercase tracking-wide">{card.title}</p>
-                <p className="text-4xl font-extrabold text-gray-900 mt-2 tracking-tight">{card.value}</p>
-              </div>
-              <div className={`p-4 rounded-2xl bg-white shadow-sm ring-1 ring-black/5`}>
-                <card.icon className={`text-3xl ${card.color}`} />
-              </div>
-            </CardContent>
-          </Card>
-        ))}
+        <Card className="p-6 border-l-4 border-blue-500">
+          <div className="flex justify-between items-start">
+            <div>
+              <p className="text-gray-500 text-sm font-medium">Pending Assignments</p>
+              <h3 className="text-3xl font-bold text-gray-800 mt-2">
+                {assignments.filter(a => !a.submitted).length}
+              </h3>
+            </div>
+            <div className="p-3 bg-blue-50 rounded-lg text-blue-600">
+              <FileText size={24} />
+            </div>
+          </div>
+        </Card>
+        <Card className="p-6 border-l-4 border-green-500">
+          <div className="flex justify-between items-start">
+            <div>
+              <p className="text-gray-500 text-sm font-medium">Attendance</p>
+              <h3 className="text-3xl font-bold text-gray-800 mt-2">
+                {attendance.length > 0
+                  ? `${Math.round((attendance.filter(a => a.status === 'Present').length / attendance.length) * 100)}%`
+                  : 'N/A'}
+              </h3>
+            </div>
+            <div className="p-3 bg-green-50 rounded-lg text-green-600">
+              <CheckCircle size={24} />
+            </div>
+          </div>
+        </Card>
+        <Card className="p-6 border-l-4 border-purple-500">
+          <div className="flex justify-between items-start">
+            <div>
+              <p className="text-gray-500 text-sm font-medium">New Notices</p>
+              <h3 className="text-3xl font-bold text-gray-800 mt-2">{notices.length}</h3>
+            </div>
+            <div className="p-3 bg-purple-50 rounded-lg text-purple-600">
+              <Bell size={24} />
+            </div>
+          </div>
+        </Card>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Left Column */}
-        <div className="lg:col-span-2 space-y-8">
-          {/* Attendance Chart */}
-          <Card className="border-none shadow-lg ring-1 ring-gray-100">
-            <CardHeader className="flex flex-row items-center justify-between border-b border-gray-100 pb-4">
-              <CardTitle className="flex items-center gap-3 text-xl">
-                <div className="p-2 bg-blue-50 rounded-lg text-blue-600">
-                  <FaChartBar />
+      {/* Recent Activity / Notices */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <Card className="p-6">
+          <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center">
+            <Bell className="mr-2 text-blue-600" size={20} /> Recent Announcements
+          </h3>
+          <div className="space-y-4">
+            {notices.slice(0, 3).map((notice) => (
+              <div key={notice._id} className="p-4 bg-gray-50 rounded-lg border border-gray-100 hover:bg-blue-50 transition-colors">
+                <div className="flex justify-between items-start mb-1">
+                  <h4 className="font-semibold text-gray-800">{notice.title}</h4>
+                  <span className="text-xs text-gray-500">
+                    {new Date(notice.createdAt).toLocaleDateString()}
+                  </span>
                 </div>
-                Subject-wise Attendance
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="pt-6">
-              <div className="space-y-5">
-                {attendanceStats.subjectWise.length > 0 ? attendanceStats.subjectWise.map((subject, index) => (
-                  <div key={index} className="space-y-2">
-                    <div className="flex justify-between text-sm font-semibold">
-                      <span className="text-gray-700">{subject.name}</span>
-                      <span className={subject.status === 'good' ? 'text-emerald-600' : 'text-amber-600'}>
-                        {subject.attendance}
-                      </span>
-                    </div>
-                    <div className="w-full bg-gray-100 rounded-full h-3 overflow-hidden">
-                      <div
-                        className={`h-full rounded-full transition-all duration-1000 ease-out ${subject.status === 'good' ? 'bg-gradient-to-r from-emerald-400 to-emerald-600' : 'bg-gradient-to-r from-amber-400 to-amber-600'}`}
-                        style={{ width: subject.attendance }}
-                      ></div>
-                    </div>
-                  </div>
-                )) : (
-                  <div className="text-center py-8 bg-gray-50 rounded-xl border border-dashed border-gray-200">
-                    <p className="text-gray-500">No attendance records found yet.</p>
-                  </div>
-                )}
+                <p className="text-sm text-gray-600 line-clamp-2">{notice.description}</p>
               </div>
-            </CardContent>
-          </Card>
+            ))}
+            {notices.length === 0 && <p className="text-gray-500 text-center py-4">No new announcements.</p>}
+          </div>
+        </Card>
 
-          {/* Recent Assignments */}
-          <Card className="border-none shadow-lg ring-1 ring-gray-100">
-            <CardHeader className="flex flex-row items-center justify-between border-b border-gray-100 pb-4">
-              <CardTitle className="flex items-center gap-3 text-xl">
-                <div className="p-2 bg-indigo-50 rounded-lg text-indigo-600">
-                  <FaFileAlt />
+        <Card className="p-6">
+          <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center">
+            <Clock className="mr-2 text-orange-600" size={20} /> Upcoming Deadlines
+          </h3>
+          <div className="space-y-4">
+            {assignments.filter(a => !a.submitted).slice(0, 3).map((assignment) => (
+              <div key={assignment._id} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg border border-gray-100">
+                <div>
+                  <h4 className="font-semibold text-gray-800">{assignment.title}</h4>
+                  <p className="text-xs text-red-500 font-medium mt-1">
+                    Due: {new Date(assignment.deadline).toLocaleDateString()}
+                  </p>
                 </div>
-                Recent Assignments
-              </CardTitle>
-              <Link to={`/student/${studentId}/assignments`} className="text-sm font-semibold text-indigo-600 hover:text-indigo-800 hover:underline">
-                View All
-              </Link>
-            </CardHeader>
-            <CardContent className="pt-6">
-              <div className="space-y-4">
-                {assignments.slice(0, 5).map((assignment, index) => {
-                  const isSubmitted = assignment.submissions?.some(s => s.studentId === studentId);
-                  return (
-                    <div key={index} className="flex items-center justify-between p-4 bg-white border border-gray-100 rounded-xl hover:border-indigo-100 hover:shadow-md transition-all group">
-                      <div className="flex-1 min-w-0 mr-4">
-                        <h4 className="font-bold text-gray-900 truncate group-hover:text-indigo-700 transition-colors">{assignment.title}</h4>
-                        <p className="text-sm text-gray-500 truncate">{assignment.subjectId?.subjectName}</p>
-                        <div className="flex items-center gap-2 mt-1">
-                          <FaClock size={12} className="text-gray-400" />
-                          <p className="text-xs text-gray-400">Due: {new Date(assignment.deadline).toLocaleDateString()}</p>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-3">
-                        <Badge variant={isSubmitted ? 'success' : 'warning'} className="px-3 py-1">
-                          {isSubmitted ? 'Submitted' : 'Pending'}
-                        </Badge>
-                        {assignment.fileUrl && (
-                          <button
-                            onClick={() => window.open(assignment.fileUrl, '_blank')}
-                            className="p-2 text-gray-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-all"
-                            title="Download Attachment"
-                          >
-                            <FaDownload />
-                          </button>
-                        )}
-                      </div>
-                    </div>
-                  );
-                })}
-                {assignments.length === 0 && (
-                  <div className="text-center py-8 bg-gray-50 rounded-xl border border-dashed border-gray-200">
-                    <p className="text-gray-500">No assignments due right now.</p>
-                  </div>
-                )}
+                <Badge type="warning">Pending</Badge>
               </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Right Column */}
-        <div className="space-y-8">
-          {/* Timetable */}
-          <Card className="border-none shadow-lg ring-1 ring-gray-100">
-            <CardHeader className="border-b border-gray-100 pb-4">
-              <CardTitle className="flex items-center gap-3 text-xl">
-                <div className="p-2 bg-orange-50 rounded-lg text-orange-600">
-                  <FaCalendarAlt />
-                </div>
-                Today's Schedule
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="pt-6">
-              <div className="space-y-4">
-                {todaysSchedule.length > 0 ? todaysSchedule.map((slot, index) => (
-                  <div key={index} className="flex items-start gap-4 p-4 rounded-xl bg-orange-50/50 border border-orange-100">
-                    <div className="bg-white text-orange-600 px-3 py-1.5 rounded-lg text-xs font-bold shadow-sm whitespace-nowrap border border-orange-100">
-                      {slot.timeSlot}
-                    </div>
-                    <div>
-                      <p className="font-bold text-gray-900 text-sm">{slot.subjectId?.subjectName}</p>
-                      <p className="text-xs text-gray-500 mt-1 flex items-center gap-1">
-                        <span className="w-1.5 h-1.5 rounded-full bg-orange-400"></span>
-                        Room: {slot.roomNo || 'N/A'}
-                      </p>
-                    </div>
-                  </div>
-                )) : (
-                  <div className="text-center py-8 bg-gray-50 rounded-xl border border-dashed border-gray-200">
-                    <p className="text-gray-500 text-sm">No classes scheduled for today.</p>
-                  </div>
-                )}
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Notifications */}
-          <Card className="border-none shadow-lg ring-1 ring-gray-100">
-            <CardHeader className="border-b border-gray-100 pb-4">
-              <CardTitle className="flex items-center gap-3 text-xl">
-                <div className="p-2 bg-red-50 rounded-lg text-red-600">
-                  <FaBell />
-                </div>
-                Notifications
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="pt-6">
-              <div className="space-y-4">
-                {notices.slice(0, 5).map((notif, index) => (
-                  <div key={index} className="flex gap-4 p-3 hover:bg-gray-50 rounded-lg transition-colors">
-                    <div className="mt-1.5 min-w-[10px] h-2.5 w-2.5 rounded-full bg-red-500 shadow-sm shadow-red-200"></div>
-                    <div>
-                      <h4 className="text-sm font-bold text-gray-900">{notif.title}</h4>
-                      <p className="text-xs text-gray-600 mt-1 line-clamp-2 leading-relaxed">{notif.description}</p>
-                      <p className="text-[10px] text-gray-400 mt-2 font-medium">{new Date(notif.createdAt).toLocaleDateString()}</p>
-                    </div>
-                  </div>
-                ))}
-                {notices.length === 0 && (
-                  <div className="text-center py-8 bg-gray-50 rounded-xl border border-dashed border-gray-200">
-                    <p className="text-gray-500 text-sm">No new notifications.</p>
-                  </div>
-                )}
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Quick Actions */}
-          <Card className="bg-gradient-to-br from-blue-600 to-indigo-700 text-white border-none shadow-xl shadow-blue-200">
-            <CardContent className="p-6">
-              <h3 className="font-bold text-xl mb-6 flex items-center gap-2">
-                ⚡ Quick Actions
-              </h3>
-              <div className="space-y-4">
-                <Link to={`/student/${studentId}/fees`}>
-                  <Button variant="secondary" className="w-full justify-between bg-white/10 border border-white/20 text-white hover:bg-white/20 backdrop-blur-sm transition-all">
-                    <span className="font-medium">Pay Fees</span>
-                    <FaArrowRight size={14} />
-                  </Button>
-                </Link>
-                <Link to={`/student/${studentId}/marks`}>
-                  <Button variant="secondary" className="w-full justify-between bg-white/10 border border-white/20 text-white hover:bg-white/20 backdrop-blur-sm transition-all">
-                    <span className="font-medium">View Results</span>
-                    <FaArrowRight size={14} />
-                  </Button>
-                </Link>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+            ))}
+            {assignments.filter(a => !a.submitted).length === 0 && (
+              <p className="text-gray-500 text-center py-4">No pending assignments!</p>
+            )}
+          </div>
+        </Card>
       </div>
     </div>
   );
+
+  const AssignmentsTab = () => (
+    <div className="space-y-6">
+      <div className="flex justify-between items-center">
+        <h2 className="text-2xl font-bold text-gray-800">Assignments</h2>
+      </div>
+      <div className="grid gap-4">
+        {assignments.map((assignment) => (
+          <Card key={assignment._id} className="p-6 hover:shadow-md transition-shadow">
+            <div className="flex flex-col md:flex-row justify-between md:items-center gap-4">
+              <div className="flex-1">
+                <div className="flex items-center gap-3 mb-2">
+                  <h3 className="text-lg font-bold text-gray-900">{assignment.title}</h3>
+                  <Badge type={assignment.submitted ? "success" : "warning"}>
+                    {assignment.submitted ? "Submitted" : "Pending"}
+                  </Badge>
+                </div>
+                <p className="text-gray-600 mb-2">{assignment.description}</p>
+                <div className="flex items-center gap-4 text-sm text-gray-500">
+                  <span className="flex items-center gap-1">
+                    <BookOpen size={14} /> {assignment.subjectId?.subjectName || 'Subject'}
+                  </span>
+                  <span className="flex items-center gap-1 text-red-500">
+                    <Clock size={14} /> Due: {new Date(assignment.deadline).toLocaleDateString()}
+                  </span>
+                </div>
+              </div>
+              <div className="flex gap-3">
+                {assignment.fileUrl && (
+                  <a
+                    href={assignment.fileUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-blue-600 bg-blue-50 rounded-lg hover:bg-blue-100"
+                  >
+                    <Download size={16} /> Resource
+                  </a>
+                )}
+                {!assignment.submitted && (
+                  <button className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700">
+                    Submit Work
+                  </button>
+                )}
+              </div>
+            </div>
+          </Card>
+        ))}
+        {assignments.length === 0 && (
+          <div className="text-center py-12 bg-white rounded-xl border border-dashed border-gray-300">
+            <FileText className="mx-auto h-12 w-12 text-gray-400" />
+            <h3 className="mt-2 text-sm font-medium text-gray-900">No assignments</h3>
+            <p className="mt-1 text-sm text-gray-500">You're all caught up!</p>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+
+  const AttendanceTab = () => (
+    <div className="space-y-6">
+      <h2 className="text-2xl font-bold text-gray-800">Attendance Record</h2>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Overall Stats */}
+        <Card className="p-6 lg:col-span-1">
+          <h3 className="text-lg font-semibold mb-4">Summary</h3>
+          <div className="flex items-center justify-center py-6">
+            <div className="relative h-40 w-40">
+              <svg className="h-full w-full" viewBox="0 0 36 36">
+                <path
+                  d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                  fill="none"
+                  stroke="#E5E7EB"
+                  strokeWidth="3"
+                />
+                <path
+                  d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                  fill="none"
+                  stroke="#3B82F6"
+                  strokeWidth="3"
+                  strokeDasharray={`${(attendance.filter(a => a.status === 'Present').length / attendance.length) * 100 || 0}, 100`}
+                />
+              </svg>
+              <div className="absolute inset-0 flex flex-col items-center justify-center">
+                <span className="text-3xl font-bold text-gray-800">
+                  {attendance.length > 0
+                    ? Math.round((attendance.filter(a => a.status === 'Present').length / attendance.length) * 100)
+                    : 0}%
+                </span>
+                <span className="text-xs text-gray-500">Present</span>
+              </div>
+            </div>
+          </div>
+          <div className="space-y-2 mt-4">
+            <div className="flex justify-between text-sm">
+              <span className="text-gray-600">Total Classes</span>
+              <span className="font-medium">{attendance.length}</span>
+            </div>
+            <div className="flex justify-between text-sm">
+              <span className="text-green-600">Present</span>
+              <span className="font-medium">{attendance.filter(a => a.status === 'Present').length}</span>
+            </div>
+            <div className="flex justify-between text-sm">
+              <span className="text-red-600">Absent</span>
+              <span className="font-medium">{attendance.filter(a => a.status === 'Absent').length}</span>
+            </div>
+          </div>
+        </Card>
+
+        {/* Detailed List */}
+        <Card className="lg:col-span-2 overflow-hidden">
+          <div className="px-6 py-4 border-b border-gray-100 bg-gray-50">
+            <h3 className="font-semibold text-gray-800">Recent Records</h3>
+          </div>
+          <div className="divide-y divide-gray-100 max-h-[500px] overflow-y-auto">
+            {attendance.map((record) => (
+              <div key={record._id} className="p-4 flex items-center justify-between hover:bg-gray-50">
+                <div>
+                  <p className="font-medium text-gray-900">{record.subjectId?.subjectName || 'Unknown Subject'}</p>
+                  <p className="text-xs text-gray-500">{new Date(record.date).toLocaleDateString()}</p>
+                </div>
+                <Badge type={record.status === 'Present' ? 'success' : 'danger'}>
+                  {record.status}
+                </Badge>
+              </div>
+            ))}
+            {attendance.length === 0 && (
+              <p className="text-center py-8 text-gray-500">No attendance records found.</p>
+            )}
+          </div>
+        </Card>
+      </div>
+    </div>
+  );
+
+  const MarksTab = () => (
+    <div className="space-y-6">
+      <h2 className="text-2xl font-bold text-gray-800">Grades & Marks</h2>
+      <div className="grid gap-4">
+        {marks.map((mark) => (
+          <Card key={mark._id} className="p-6">
+            <div className="flex justify-between items-center mb-4">
+              <div>
+                <h3 className="text-lg font-bold text-gray-900">{mark.subjectId?.subjectName}</h3>
+                <p className="text-sm text-gray-500">{mark.examType}</p>
+              </div>
+              <div className="text-right">
+                <span className="text-2xl font-bold text-blue-600">{mark.marks}</span>
+                <span className="text-gray-400 text-sm"> / {mark.totalMarks}</span>
+              </div>
+            </div>
+            <div className="w-full bg-gray-200 rounded-full h-2.5">
+              <div
+                className="bg-blue-600 h-2.5 rounded-full"
+                style={{ width: `${(mark.marks / mark.totalMarks) * 100}%` }}
+              ></div>
+            </div>
+          </Card>
+        ))}
+        {marks.length === 0 && (
+          <div className="text-center py-12 bg-white rounded-xl border border-dashed border-gray-300">
+            <Award className="mx-auto h-12 w-12 text-gray-400" />
+            <h3 className="mt-2 text-sm font-medium text-gray-900">No grades yet</h3>
+            <p className="mt-1 text-sm text-gray-500">Check back after exams!</p>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+
+  const MaterialsTab = () => (
+    <div className="space-y-6">
+      <h2 className="text-2xl font-bold text-gray-800">Study Materials</h2>
+      <div className="grid gap-4">
+        {materials.map((material) => (
+          <Card key={material._id} className="p-6 flex items-center justify-between">
+            <div className="flex items-start gap-4">
+              <div className="p-3 bg-indigo-50 text-indigo-600 rounded-lg">
+                <BookOpen size={24} />
+              </div>
+              <div>
+                <h3 className="font-bold text-gray-900">{material.title}</h3>
+                <p className="text-sm text-gray-600">{material.description}</p>
+                <p className="text-xs text-gray-400 mt-1">
+                  {material.subjectId?.subjectName} • {new Date(material.createdAt).toLocaleDateString()}
+                </p>
+              </div>
+            </div>
+            {material.fileUrl && (
+              <a
+                href={material.fileUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="p-2 text-gray-400 hover:text-blue-600 transition-colors"
+              >
+                <Download size={20} />
+              </a>
+            )}
+          </Card>
+        ))}
+        {materials.length === 0 && (
+          <p className="text-center text-gray-500 py-8">No study materials available.</p>
+        )}
+      </div>
+    </div>
+  );
+
+  const NoticesTab = () => (
+    <div className="space-y-6">
+      <h2 className="text-2xl font-bold text-gray-800">Announcements</h2>
+      <div className="space-y-4">
+        {notices.map((notice) => (
+          <Card key={notice._id} className="p-6">
+            <div className="flex items-start gap-4">
+              <div className="p-2 bg-yellow-50 text-yellow-600 rounded-full mt-1">
+                <Bell size={20} />
+              </div>
+              <div>
+                <h3 className="font-bold text-gray-900 text-lg">{notice.title}</h3>
+                <p className="text-xs text-gray-500 mb-2">
+                  {new Date(notice.createdAt).toLocaleDateString()}
+                </p>
+                <p className="text-gray-700 leading-relaxed">{notice.description}</p>
+              </div>
+            </div>
+          </Card>
+        ))}
+      </div>
+    </div>
+  );
+
+  return (
+    <div className="min-h-screen bg-gray-50 flex">
+      {/* Sidebar Navigation */}
+      <aside
+        className={`fixed inset-y-0 left-0 z-50 w-64 bg-white border-r border-gray-200 transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
+          }`}
+      >
+        <div className="h-full flex flex-col">
+          <div className="p-6 border-b border-gray-100 flex items-center justify-between">
+            <div className="flex items-center gap-2 text-blue-700 font-bold text-xl">
+              <GraduationCap size={28} />
+              <span>StudentPortal</span>
+            </div>
+            <button onClick={() => setIsSidebarOpen(false)} className="lg:hidden text-gray-500">
+              <X size={24} />
+            </button>
+          </div>
+
+          <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
+            {navItems.map((item) => (
+              <button
+                key={item.id}
+                onClick={() => {
+                  setActiveTab(item.id);
+                  setIsSidebarOpen(false);
+                }}
+                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${activeTab === item.id
+                    ? 'bg-blue-50 text-blue-700'
+                    : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                  }`}
+              >
+                {item.icon}
+                {item.label}
+              </button>
+            ))}
+          </nav>
+
+          <div className="p-4 border-t border-gray-100">
+            <button
+              onClick={handleLogout}
+              className="w-full flex items-center gap-3 px-4 py-3 text-red-600 hover:bg-red-50 rounded-xl text-sm font-medium transition-colors"
+            >
+              <LogOut size={20} />
+              Sign Out
+            </button>
+          </div>
+        </div>
+      </aside>
+
+      {/* Main Content */}
+      <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
+        {/* Mobile Header */}
+        <header className="bg-white border-b border-gray-200 lg:hidden p-4 flex items-center justify-between">
+          <button onClick={() => setIsSidebarOpen(true)} className="text-gray-600">
+            <Menu size={24} />
+          </button>
+          <span className="font-semibold text-gray-800">Student Portal</span>
+          <div className="w-8"></div> {/* Spacer */}
+        </header>
+
+        <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8">
+          <div className="max-w-6xl mx-auto">
+            {activeTab === 'dashboard' && <DashboardTab />}
+            {activeTab === 'assignments' && <AssignmentsTab />}
+            {activeTab === 'attendance' && <AttendanceTab />}
+            {activeTab === 'marks' && <MarksTab />}
+            {activeTab === 'materials' && <MaterialsTab />}
+            {activeTab === 'notices' && <NoticesTab />}
+          </div>
+        </main>
+      </div>
+
+      {/* Overlay for mobile sidebar */}
+      {isSidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black/20 z-40 lg:hidden"
+          onClick={() => setIsSidebarOpen(false)}
+        ></div>
+      )}
+    </div>
+  );
 };
+
+// Helper Icon Component (since GraduationCap was missing in imports above)
+const GraduationCap = ({ size = 24, className = "" }) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className={className}
+  >
+    <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
+    <path d="M6 12v5c3 3 9 3 12 0v-5" />
+  </svg>
+);
 
 export default StudentDashboardNew;
