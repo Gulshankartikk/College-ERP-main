@@ -397,8 +397,7 @@ const addMarks = async (req, res) => {
 // ------------------------- GET ALL STUDENTS MARKS -------------------------
 const getAllStudentsMarks = async (req, res) => {
   try {
-    const { teacherId } = req.params;
-    const { subjectId } = req.query;
+    const { teacherId, subjectId } = req.params;
     if (!subjectId) return res.status(400).json({ success: false, msg: 'subjectId required' });
 
     const subject = await Subject.findById(subjectId);

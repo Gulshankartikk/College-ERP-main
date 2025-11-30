@@ -31,23 +31,25 @@ const Layout = () => {
 
   const userRole = getUserRole();
 
-  // Initialize viewRole with userRole if not set
-  React.useEffect(() => {
-    if (userRole && !viewRole) {
-      setViewRole(userRole);
-    }
-  }, [userRole, viewRole]);
-
-  // Auto-switch viewRole based on URL for Admins
+  // Sync viewRole with userRole and handle Admin view switching
   React.useEffect(() => {
     if (userRole === 'admin') {
+      // Only Admins can switch views based on URL
       if (location.pathname.startsWith('/student')) {
         setViewRole('student');
       } else if (location.pathname.startsWith('/teacher')) {
         setViewRole('teacher');
       } else if (location.pathname.startsWith('/admin')) {
         setViewRole('admin');
+      } else {
+        // Default to admin view if on other pages (e.g. home)
+        setViewRole('admin');
       }
+    } else {
+      // For non-admins, viewRole MUST always match userRole
+      // This ensures that if a user logs out (userRole becomes null) 
+      // or logs in as a different role, viewRole updates correctly.
+      setViewRole(userRole);
     }
   }, [location.pathname, userRole]);
 

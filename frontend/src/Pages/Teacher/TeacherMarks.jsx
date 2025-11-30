@@ -55,6 +55,7 @@ const TeacherMarks = () => {
     setLoading(true);
     try {
       const token = Cookies.get('token');
+      console.log('Fetching students for subject:', selectedSubject);
       const [studentsRes, marksRes] = await Promise.all([
         axios.get(`${BASE_URL}/api/teacher/${teacherId}/subjects/${selectedSubject}/students`, {
           headers: { Authorization: `Bearer ${token}` }
@@ -63,6 +64,7 @@ const TeacherMarks = () => {
           headers: { Authorization: `Bearer ${token}` }
         })
       ]);
+      console.log('Students fetched:', studentsRes.data.students);
       setStudents(studentsRes.data.students || []);
       setStudentMarks(marksRes.data.studentMarks || []);
     } catch (error) {
@@ -157,8 +159,8 @@ const TeacherMarks = () => {
                   <TableCell className="text-center">
                     <span
                       className={`px-3 py-1 rounded-full text-xs font-bold ${sm.percentage >= 75 ? 'bg-green-100 text-green-700' :
-                          sm.percentage >= 50 ? 'bg-yellow-100 text-yellow-700' :
-                            'bg-red-100 text-red-700'
+                        sm.percentage >= 50 ? 'bg-yellow-100 text-yellow-700' :
+                          'bg-red-100 text-red-700'
                         }`}
                     >
                       {sm.percentage}%
