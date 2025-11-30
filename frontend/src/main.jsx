@@ -46,6 +46,9 @@ import TeacherAttendance from "./Pages/Teacher/TeacherAttendance";
 import TeacherAssignments from "./Pages/Teacher/TeacherAssignments";
 import TeacherMaterials from "./Pages/Teacher/TeacherMaterials";
 import TeacherMarks from "./Pages/Teacher/TeacherMarks";
+import TeacherResources from "./Pages/Teacher/TeacherResources";
+
+// ... existing imports ...
 import TeacherTimetable from "./Pages/Teacher/TeacherTimetable";
 import TeacherNotices from "./Pages/Teacher/TeacherNotices";
 import TeacherLeave from "./Pages/Teacher/TeacherLeave";
@@ -110,6 +113,7 @@ const router = createBrowserRouter(
           <Route path="attendance" element={<TeacherAttendance />} />
           <Route path="assignments" element={<TeacherAssignments />} />
           <Route path="materials" element={<TeacherMaterials />} />
+          <Route path="resources" element={<TeacherResources />} />
           <Route path="marks" element={<TeacherMarks />} />
           <Route path="timetable" element={<TeacherTimetable />} />
           <Route path="notices" element={<TeacherNotices />} />

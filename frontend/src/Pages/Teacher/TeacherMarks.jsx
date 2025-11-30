@@ -3,10 +3,13 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import { BASE_URL } from '../../constants/api';
-import TeacherHeader from '../../components/TeacherHeader';
-import BackButton from '../../components/BackButton';
-import LoadingSpinner from '../../components/LoadingSpinner';
 import { FaPlus, FaTrophy, FaChartLine } from 'react-icons/fa';
+import Card, { CardContent } from '../../components/ui/Card';
+import Button from '../../components/ui/Button';
+import Select from '../../components/ui/Select';
+import Input from '../../components/ui/Input';
+import LoadingSpinner from '../../components/LoadingSpinner';
+import Table, { TableHeader, TableBody, TableRow, TableHead, TableCell } from '../../components/ui/Table';
 
 const TeacherMarks = () => {
   const { id: teacherId } = useParams();
@@ -93,167 +96,141 @@ const TeacherMarks = () => {
   };
 
   return (
-    <div className="min-h-screen" style={{ background: 'linear-gradient(135deg, #2d545e 0%, #12343b 100%)' }}>
-      <TeacherHeader currentRole="teacher" />
-      <div className="p-6">
-        <BackButton className="mb-4" />
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-3xl font-bold text-white">Manage Marks</h1>
-          {selectedSubject && selectedSubject !== 'all' && (
-            <button
-              onClick={() => setShowModal(true)}
-              className="px-6 py-3 rounded-lg text-white font-bold flex items-center gap-2"
-              style={{ backgroundColor: '#e1b382' }}
-            >
-              <FaPlus /> Add Marks
-            </button>
-          )}
+    <div className="space-y-6">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900">Manage Marks</h1>
+          <p className="text-gray-500">Record and track student performance</p>
         </div>
-
-        <div className="bg-white rounded-lg shadow-xl p-6 mb-6">
-          <label className="block text-sm font-bold mb-2" style={{ color: '#2d545e' }}>
-            Select Subject
-          </label>
-          <select
-            value={selectedSubject}
-            onChange={(e) => setSelectedSubject(e.target.value)}
-            className="w-full p-3 border rounded-lg"
-            style={{ borderColor: '#e1b382' }}
-          >
-            <option value="all">All Subjects</option>
-            {subjects.map(subject => (
-              <option key={subject._id} value={subject._id}>
-                {subject.subjectName} ({subject.subjectCode})
-              </option>
-            ))}
-          </select>
-        </div>
-
-        {loading ? (
-          <LoadingSpinner message="Loading marks..." />
-        ) : selectedSubject === 'all' ? (
-          <div className="bg-white rounded-lg shadow-xl p-12 text-center">
-            <FaChartLine size={48} className="mx-auto mb-4" style={{ color: '#e1b382' }} />
-            <p className="text-gray-500 text-lg">Please select a specific subject to view and manage marks</p>
-          </div>
-        ) : selectedSubject && studentMarks.length > 0 ? (
-          <div className="bg-white rounded-lg shadow-xl p-6">
-            <h2 className="text-xl font-bold mb-4" style={{ color: '#2d545e' }}>Student Performance</h2>
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead style={{ backgroundColor: '#2d545e' }}>
-                  <tr>
-                    <th className="p-3 text-left text-white">Roll No</th>
-                    <th className="p-3 text-left text-white">Name</th>
-                    <th className="p-3 text-center text-white">Total Marks</th>
-                    <th className="p-3 text-center text-white">Total Possible</th>
-                    <th className="p-3 text-center text-white">Percentage</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {studentMarks.map((sm, index) => (
-                    <tr key={sm.student._id} style={{ backgroundColor: index % 2 === 0 ? '#f9f9f9' : 'white' }}>
-                      <td className="p-3">{sm.student.rollNo}</td>
-                      <td className="p-3">{sm.student.name}</td>
-                      <td className="p-3 text-center font-bold">{sm.totalMarks}</td>
-                      <td className="p-3 text-center">{sm.totalPossible}</td>
-                      <td className="p-3 text-center">
-                        <span
-                          className="px-3 py-1 rounded-full text-white font-bold"
-                          style={{
-                            backgroundColor: sm.percentage >= 75 ? '#4ade80' : sm.percentage >= 50 ? '#fbbf24' : '#ef4444'
-                          }}
-                        >
-                          {sm.percentage}%
-                        </span>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        ) : selectedSubject && selectedSubject !== 'all' ? (
-          <div className="bg-white rounded-lg shadow-xl p-12 text-center">
-            <FaChartLine size={48} className="mx-auto mb-4" style={{ color: '#e1b382' }} />
-            <p className="text-gray-500 text-lg">No marks recorded yet for this subject</p>
-          </div>
-        ) : null}
+        {selectedSubject && selectedSubject !== 'all' && (
+          <Button onClick={() => setShowModal(true)}>
+            <FaPlus className="mr-2" /> Add Marks
+          </Button>
+        )}
       </div>
 
+      <Card>
+        <CardContent className="p-6">
+          <div className="max-w-md">
+            <Select
+              label="Select Subject"
+              value={selectedSubject}
+              onChange={(e) => setSelectedSubject(e.target.value)}
+            >
+              <option value="all">-- Select Subject --</option>
+              {subjects.map(subject => (
+                <option key={subject._id} value={subject._id}>
+                  {subject.subjectName} ({subject.subjectCode})
+                </option>
+              ))}
+            </Select>
+          </div>
+        </CardContent>
+      </Card>
+
+      {loading ? (
+        <LoadingSpinner message="Loading marks..." />
+      ) : selectedSubject === 'all' ? (
+        <div className="text-center py-12 bg-gray-50 rounded-xl border-2 border-dashed border-gray-200">
+          <FaChartLine className="mx-auto h-12 w-12 text-gray-400 mb-4" />
+          <p className="text-gray-500 text-lg">Please select a subject to view marks</p>
+        </div>
+      ) : selectedSubject && studentMarks.length > 0 ? (
+        <div className="rounded-xl border border-gray-200 overflow-hidden bg-white shadow-sm">
+          <Table>
+            <TableHeader>
+              <tr>
+                <TableHead>Roll No</TableHead>
+                <TableHead>Name</TableHead>
+                <TableHead className="text-center">Total Marks</TableHead>
+                <TableHead className="text-center">Total Possible</TableHead>
+                <TableHead className="text-center">Percentage</TableHead>
+              </tr>
+            </TableHeader>
+            <TableBody>
+              {studentMarks.map((sm) => (
+                <TableRow key={sm.student._id}>
+                  <TableCell className="font-medium">{sm.student.rollNo}</TableCell>
+                  <TableCell>{sm.student.name}</TableCell>
+                  <TableCell className="text-center font-bold">{sm.totalMarks}</TableCell>
+                  <TableCell className="text-center">{sm.totalPossible}</TableCell>
+                  <TableCell className="text-center">
+                    <span
+                      className={`px-3 py-1 rounded-full text-xs font-bold ${sm.percentage >= 75 ? 'bg-green-100 text-green-700' :
+                          sm.percentage >= 50 ? 'bg-yellow-100 text-yellow-700' :
+                            'bg-red-100 text-red-700'
+                        }`}
+                    >
+                      {sm.percentage}%
+                    </span>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+      ) : selectedSubject && selectedSubject !== 'all' ? (
+        <div className="text-center py-12 bg-gray-50 rounded-xl">
+          <p className="text-gray-500">No marks recorded yet for this subject</p>
+        </div>
+      ) : null}
+
       {showModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-8 max-w-md w-full">
-            <h2 className="text-2xl font-bold mb-4" style={{ color: '#2d545e' }}>Add Marks</h2>
-            <form onSubmit={handleSubmit}>
-              <div className="mb-4">
-                <label className="block text-sm font-bold mb-2">Student</label>
-                <select
-                  value={formData.studentId}
-                  onChange={(e) => setFormData({ ...formData, studentId: e.target.value })}
-                  className="w-full p-3 border rounded-lg"
-                  required
-                >
-                  <option value="">-- Select Student --</option>
-                  {students.map(student => (
-                    <option key={student._id} value={student._id}>
-                      {student.name} ({student.rollNo})
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div className="mb-4">
-                <label className="block text-sm font-bold mb-2">Exam Type</label>
-                <select
-                  value={formData.examType}
-                  onChange={(e) => setFormData({ ...formData, examType: e.target.value })}
-                  className="w-full p-3 border rounded-lg"
-                  required
-                >
-                  <option value="Mid-Term">Mid-Term</option>
-                  <option value="End-Term">End-Term</option>
-                  <option value="Quiz">Quiz</option>
-                  <option value="Assignment">Assignment</option>
-                </select>
-              </div>
-              <div className="mb-4">
-                <label className="block text-sm font-bold mb-2">Marks Obtained</label>
-                <input
-                  type="number"
-                  value={formData.marks}
-                  onChange={(e) => setFormData({ ...formData, marks: e.target.value })}
-                  className="w-full p-3 border rounded-lg"
-                  min="0"
-                  required
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-sm font-bold mb-2">Total Marks</label>
-                <input
-                  type="number"
-                  value={formData.totalMarks}
-                  onChange={(e) => setFormData({ ...formData, totalMarks: e.target.value })}
-                  className="w-full p-3 border rounded-lg"
-                  min="0"
-                  required
-                />
-              </div>
-              <div className="flex gap-4">
-                <button
-                  type="submit"
-                  className="flex-1 px-6 py-3 rounded-lg text-white font-bold"
-                  style={{ backgroundColor: '#e1b382' }}
-                >
-                  Add Marks
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setShowModal(false)}
-                  className="flex-1 px-6 py-3 rounded-lg border-2 font-bold"
-                  style={{ borderColor: '#2d545e', color: '#2d545e' }}
-                >
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-xl shadow-xl max-w-md w-full p-6">
+            <h2 className="text-xl font-bold mb-4">Add Marks</h2>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <Select
+                label="Student"
+                value={formData.studentId}
+                onChange={(e) => setFormData({ ...formData, studentId: e.target.value })}
+                required
+              >
+                <option value="">-- Select Student --</option>
+                {students.map(student => (
+                  <option key={student._id} value={student._id}>
+                    {student.name} ({student.rollNo})
+                  </option>
+                ))}
+              </Select>
+
+              <Select
+                label="Exam Type"
+                value={formData.examType}
+                onChange={(e) => setFormData({ ...formData, examType: e.target.value })}
+                required
+              >
+                <option value="Mid-Term">Mid-Term</option>
+                <option value="End-Term">End-Term</option>
+                <option value="Quiz">Quiz</option>
+                <option value="Assignment">Assignment</option>
+              </Select>
+
+              <Input
+                label="Marks Obtained"
+                type="number"
+                value={formData.marks}
+                onChange={(e) => setFormData({ ...formData, marks: e.target.value })}
+                min="0"
+                required
+              />
+
+              <Input
+                label="Total Marks"
+                type="number"
+                value={formData.totalMarks}
+                onChange={(e) => setFormData({ ...formData, totalMarks: e.target.value })}
+                min="0"
+                required
+              />
+
+              <div className="flex gap-3 mt-6">
+                <Button type="button" variant="outline" className="flex-1" onClick={() => setShowModal(false)}>
                   Cancel
-                </button>
+                </Button>
+                <Button type="submit" className="flex-1">
+                  Add Marks
+                </Button>
               </div>
             </form>
           </div>

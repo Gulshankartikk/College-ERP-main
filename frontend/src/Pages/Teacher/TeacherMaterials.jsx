@@ -3,17 +3,19 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import { BASE_URL } from '../../constants/api';
-import TeacherHeader from '../../components/TeacherHeader';
-import BackButton from '../../components/BackButton';
-import LoadingSpinner from '../../components/LoadingSpinner';
 import { FaPlus, FaFileAlt, FaDownload } from 'react-icons/fa';
+import Card, { CardContent } from '../../components/ui/Card';
+import Button from '../../components/ui/Button';
+import Select from '../../components/ui/Select';
+import Input from '../../components/ui/Input';
+import LoadingSpinner from '../../components/LoadingSpinner';
 
 const TeacherMaterials = () => {
   const { id: teacherId } = useParams();
   const [materials, setMaterials] = useState([]);
   const [allMaterials, setAllMaterials] = useState([]);
   const [subjects, setSubjects] = useState([]);
-  const [filterSubject, setFilterSubject] = useState('');
+  const [filterSubject, setFilterSubject] = useState('all');
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [formData, setFormData] = useState({
@@ -50,7 +52,7 @@ const TeacherMaterials = () => {
   };
 
   useEffect(() => {
-    if (filterSubject) {
+    if (filterSubject && filterSubject !== 'all') {
       setMaterials(allMaterials.filter(m => m.subjectId?._id === filterSubject));
     } else {
       setMaterials(allMaterials);
@@ -79,140 +81,126 @@ const TeacherMaterials = () => {
   if (loading) return <LoadingSpinner message="Loading materials..." />;
 
   return (
-    <div className="min-h-screen" style={{ background: 'linear-gradient(135deg, #2d545e 0%, #12343b 100%)' }}>
-      <TeacherHeader currentRole="teacher" />
-      <div className="p-6">
-        <BackButton className="mb-4" />
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-3xl font-bold text-white">Study Materials</h1>
-          <button
-            onClick={() => setShowModal(true)}
-            className="px-6 py-3 rounded-lg text-white font-bold flex items-center gap-2"
-            style={{ backgroundColor: '#e1b382' }}
-          >
-            <FaPlus /> Upload Material
-          </button>
+    <div className="space-y-6">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900">Study Materials</h1>
+          <p className="text-gray-500">Manage and share course materials</p>
         </div>
-
-        <div className="bg-white rounded-lg shadow-xl p-4 mb-6">
-          <label className="block text-sm font-bold mb-2" style={{ color: '#2d545e' }}>Filter by Subject</label>
-          <select
-            value={filterSubject}
-            onChange={(e) => setFilterSubject(e.target.value)}
-            className="w-full p-3 border rounded-lg"
-            style={{ borderColor: '#e1b382' }}
-          >
-            <option value="">All Subjects</option>
-            {subjects.map(subject => (
-              <option key={subject._id} value={subject._id}>
-                {subject.subjectName} ({subject.subjectCode})
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {materials.map(material => (
-            <div key={material._id} className="bg-white rounded-lg shadow-xl p-6" style={{ borderTop: '4px solid #c89666' }}>
-              <div className="flex items-start gap-3 mb-3">
-                <FaFileAlt size={24} style={{ color: '#e1b382' }} />
-                <div className="flex-1">
-                  <h3 className="text-xl font-bold mb-1" style={{ color: '#2d545e' }}>{material.title}</h3>
-                  <p className="text-sm" style={{ color: '#c89666' }}>
-                    {material.subjectId?.subjectName} ({material.subjectId?.subjectCode})
-                  </p>
-                </div>
-              </div>
-              <p className="text-gray-600 mb-4">{material.description}</p>
-              {material.fileUrl && (
-                <a
-                  href={material.fileUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-white font-bold"
-                  style={{ backgroundColor: '#2d545e' }}
-                >
-                  <FaDownload /> Download
-                </a>
-              )}
-            </div>
-          ))}
-        </div>
-
-        {materials.length === 0 && (
-          <div className="bg-white rounded-lg shadow-xl p-12 text-center">
-            <p className="text-gray-500 text-lg">No study materials uploaded yet</p>
-          </div>
-        )}
+        <Button onClick={() => setShowModal(true)}>
+          <FaPlus className="mr-2" /> Upload Material
+        </Button>
       </div>
 
+      <Card>
+        <CardContent className="p-6">
+          <div className="max-w-md">
+            <Select
+              label="Filter by Subject"
+              value={filterSubject}
+              onChange={(e) => setFilterSubject(e.target.value)}
+            >
+              <option value="all">All Subjects</option>
+              {subjects.map(subject => (
+                <option key={subject._id} value={subject._id}>
+                  {subject.subjectName} ({subject.subjectCode})
+                </option>
+              ))}
+            </Select>
+          </div>
+        </CardContent>
+      </Card>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {materials.map(material => (
+          <Card key={material._id} className="hover:shadow-lg transition-shadow">
+            <CardContent className="p-6">
+              <div className="flex items-start gap-4">
+                <div className="p-3 bg-blue-50 rounded-lg">
+                  <FaFileAlt className="text-blue-600 text-xl" />
+                </div>
+                <div className="flex-1">
+                  <h3 className="font-bold text-gray-900 mb-1">{material.title}</h3>
+                  <p className="text-sm text-blue-600 font-medium mb-2">
+                    {material.subjectId?.subjectName}
+                  </p>
+                  <p className="text-gray-600 text-sm mb-4 line-clamp-2">{material.description}</p>
+
+                  {material.fileUrl && (
+                    <a
+                      href={material.fileUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center text-sm font-medium text-blue-600 hover:text-blue-700"
+                    >
+                      <FaDownload className="mr-2" /> Download Resource
+                    </a>
+                  )}
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+
+      {materials.length === 0 && (
+        <div className="text-center py-12 bg-gray-50 rounded-xl border-2 border-dashed border-gray-200">
+          <FaFileAlt className="mx-auto h-12 w-12 text-gray-400 mb-4" />
+          <p className="text-gray-500 text-lg">No study materials found</p>
+        </div>
+      )}
+
       {showModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-8 max-w-md w-full">
-            <h2 className="text-2xl font-bold mb-4" style={{ color: '#2d545e' }}>Upload Study Material</h2>
-            <form onSubmit={handleSubmit}>
-              <div className="mb-4">
-                <label className="block text-sm font-bold mb-2">Subject</label>
-                <select
-                  value={formData.subjectId}
-                  onChange={(e) => setFormData({ ...formData, subjectId: e.target.value })}
-                  className="w-full p-3 border rounded-lg"
-                  required
-                >
-                  <option value="">-- Select Subject --</option>
-                  {subjects.map(subject => (
-                    <option key={subject._id} value={subject._id}>
-                      {subject.subjectName} ({subject.subjectCode})
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div className="mb-4">
-                <label className="block text-sm font-bold mb-2">Title</label>
-                <input
-                  type="text"
-                  value={formData.title}
-                  onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                  className="w-full p-3 border rounded-lg"
-                  required
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-sm font-bold mb-2">Description</label>
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-xl shadow-xl max-w-md w-full p-6">
+            <h2 className="text-xl font-bold mb-4">Upload Study Material</h2>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <Select
+                label="Subject"
+                value={formData.subjectId}
+                onChange={(e) => setFormData({ ...formData, subjectId: e.target.value })}
+                required
+              >
+                <option value="">-- Select Subject --</option>
+                {subjects.map(subject => (
+                  <option key={subject._id} value={subject._id}>
+                    {subject.subjectName} ({subject.subjectCode})
+                  </option>
+                ))}
+              </Select>
+
+              <Input
+                label="Title"
+                value={formData.title}
+                onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                required
+              />
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
                 <textarea
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  className="w-full p-3 border rounded-lg"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
                   rows="3"
                 />
               </div>
-              <div className="mb-4">
-                <label className="block text-sm font-bold mb-2">File URL</label>
-                <input
-                  type="url"
-                  value={formData.fileUrl}
-                  onChange={(e) => setFormData({ ...formData, fileUrl: e.target.value })}
-                  className="w-full p-3 border rounded-lg"
-                  placeholder="https://example.com/file.pdf"
-                  required
-                />
-              </div>
-              <div className="flex gap-4">
-                <button
-                  type="submit"
-                  className="flex-1 px-6 py-3 rounded-lg text-white font-bold"
-                  style={{ backgroundColor: '#e1b382' }}
-                >
-                  Upload
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setShowModal(false)}
-                  className="flex-1 px-6 py-3 rounded-lg border-2 font-bold"
-                  style={{ borderColor: '#2d545e', color: '#2d545e' }}
-                >
+
+              <Input
+                label="File URL"
+                value={formData.fileUrl}
+                onChange={(e) => setFormData({ ...formData, fileUrl: e.target.value })}
+                placeholder="https://example.com/file.pdf"
+                required
+              />
+
+              <div className="flex gap-3 mt-6">
+                <Button type="button" variant="outline" className="flex-1" onClick={() => setShowModal(false)}>
                   Cancel
-                </button>
+                </Button>
+                <Button type="submit" className="flex-1">
+                  Upload
+                </Button>
               </div>
             </form>
           </div>

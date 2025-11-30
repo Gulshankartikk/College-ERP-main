@@ -50,6 +50,7 @@ const Sidebar = ({ isOpen, onClose, userRole }) => {
         { icon: Users, label: 'My Students', path: `/teacher/${teacherId}/students` },
         { icon: ClipboardCheck, label: 'Attendance', path: `/teacher/${teacherId}/attendance` },
         { icon: BookOpen, label: 'Assignments', path: `/teacher/${teacherId}/assignments` },
+        { icon: Library, label: 'Learning Resources', path: `/teacher/${teacherId}/resources` },
         { icon: FileText, label: 'Materials', path: `/teacher/${teacherId}/materials` },
         { icon: GraduationCap, label: 'Marks', path: `/teacher/${teacherId}/marks` },
         { icon: Calendar, label: 'Timetable', path: `/teacher/${teacherId}/timetable` },

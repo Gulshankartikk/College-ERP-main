@@ -507,7 +507,7 @@ const addStudyMaterial = async (req, res) => {
 const addAssignment = async (req, res) => {
   try {
     const { teacherId } = req.params;
-    const { subjectId, title, description, deadline } = req.body;
+    const { subjectId, title, description, deadline, maxMarks, submissionType } = req.body;
 
     if (!title || !subjectId || !deadline) {
       return res.status(400).json({ success: false, msg: 'Title, subject, and deadline are required' });
@@ -516,7 +516,27 @@ const addAssignment = async (req, res) => {
     const actualTeacherId = teacherId === 'admin' ? 'admin' : teacherId;
     const fileUrl = buildFileUrl(req, req.file) || req.body.fileUrl || null;
 
-    const assignment = new Assignments({ teacherId: actualTeacherId, subjectId, title, description, deadline, fileUrl });
+    let files = [];
+    if (req.file) {
+      files.push({
+        name: req.file.originalname,
+        url: fileUrl,
+        size: req.file.size,
+        type: req.file.mimetype
+      });
+    }
+
+    const assignment = new Assignments({
+      teacherId: actualTeacherId,
+      subjectId,
+      title,
+      description,
+      deadline,
+      fileUrl,
+      maxMarks: maxMarks || null,
+      submissionType: submissionType || 'online',
+      files
+    });
     await assignment.save();
 
     const teacher = actualTeacherId === 'admin' ? { name: 'Administrator' } : await Teacher.findById(actualTeacherId);
@@ -791,6 +811,18 @@ module.exports = {
         });
       }
 
+      let parsedLinks = [];
+      try {
+        if (links) {
+          parsedLinks = typeof links === 'string' ? JSON.parse(links) : links;
+        }
+      } catch (e) {
+        console.warn('Invalid links JSON:', links);
+        // Fallback: if it's a simple string, maybe treat as one link? Or just ignore.
+        // For now, ignore invalid JSON to prevent crash
+        parsedLinks = [];
+      }
+
       const resource = new LearningResource({
         teacherId: actualTeacherId,
         subjectId,
@@ -798,7 +830,7 @@ module.exports = {
         description,
         type,
         files,
-        links: links ? JSON.parse(links) : [],
+        links: parsedLinks,
         tags: tags ? tags.split(',').map(t => t.trim()) : [],
         isPublished: isPublished === 'true' || isPublished === true
       });
