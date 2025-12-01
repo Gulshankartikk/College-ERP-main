@@ -1,18 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import axios from 'axios';
-import Cookies from 'js-cookie';
-import { BASE_URL } from '../../constants/api';
+import React from 'react';
 import StudentHeader from '../../components/StudentHeader';
 import BackButton from '../../components/BackButton';
-import LoadingSpinner from '../../components/LoadingSpinner';
-import { FaMoneyBillWave, FaCheckCircle, FaExclamationCircle } from 'react-icons/fa';
+import { FaMoneyBillWave, FaExclamationCircle } from 'react-icons/fa';
 
 const StudentFees = () => {
-  const { studentId } = useParams();
-  const [fees, setFees] = useState(null);
-  const [loading, setLoading] = useState(false);
-
   // Mock data
   const mockFees = {
     totalAmount: 50000,

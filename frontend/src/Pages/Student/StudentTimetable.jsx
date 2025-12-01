@@ -1,16 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import axios from 'axios';
-import Cookies from 'js-cookie';
-import { BASE_URL } from '../../constants/api';
+import React from 'react';
 import StudentHeader from '../../components/StudentHeader';
 import BackButton from '../../components/BackButton';
-import LoadingSpinner from '../../components/LoadingSpinner';
 import { FaCalendarAlt, FaClock } from 'react-icons/fa';
 
 const StudentTimetable = () => {
-  const { studentId } = useParams();
-  const [loading, setLoading] = useState(false);
+
 
   const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
   const timeSlots = ['9:00-10:00', '10:00-11:00', '11:00-12:00', '12:00-1:00', '2:00-3:00', '3:00-4:00'];

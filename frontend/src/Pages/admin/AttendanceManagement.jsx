@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { FaClipboardList, FaCalendarAlt, FaDownload, FaSearch, FaTimes, FaEdit, FaEye, FaCheck, FaUserCheck } from 'react-icons/fa';
+import React, { useState } from 'react';
+import { FaClipboardList, FaCalendarAlt, FaDownload, FaSearch, FaTimes, FaEdit, FaEye, FaCheck } from 'react-icons/fa';
 import AdminHeader from '../../components/AdminHeader';
 import BackButton from '../../components/BackButton';
 
@@ -232,7 +232,7 @@ const AttendanceManagement = () => {
                         <div className="w-16 bg-soft-grey rounded-full h-2 mr-2">
                           <div
                             className={`h-2 rounded-full ${record.percentage >= 80 ? 'bg-green-500' :
-                                record.percentage >= 60 ? 'bg-yellow-500' : 'bg-red-500'
+                              record.percentage >= 60 ? 'bg-yellow-500' : 'bg-red-500'
                               }`}
                             style={{ width: `${record.percentage}%` }}
                           ></div>
@@ -242,8 +242,8 @@ const AttendanceManagement = () => {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span className={`px-2 py-1 text-xs font-semibold rounded-full ${record.percentage >= 80 ? 'bg-green-100 text-green-800' :
-                          record.percentage >= 60 ? 'bg-yellow-100 text-yellow-800' :
-                            'bg-red-100 text-red-800'
+                        record.percentage >= 60 ? 'bg-yellow-100 text-yellow-800' :
+                          'bg-red-100 text-red-800'
                         }`}>
                         {record.percentage >= 80 ? 'Good' : record.percentage >= 60 ? 'Average' : 'Poor'}
                       </span>
@@ -314,8 +314,8 @@ const AttendanceManagement = () => {
                             <button
                               onClick={() => updateAttendanceStatus(student.id, 'Present')}
                               className={`px-3 py-1 rounded-full text-sm font-medium ${student.status === 'Present'
-                                  ? 'bg-green-500 text-white'
-                                  : 'bg-soft-grey text-navy hover:bg-green-100'
+                                ? 'bg-green-500 text-white'
+                                : 'bg-soft-grey text-navy hover:bg-green-100'
                                 }`}
                             >
                               <FaCheck className="inline mr-1" /> Present
@@ -323,8 +323,8 @@ const AttendanceManagement = () => {
                             <button
                               onClick={() => updateAttendanceStatus(student.id, 'Absent')}
                               className={`px-3 py-1 rounded-full text-sm font-medium ${student.status === 'Absent'
-                                  ? 'bg-red-500 text-white'
-                                  : 'bg-soft-grey text-navy hover:bg-red-100'
+                                ? 'bg-red-500 text-white'
+                                : 'bg-soft-grey text-navy hover:bg-red-100'
                                 }`}
                             >
                               <FaTimes className="inline mr-1" /> Absent
@@ -458,8 +458,8 @@ const AttendanceManagement = () => {
                   <p><strong>Percentage:</strong> {selectedStudent.percentage}%</p>
                   <p><strong>Status:</strong>
                     <span className={`ml-2 px-2 py-1 text-xs font-semibold rounded-full ${selectedStudent.percentage >= 80 ? 'bg-green-100 text-green-800' :
-                        selectedStudent.percentage >= 60 ? 'bg-yellow-100 text-yellow-800' :
-                          'bg-red-100 text-red-800'
+                      selectedStudent.percentage >= 60 ? 'bg-yellow-100 text-yellow-800' :
+                        'bg-red-100 text-red-800'
                       }`}>
                       {selectedStudent.percentage >= 80 ? 'Good' : selectedStudent.percentage >= 60 ? 'Average' : 'Poor'}
                     </span>

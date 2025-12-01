@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
 import { FaTrophy, FaStar, FaArrowLeft, FaBell, FaUserGraduate } from 'react-icons/fa';
 import Card, { CardContent } from '../../components/ui/Card';
 import Badge from '../../components/ui/Badge';
@@ -7,7 +6,7 @@ import Button from '../../components/ui/Button';
 
 const StudentAchievers = () => {
     // Mock data for now, as we don't have a populated "achievements" DB yet
-    const [achievers, setAchievers] = useState([
+    const [achievers] = useState([
         {
             id: 1,
             name: "Aditya Kumar",
@@ -46,7 +45,7 @@ const StudentAchievers = () => {
         }
     ]);
 
-    const [updates, setUpdates] = useState([
+    const [updates] = useState([
         { id: 1, text: "Annual Sports Meet registration closes tomorrow!", time: "2 hours ago" },
         { id: 2, text: "Guest Lecture on Blockchain Technology by Industry Experts.", time: "5 hours ago" },
         { id: 3, text: "Mid-term exam schedule has been released.", time: "1 day ago" }

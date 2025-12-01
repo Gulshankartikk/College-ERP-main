@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
-import { useParams } from 'react-router-dom';
 import StudentHeader from '../../components/StudentHeader';
 import BackButton from '../../components/BackButton';
-import { FaPlus, FaCalendarAlt } from 'react-icons/fa';
+import { FaPlus } from 'react-icons/fa';
 
 const StudentLeave = () => {
-  const { studentId } = useParams();
+
   const [showModal, setShowModal] = useState(false);
   const [formData, setFormData] = useState({
     leaveType: 'Sick Leave',

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { BASE_URL } from '../../constants/api';
 import axios from 'axios';
 import { toast } from 'react-toastify';
-import { FaUserGraduate, FaPlus, FaEdit, FaTrash, FaEye, FaSearch } from 'react-icons/fa';
+import { FaUserGraduate, FaPlus, FaEdit, FaTrash, FaEye, FaSearch, FaChalkboardTeacher } from 'react-icons/fa';
 import AdminHeader from '../../components/AdminHeader';
 import BackButton from '../../components/BackButton';
 import Cookies from 'js-cookie';

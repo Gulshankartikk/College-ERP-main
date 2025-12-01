@@ -8,9 +8,9 @@ export const APP_CONFIG = {
 
 // Environment Configuration
 export const ENV_CONFIG = {
-  isDevelopment: process.env.NODE_ENV === 'development',
-  isProduction: process.env.NODE_ENV === 'production',
-  apiUrl: process.env.REACT_APP_API_URL || 'http://localhost:4000'
+  isDevelopment: import.meta.env.DEV,
+  isProduction: import.meta.env.PROD,
+  apiUrl: import.meta.env.VITE_API_URL || 'http://localhost:4000'
 };
 
 // Theme Configuration
