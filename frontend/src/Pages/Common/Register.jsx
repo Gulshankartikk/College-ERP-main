@@ -94,7 +94,7 @@ const Register = () => {
             <Input
               label="Full Name"
               name="name"
-              placeholder="John Doe"
+              placeholder="Gulshan kumar"
               value={formData.name}
               onChange={handleChange}
               required
@@ -103,7 +103,7 @@ const Register = () => {
               label="Phone Number"
               name="phone"
               type="tel"
-              placeholder="+1 (555) 000-0000"
+              placeholder="+91 98765 43210"
               value={formData.phone}
               onChange={handleChange}
               required
@@ -114,7 +114,7 @@ const Register = () => {
             label="Email Address"
             name="email"
             type="email"
-            placeholder="john@example.com"
+            placeholder="kartik@gmail.com"
             value={formData.email}
             onChange={handleChange}
             required
