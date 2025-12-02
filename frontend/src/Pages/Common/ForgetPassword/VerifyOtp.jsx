@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
 import { BASE_URL } from "../../../constants/api"
 import axios from "axios";
 import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import Input from "../../../components/ui/Input";
+import Button from "../../../components/ui/Button";
+import { ShieldCheck } from "lucide-react";
 
 const VerifyOtp = () => {
   const location = useLocation();
@@ -21,99 +23,89 @@ const VerifyOtp = () => {
       setRole("teacher");
     }
   }, []);
-  // let role = useSelector((state) => state.User.role);
 
   let navigate = useNavigate();
 
   const [otp, setOtp] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
     try {
       let res =
         role === "teacher"
           ? await axios.post(
-              `${BASE_URL}/teacher/forgetPassword/verifyotp`,
-              { opt: Number(otp), password }
-            )
+            `${BASE_URL}/teacher/forgetPassword/verifyotp`,
+            { opt: Number(otp), password }
+          )
           : await axios.post(
-              `${BASE_URL}/student/forgetPassword/verifyotp`,
-              { otp: Number(otp), password }
-            );
+            `${BASE_URL}/student/forgetPassword/verifyotp`,
+            { otp: Number(otp), password }
+          );
 
       console.log(res.data);
 
       if (res.data.success) {
-        setOtp(null);
+        setOtp("");
         setPassword("");
         toast.success(res.data.msg);
         navigate("/");
       }
     } catch (err) {
       console.log("Something went wrong", err);
-      toast.error(err.response.data.msg);
+      toast.error(err.response?.data?.msg || "Verification failed");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <>
-      <div className="flex w-full relative">
-        <div className="flex flex-col justify-center gap-10 w-full min-h[100vh]">
-          <div className="overflow-hidden w-full cursor-default">
-            <h1 className="overflow-hidden w-full h-full text-center font-oswald font-bold text-5xl md:text-8xl lg:text-7xl xl:text-9xl my-9">
-              Verify OTP
-            </h1>
+    <div className="min-h-screen bg-background flex items-center justify-center px-4">
+      <div className="max-w-md w-full bg-white rounded-xl shadow-lg p-8 border border-gray-200">
+        <div className="text-center mb-8">
+          <div className="bg-primary/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+            <ShieldCheck className="w-8 h-8 text-primary" />
           </div>
-
-          <div className="w-full flex justify-center items-center lg:mt-2 xl:mt-10 mt-10">
-            <form
-              onSubmit={handleSubmit}
-              className="mx-5 text-xl font-medium mt-8 mb-10 xl:mt-7 min-w-[80vw] lg:min-w-[50vw] border-2 rounded-lg border-black flex flex-col gap-2 px-5 py-7"
-            >
-              <div className="overflow-hidden flex flex-col gap-2">
-                <label htmlFor="email" className="overflow-hidden">
-                  OTP
-                </label>
-                <input
-                  type="number"
-                  value={otp}
-                  placeholder="Enter OTP"
-                  className="w-full border border-black rounded-md py-2 px-2 text-sm"
-                  onChange={(e) => {
-                    setOtp(e.target.value);
-                  }}
-                  maxLength={4}
-                  required
-                />
-              </div>
-              <div className="overflow-hidden flex flex-col gap-2">
-                <label htmlFor="email" className="overflow-hidden">
-                  Password
-                </label>
-                <input
-                  type="password"
-                  value={password}
-                  placeholder="Enter New Password"
-                  className="w-full border border-black rounded-md py-2 px-2 text-sm"
-                  onChange={(e) => {
-                    setPassword(e.target.value);
-                  }}
-                  required
-                />
-              </div>
-              <button
-                type="submit"
-                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4"
-              >
-                Change Password
-              </button>
-            </form>
-          </div>
+          <h1 className="text-3xl font-bold text-secondary font-heading">
+            Verify OTP
+          </h1>
+          <p className="text-text-secondary mt-2">
+            Enter the OTP sent to your email and set a new password.
+          </p>
         </div>
+
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <Input
+            label="OTP"
+            type="number"
+            value={otp}
+            placeholder="Enter 4-digit OTP"
+            onChange={(e) => setOtp(e.target.value)}
+            maxLength={4}
+            required
+          />
+          <Input
+            label="New Password"
+            type="password"
+            value={password}
+            placeholder="Enter new password"
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+
+          <Button
+            type="submit"
+            className="w-full"
+            isLoading={loading}
+          >
+            Change Password
+          </Button>
+        </form>
       </div>
-    </>
+    </div>
   );
 };
 

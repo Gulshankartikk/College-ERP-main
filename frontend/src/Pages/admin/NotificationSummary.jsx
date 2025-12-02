@@ -7,6 +7,8 @@ import { MdAssignment, MdNotifications } from 'react-icons/md';
 import Cookies from 'js-cookie';
 import { toast } from 'react-toastify';
 import AdminHeader from '../../components/AdminHeader';
+import Button from '../../components/ui/Button';
+import Input from '../../components/ui/Input';
 
 const NotificationSummary = () => {
   const [data, setData] = useState({
@@ -200,8 +202,8 @@ const NotificationSummary = () => {
     <button
       onClick={() => setActiveTab(id)}
       className={`flex items-center px-4 py-2 rounded-lg font-medium transition-colors ${activeTab === id
-        ? 'bg-sky-blue text-white'
-        : 'bg-soft-grey text-navy hover:bg-soft-grey/80'
+        ? 'bg-primary text-white'
+        : 'bg-gray-100 text-secondary hover:bg-gray-200'
         }`}
     >
       {icon}
@@ -217,7 +219,7 @@ const NotificationSummary = () => {
       <div className="min-h-screen bg-background">
         <AdminHeader currentRole="admin" />
         <div className="flex items-center justify-center h-64">
-          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-sky-blue"></div>
+          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary"></div>
         </div>
       </div>
     );
@@ -229,49 +231,49 @@ const NotificationSummary = () => {
       <div className="py-8">
         <div className="max-w-7xl mx-auto px-4">
           <div className="mb-8">
-            <h1 className="text-4xl font-bold text-navy">Activity Summary</h1>
-            <p className="text-text-grey mt-2">Track all teacher activities and system notifications</p>
+            <h1 className="text-4xl font-bold text-secondary font-heading">Activity Summary</h1>
+            <p className="text-text-secondary mt-2">Track all teacher activities and system notifications</p>
           </div>
 
           {/* Stats Overview */}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-            <div className="bg-white rounded-lg shadow-md p-6 border-l-4 border-sky-blue">
+            <div className="bg-white rounded-lg shadow-md p-6 border-l-4 border-primary">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-text-grey text-sm">Total Assignments</p>
-                  <p className="text-3xl font-bold text-navy">{data?.assignments?.length || 0}</p>
+                  <p className="text-text-secondary text-sm">Total Assignments</p>
+                  <p className="text-3xl font-bold text-secondary">{data?.assignments?.length || 0}</p>
                 </div>
-                <MdAssignment className="text-sky-blue text-3xl" />
+                <MdAssignment className="text-primary text-3xl" />
               </div>
             </div>
 
-            <div className="bg-white rounded-lg shadow-md p-6 border-l-4 border-navy">
+            <div className="bg-white rounded-lg shadow-md p-6 border-l-4 border-secondary">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-text-grey text-sm">Total Notices</p>
-                  <p className="text-3xl font-bold text-navy">{data?.notices?.length || 0}</p>
+                  <p className="text-text-secondary text-sm">Total Notices</p>
+                  <p className="text-3xl font-bold text-secondary">{data?.notices?.length || 0}</p>
                 </div>
-                <FaBell className="text-navy text-3xl" />
+                <FaBell className="text-secondary text-3xl" />
               </div>
             </div>
 
-            <div className="bg-white rounded-lg shadow-md p-6 border-l-4 border-sky-blue">
+            <div className="bg-white rounded-lg shadow-md p-6 border-l-4 border-primary">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-text-grey text-sm">Study Materials</p>
-                  <p className="text-3xl font-bold text-navy">{data?.materials?.length || 0}</p>
+                  <p className="text-text-secondary text-sm">Study Materials</p>
+                  <p className="text-3xl font-bold text-secondary">{data?.materials?.length || 0}</p>
                 </div>
-                <FaStickyNote className="text-sky-blue text-3xl" />
+                <FaStickyNote className="text-primary text-3xl" />
               </div>
             </div>
 
-            <div className="bg-white rounded-lg shadow-md p-6 border-l-4 border-navy">
+            <div className="bg-white rounded-lg shadow-md p-6 border-l-4 border-secondary">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-text-grey text-sm">Attendance Records</p>
-                  <p className="text-3xl font-bold text-navy">{data?.attendance?.length || 0}</p>
+                  <p className="text-text-secondary text-sm">Attendance Records</p>
+                  <p className="text-3xl font-bold text-secondary">{data?.attendance?.length || 0}</p>
                 </div>
-                <FaClipboardList className="text-navy text-3xl" />
+                <FaClipboardList className="text-secondary text-3xl" />
               </div>
             </div>
           </div>
@@ -311,18 +313,18 @@ const NotificationSummary = () => {
           </div>
 
           {/* Content Area */}
-          <div className="bg-white rounded-lg shadow-md p-6">
+          <div className="bg-white rounded-lg shadow-md p-6 border border-gray-200">
             {activeTab === 'assignments' && (
               <div>
-                <h2 className="text-2xl font-semibold mb-4">Assignment Tracking</h2>
+                <h2 className="text-2xl font-semibold mb-4 text-secondary font-heading">Assignment Tracking</h2>
                 <div className="space-y-4">
                   {(data?.assignments || []).map((assignment) => (
-                    <div key={assignment._id} className="border border-soft-grey rounded-lg p-4 hover:bg-background">
+                    <div key={assignment._id} className="border border-gray-200 rounded-lg p-4 hover:bg-gray-50 transition-colors">
                       <div className="flex items-center justify-between">
                         <div className="flex-1">
-                          <h3 className="font-semibold text-lg text-navy">{assignment.title}</h3>
-                          <p className="text-text-grey">{assignment.subjectId?.subjectName} ({assignment.subjectId?.subjectCode})</p>
-                          <p className="text-sm text-text-grey">
+                          <h3 className="font-semibold text-lg text-secondary">{assignment.title}</h3>
+                          <p className="text-text-secondary">{assignment.subjectId?.subjectName} ({assignment.subjectId?.subjectCode})</p>
+                          <p className="text-sm text-text-muted">
                             Due: {new Date(assignment.deadline).toLocaleDateString()} |
                             Created: {new Date(assignment.createdAt).toLocaleDateString()}
                           </p>
@@ -330,17 +332,17 @@ const NotificationSummary = () => {
                         <div className="text-right">
                           <div className="flex items-center space-x-4">
                             <div>
-                              <p className="text-lg font-bold text-sky-blue">
+                              <p className="text-lg font-bold text-primary">
                                 {assignment.submittedCount || 0}/{assignment.totalStudents || 0}
                               </p>
-                              <p className="text-xs text-text-grey">Submitted</p>
+                              <p className="text-xs text-text-muted">Submitted</p>
                             </div>
-                            <button className="text-sky-blue hover:text-sky-blue/80 mr-2">
+                            <button className="text-primary hover:text-primary/80 mr-2">
                               <FaEye size={20} />
                             </button>
                             <button
                               onClick={() => handleDelete('assignment', assignment._id)}
-                              className="text-red-500 hover:text-red-700"
+                              className="text-danger hover:text-danger/80"
                             >
                               <FaTrash size={16} />
                             </button>
@@ -355,15 +357,15 @@ const NotificationSummary = () => {
 
             {activeTab === 'notices' && (
               <div>
-                <h2 className="text-2xl font-semibold mb-4">Notice Board Activity</h2>
+                <h2 className="text-2xl font-semibold mb-4 text-secondary font-heading">Notice Board Activity</h2>
                 <div className="space-y-4">
                   {(data?.notices || []).map((notice) => (
-                    <div key={notice._id} className="border border-soft-grey rounded-lg p-4 hover:bg-background">
+                    <div key={notice._id} className="border border-gray-200 rounded-lg p-4 hover:bg-gray-50 transition-colors">
                       <div className="flex items-start justify-between">
                         <div className="flex-1">
-                          <h3 className="font-semibold text-lg text-navy">{notice.title}</h3>
-                          <p className="text-text-grey mt-2">{notice.description}</p>
-                          <p className="text-sm text-text-grey mt-2">
+                          <h3 className="font-semibold text-lg text-secondary">{notice.title}</h3>
+                          <p className="text-text-secondary mt-2">{notice.description}</p>
+                          <p className="text-sm text-text-muted mt-2">
                             Course: {notice.courseId?.courseName} |
                             Posted: {new Date(notice.createdAt).toLocaleDateString()}
                           </p>
@@ -372,13 +374,13 @@ const NotificationSummary = () => {
                           <div className="flex items-center space-x-2 mb-2">
                             <button
                               onClick={() => handleDelete('notice', notice._id)}
-                              className="text-red-500 hover:text-red-700"
+                              className="text-danger hover:text-danger/80"
                             >
                               <FaTrash size={16} />
                             </button>
                           </div>
-                          <p className="text-lg font-bold text-navy">{notice.studentCount || 0}</p>
-                          <p className="text-xs text-text-grey">Students Notified</p>
+                          <p className="text-lg font-bold text-secondary">{notice.studentCount || 0}</p>
+                          <p className="text-xs text-text-muted">Students Notified</p>
                         </div>
                       </div>
                     </div>
@@ -389,15 +391,15 @@ const NotificationSummary = () => {
 
             {activeTab === 'materials' && (
               <div>
-                <h2 className="text-2xl font-semibold mb-4">Study Materials</h2>
+                <h2 className="text-2xl font-semibold mb-4 text-secondary font-heading">Study Materials</h2>
                 <div className="space-y-4">
                   {(data?.materials || []).map((material) => (
-                    <div key={material._id} className="border border-soft-grey rounded-lg p-4 hover:bg-background">
+                    <div key={material._id} className="border border-gray-200 rounded-lg p-4 hover:bg-gray-50 transition-colors">
                       <div className="flex items-center justify-between">
                         <div className="flex-1">
-                          <h3 className="font-semibold text-lg text-navy">{material.title}</h3>
-                          <p className="text-text-grey">{material.subjectId?.subjectName} ({material.subjectId?.subjectCode})</p>
-                          <p className="text-sm text-text-grey">
+                          <h3 className="font-semibold text-lg text-secondary">{material.title}</h3>
+                          <p className="text-text-secondary">{material.subjectId?.subjectName} ({material.subjectId?.subjectCode})</p>
+                          <p className="text-sm text-text-muted">
                             Uploaded: {new Date(material.createdAt).toLocaleDateString()}
                           </p>
                         </div>
@@ -407,17 +409,17 @@ const NotificationSummary = () => {
                               href={material.fileUrl}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="text-sky-blue hover:text-sky-blue/80"
+                              className="text-primary hover:text-primary/80"
                             >
                               <FaDownload size={20} />
                             </a>
                           )}
-                          <button className="text-sky-blue hover:text-sky-blue/80 mr-2">
+                          <button className="text-primary hover:text-primary/80 mr-2">
                             <FaEye size={20} />
                           </button>
                           <button
                             onClick={() => handleDelete('material', material._id)}
-                            className="text-red-500 hover:text-red-700"
+                            className="text-danger hover:text-danger/80"
                           >
                             <FaTrash size={16} />
                           </button>
@@ -431,27 +433,27 @@ const NotificationSummary = () => {
 
             {activeTab === 'attendance' && (
               <div>
-                <h2 className="text-2xl font-semibold mb-4 text-navy">Attendance Records</h2>
+                <h2 className="text-2xl font-semibold mb-4 text-secondary font-heading">Attendance Records</h2>
                 <div className="overflow-x-auto">
                   <table className="min-w-full table-auto">
-                    <thead className="bg-background">
+                    <thead className="bg-gray-50">
                       <tr>
-                        <th className="px-4 py-2 text-left">Date</th>
-                        <th className="px-4 py-2 text-left">Subject</th>
-                        <th className="px-4 py-2 text-left">Student</th>
-                        <th className="px-4 py-2 text-left">Roll No</th>
-                        <th className="px-4 py-2 text-left">Status</th>
+                        <th className="px-4 py-2 text-left text-text-secondary font-semibold">Date</th>
+                        <th className="px-4 py-2 text-left text-text-secondary font-semibold">Subject</th>
+                        <th className="px-4 py-2 text-left text-text-secondary font-semibold">Student</th>
+                        <th className="px-4 py-2 text-left text-text-secondary font-semibold">Roll No</th>
+                        <th className="px-4 py-2 text-left text-text-secondary font-semibold">Status</th>
                       </tr>
                     </thead>
-                    <tbody>
+                    <tbody className="divide-y divide-gray-200">
                       {(data?.attendance || []).map((record) => (
-                        <tr key={record._id} className="border-b border-soft-grey hover:bg-background">
-                          <td className="px-4 py-2 text-navy">{new Date(record.date).toLocaleDateString()}</td>
-                          <td className="px-4 py-2 text-text-grey">{record.subjectId?.subjectName}</td>
-                          <td className="px-4 py-2 text-navy">{record.studentId?.name}</td>
-                          <td className="px-4 py-2 text-text-grey">{record.studentId?.rollNo}</td>
+                        <tr key={record._id} className="hover:bg-gray-50 transition-colors">
+                          <td className="px-4 py-2 text-secondary">{new Date(record.date).toLocaleDateString()}</td>
+                          <td className="px-4 py-2 text-text-secondary">{record.subjectId?.subjectName}</td>
+                          <td className="px-4 py-2 text-secondary">{record.studentId?.name}</td>
+                          <td className="px-4 py-2 text-text-secondary">{record.studentId?.rollNo}</td>
                           <td className="px-4 py-2">
-                            <span className={`px-2 py-1 rounded-full text-xs font-medium ${record.status === 'Present' ? 'bg-sky-blue/10 text-sky-blue' : 'bg-navy/10 text-navy'
+                            <span className={`px-2 py-1 rounded-full text-xs font-medium ${record.status === 'Present' ? 'bg-success/10 text-success' : 'bg-danger/10 text-danger'
                               }`}>
                               {record.status}
                             </span>
@@ -466,29 +468,29 @@ const NotificationSummary = () => {
 
             {activeTab === 'teachers' && (
               <div>
-                <h2 className="text-2xl font-semibold mb-4">Teacher Management</h2>
+                <h2 className="text-2xl font-semibold mb-4 text-secondary font-heading">Teacher Management</h2>
                 <div className="space-y-4">
                   {(data?.teachers || []).map((teacher) => (
-                    <div key={teacher._id} className="border border-soft-grey rounded-lg p-4 hover:bg-background">
+                    <div key={teacher._id} className="border border-gray-200 rounded-lg p-4 hover:bg-gray-50 transition-colors">
                       <div className="flex items-center justify-between">
                         <div className="flex-1">
-                          <h3 className="font-semibold text-lg text-navy">{teacher.name}</h3>
-                          <p className="text-text-grey">{teacher.email}</p>
-                          <p className="text-sm text-text-grey">{teacher.phone}</p>
-                          <p className="text-xs text-text-grey/80">
+                          <h3 className="font-semibold text-lg text-secondary">{teacher.name}</h3>
+                          <p className="text-text-secondary">{teacher.email}</p>
+                          <p className="text-sm text-text-secondary">{teacher.phone}</p>
+                          <p className="text-xs text-text-muted">
                             Subjects: {teacher.assignedSubjects?.length ? teacher.assignedSubjects.join(', ') : 'No subjects assigned'}
                           </p>
                         </div>
                         <div className="flex items-center space-x-2">
                           <button
                             onClick={() => handleEditTeacher(teacher)}
-                            className="text-sky-blue hover:text-sky-blue/80 mr-2"
+                            className="text-primary hover:text-primary/80 mr-2"
                           >
                             <FaEdit size={16} />
                           </button>
                           <button
                             onClick={() => handleDelete('teacher', teacher._id)}
-                            className="text-red-500 hover:text-red-700"
+                            className="text-danger hover:text-danger/80"
                           >
                             <FaTrash size={16} />
                           </button>
@@ -535,64 +537,53 @@ const EditTeacherModal = ({ teacher, onClose, onUpdate }) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-navy/50 flex items-center justify-center z-50 backdrop-blur-sm">
+    <div className="fixed inset-0 bg-secondary/50 flex items-center justify-center z-50 backdrop-blur-sm">
       <div className="bg-white rounded-lg p-6 w-full max-w-md shadow-xl">
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-semibold text-navy">Edit Teacher</h2>
-          <button onClick={onClose} className="text-text-grey hover:text-navy">
+          <h2 className="text-xl font-semibold text-secondary font-heading">Edit Teacher</h2>
+          <button onClick={onClose} className="text-text-secondary hover:text-secondary">
             ×
           </button>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium mb-2 text-navy">Name</label>
-            <input
-              type="text"
-              value={formData.name}
-              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-              className="w-full p-2 border border-soft-grey rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-blue"
-              required
-            />
-          </div>
+          <Input
+            label="Name"
+            value={formData.name}
+            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+            required
+          />
 
-          <div>
-            <label className="block text-sm font-medium mb-2 text-navy">Email</label>
-            <input
-              type="email"
-              value={formData.email}
-              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-              className="w-full p-2 border border-soft-grey rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-blue"
-              required
-            />
-          </div>
+          <Input
+            label="Email"
+            type="email"
+            value={formData.email}
+            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+            required
+          />
 
-          <div>
-            <label className="block text-sm font-medium mb-2 text-navy">Phone</label>
-            <input
-              type="tel"
-              value={formData.phone}
-              onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-              className="w-full p-2 border border-soft-grey rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-blue"
-              required
-            />
-          </div>
+          <Input
+            label="Phone"
+            type="tel"
+            value={formData.phone}
+            onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+            required
+          />
 
           <div className="flex justify-end space-x-2 mt-6">
-            <button
+            <Button
+              variant="ghost"
               type="button"
               onClick={onClose}
-              className="px-4 py-2 bg-soft-grey text-navy rounded-lg hover:bg-soft-grey/80"
             >
               Cancel
-            </button>
-            <button
+            </Button>
+            <Button
               type="submit"
               disabled={loading}
-              className="px-4 py-2 bg-sky-blue text-white rounded-lg disabled:opacity-50 hover:bg-sky-blue/80"
             >
               {loading ? 'Updating...' : 'Update Teacher'}
-            </button>
+            </Button>
           </div>
         </form>
       </div>

@@ -6,6 +6,9 @@ import axios from 'axios';
 import { BASE_URL } from '../../constants/api';
 import Cookies from 'js-cookie';
 import { toast } from 'react-toastify';
+import Button from '../../components/ui/Button';
+import Select from '../../components/ui/Select';
+import Input from '../../components/ui/Input';
 
 const ReportsManagement = () => {
   const [selectedReport, setSelectedReport] = useState(null);
@@ -124,7 +127,7 @@ const ReportsManagement = () => {
     if (loading) {
       return (
         <div className="flex justify-center items-center py-12">
-          <FaSpinner className="animate-spin text-4xl text-sky-blue" />
+          <FaSpinner className="animate-spin text-4xl text-primary" />
         </div>
       );
     }
@@ -150,22 +153,22 @@ const ReportsManagement = () => {
               </div>
             </div>
 
-            <div className="bg-white border rounded-lg overflow-hidden">
-              <h3 className="px-6 py-4 bg-background font-bold border-b border-soft-grey">Course-wise Collection</h3>
-              <table className="min-w-full divide-y divide-soft-grey">
-                <thead className="bg-background">
+            <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
+              <h3 className="px-6 py-4 bg-gray-50 font-bold border-b border-gray-200 text-secondary font-heading">Course-wise Collection</h3>
+              <table className="min-w-full divide-y divide-gray-200">
+                <thead className="bg-gray-50">
                   <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-text-grey uppercase">Course ID</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-text-grey uppercase">Collected</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-text-grey uppercase">Due</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase">Course ID</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase">Collected</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase">Due</th>
                   </tr>
                 </thead>
-                <tbody className="bg-white divide-y divide-soft-grey">
+                <tbody className="bg-white divide-y divide-gray-200">
                   {Object.entries(reportData.courseWiseStats).map(([courseId, stats]) => (
-                    <tr key={courseId}>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-navy">{courseId}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-green-600 font-medium">₹{stats.collected.toLocaleString()}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-red-600 font-medium">₹{stats.due.toLocaleString()}</td>
+                    <tr key={courseId} className="hover:bg-gray-50 transition-colors">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-secondary">{courseId}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-success font-medium">₹{stats.collected.toLocaleString()}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-danger font-medium">₹{stats.due.toLocaleString()}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -177,24 +180,24 @@ const ReportsManagement = () => {
       case 'academic':
         return (
           <div className="space-y-6">
-            <div className="bg-white border rounded-lg overflow-hidden">
-              <h3 className="px-6 py-4 bg-background font-bold border-b border-soft-grey">Subject Performance</h3>
-              <table className="min-w-full divide-y divide-soft-grey">
-                <thead className="bg-background">
+            <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
+              <h3 className="px-6 py-4 bg-gray-50 font-bold border-b border-gray-200 text-secondary font-heading">Subject Performance</h3>
+              <table className="min-w-full divide-y divide-gray-200">
+                <thead className="bg-gray-50">
                   <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-text-grey uppercase">Subject</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-text-grey uppercase">Average Marks</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-text-grey uppercase">Highest Marks</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-text-grey uppercase">Total Records</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase">Subject</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase">Average Marks</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase">Highest Marks</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase">Total Records</th>
                   </tr>
                 </thead>
-                <tbody className="bg-white divide-y divide-soft-grey">
+                <tbody className="bg-white divide-y divide-gray-200">
                   {Object.entries(reportData.subjectStats).map(([subject, stats]) => (
-                    <tr key={subject}>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-navy">{subject}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-text-grey">{stats.average}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-text-grey">{stats.highest}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-text-grey">{stats.count}</td>
+                    <tr key={subject} className="hover:bg-gray-50 transition-colors">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-secondary">{subject}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-text-secondary">{stats.average}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-text-secondary">{stats.highest}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-text-secondary">{stats.count}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -206,31 +209,31 @@ const ReportsManagement = () => {
       case 'enrollment':
         return (
           <div className="space-y-6">
-            <div className="bg-white p-6 rounded-lg shadow-sm border border-soft-grey">
-              <h3 className="text-lg font-bold text-navy mb-2">Total Students</h3>
-              <p className="text-3xl font-bold text-sky-blue">{reportData.totalStudents}</p>
+            <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+              <h3 className="text-lg font-bold text-secondary mb-2 font-heading">Total Students</h3>
+              <p className="text-3xl font-bold text-primary">{reportData.totalStudents}</p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="bg-white border border-soft-grey rounded-lg overflow-hidden">
-                <h3 className="px-6 py-4 bg-background font-bold border-b border-soft-grey">Course Distribution</h3>
-                <ul className="divide-y divide-soft-grey">
+              <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
+                <h3 className="px-6 py-4 bg-gray-50 font-bold border-b border-gray-200 text-secondary font-heading">Course Distribution</h3>
+                <ul className="divide-y divide-gray-200">
                   {Object.entries(reportData.courseDistribution).map(([course, count]) => (
-                    <li key={course} className="px-6 py-4 flex justify-between items-center">
-                      <span className="text-text-grey">{course}</span>
-                      <span className="bg-sky-blue/10 text-sky-blue py-1 px-3 rounded-full text-sm font-medium">{count}</span>
+                    <li key={course} className="px-6 py-4 flex justify-between items-center hover:bg-gray-50 transition-colors">
+                      <span className="text-text-secondary">{course}</span>
+                      <span className="bg-primary/10 text-primary py-1 px-3 rounded-full text-sm font-medium">{count}</span>
                     </li>
                   ))}
                 </ul>
               </div>
 
-              <div className="bg-white border border-soft-grey rounded-lg overflow-hidden">
-                <h3 className="px-6 py-4 bg-background font-bold border-b border-soft-grey">Semester Distribution</h3>
-                <ul className="divide-y divide-soft-grey">
+              <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
+                <h3 className="px-6 py-4 bg-gray-50 font-bold border-b border-gray-200 text-secondary font-heading">Semester Distribution</h3>
+                <ul className="divide-y divide-gray-200">
                   {Object.entries(reportData.yearDistribution).map(([sem, count]) => (
-                    <li key={sem} className="px-6 py-4 flex justify-between items-center">
-                      <span className="text-text-grey">{sem}</span>
-                      <span className="bg-purple-100 text-purple-800 py-1 px-3 rounded-full text-sm font-medium">{count}</span>
+                    <li key={sem} className="px-6 py-4 flex justify-between items-center hover:bg-gray-50 transition-colors">
+                      <span className="text-text-secondary">{sem}</span>
+                      <span className="bg-secondary/10 text-secondary py-1 px-3 rounded-full text-sm font-medium">{count}</span>
                     </li>
                   ))}
                 </ul>
@@ -241,14 +244,14 @@ const ReportsManagement = () => {
 
       case 'attendance':
         return (
-          <div className="bg-white p-6 rounded-lg border border-soft-grey text-center text-text-grey">
+          <div className="bg-white p-6 rounded-lg border border-gray-200 text-center text-text-secondary">
             <p>Attendance data loaded. {reportData.attendance?.length || 0} records found.</p>
-            <p className="text-sm mt-2">Use the specific Attendance Management page for detailed analysis.</p>
+            <p className="text-sm mt-2 text-text-muted">Use the specific Attendance Management page for detailed analysis.</p>
           </div>
         );
 
       default:
-        return <div className="text-center py-8 text-text-grey">Select a report type to view details</div>;
+        return <div className="text-center py-8 text-text-muted">Select a report type to view details</div>;
     }
   };
 
@@ -260,8 +263,8 @@ const ReportsManagement = () => {
           <BackButton className="mb-4" />
           <div className="flex justify-between items-center mb-8">
             <div>
-              <h1 className="text-3xl font-bold text-navy">Reports Management</h1>
-              <p className="text-text-grey mt-2">Generate and manage institutional reports</p>
+              <h1 className="text-3xl font-bold text-secondary font-heading">Reports Management</h1>
+              <p className="text-text-secondary mt-2">Generate and manage institutional reports</p>
             </div>
           </div>
 
@@ -278,24 +281,24 @@ const ReportsManagement = () => {
                   <div className={`p-3 rounded-full bg-${report.color}-100 mr-4`}>
                     <report.icon className={`text-2xl text-${report.color}-500`} />
                   </div>
-                  <h3 className="font-bold text-navy">{report.name}</h3>
+                  <h3 className="font-bold text-secondary">{report.name}</h3>
                 </div>
-                <button className="w-full py-2 bg-background text-text-grey rounded hover:bg-soft-grey/20 transition-colors text-sm font-medium">
+                <Button variant="outline" className="w-full">
                   Generate Report
-                </button>
+                </Button>
               </div>
             ))}
           </div>
 
           {/* Report Content Area */}
           {selectedReport && (
-            <div className="bg-white rounded-lg shadow-md p-6 mb-8 animate-fade-in">
-              <div className="flex justify-between items-center mb-6 border-b pb-4">
-                <h2 className="text-xl font-bold text-navy">{selectedReport.name}</h2>
+            <div className="bg-white rounded-lg shadow-md p-6 mb-8 animate-fade-in border border-gray-200">
+              <div className="flex justify-between items-center mb-6 border-b border-gray-200 pb-4">
+                <h2 className="text-xl font-bold text-secondary font-heading">{selectedReport.name}</h2>
                 {reportData && (
                   <button
                     onClick={downloadCSV}
-                    className="flex items-center space-x-2 text-sky-blue hover:text-sky-blue/80 font-medium"
+                    className="flex items-center space-x-2 text-primary hover:text-primary/80 font-medium"
                   >
                     <FaDownload />
                     <span>Download Data</span>
@@ -308,41 +311,41 @@ const ReportsManagement = () => {
           )}
 
           {/* Manual Reports Section */}
-          <div className="bg-white rounded-lg shadow-md overflow-hidden">
-            <div className="px-6 py-4 bg-background border-b border-soft-grey flex justify-between items-center">
-              <h2 className="text-xl font-bold text-navy">Custom Reports</h2>
-              <button
+          <div className="bg-white rounded-lg shadow-md overflow-hidden border border-gray-200">
+            <div className="px-6 py-4 bg-gray-50 border-b border-gray-200 flex justify-between items-center">
+              <h2 className="text-xl font-bold text-secondary font-heading">Custom Reports</h2>
+              <Button
                 onClick={() => {
                   setEditingReport(null);
                   setFormData({ title: '', type: 'Administrative', content: '' });
                   setShowModal(true);
                 }}
-                className="flex items-center space-x-2 bg-sky-blue text-white px-4 py-2 rounded-lg hover:bg-sky-blue/80"
+                className="flex items-center space-x-2"
               >
                 <FaPlus />
                 <span>Add Report</span>
-              </button>
+              </Button>
             </div>
             <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-soft-grey">
-                <thead className="bg-background">
+              <table className="min-w-full divide-y divide-gray-200">
+                <thead className="bg-gray-50">
                   <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-text-grey uppercase">Title</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-text-grey uppercase">Type</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-text-grey uppercase">Date</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-text-grey uppercase">Actions</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase">Title</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase">Type</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase">Date</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase">Actions</th>
                   </tr>
                 </thead>
-                <tbody className="bg-white divide-y divide-soft-grey">
+                <tbody className="bg-white divide-y divide-gray-200">
                   {manualReports.map((report) => (
-                    <tr key={report._id}>
-                      <td className="px-6 py-4 whitespace-nowrap font-medium text-navy">{report.title}</td>
+                    <tr key={report._id} className="hover:bg-gray-50 transition-colors">
+                      <td className="px-6 py-4 whitespace-nowrap font-medium text-secondary">{report.title}</td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <span className="px-2 py-1 text-xs font-semibold rounded-full bg-soft-grey/20 text-navy">
+                        <span className="px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-secondary">
                           {report.type}
                         </span>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-text-grey">
+                      <td className="px-6 py-4 whitespace-nowrap text-text-secondary">
                         {new Date(report.createdAt).toLocaleDateString()}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
@@ -352,13 +355,13 @@ const ReportsManagement = () => {
                             setFormData({ title: report.title, type: report.type, content: report.content });
                             setShowModal(true);
                           }}
-                          className="text-green-600 hover:text-green-900"
+                          className="text-success hover:text-success/80"
                         >
                           <FaEdit />
                         </button>
                         <button
                           onClick={() => handleDelete(report._id)}
-                          className="text-red-600 hover:text-red-900"
+                          className="text-danger hover:text-danger/80"
                         >
                           <FaTrash />
                         </button>
@@ -367,7 +370,7 @@ const ReportsManagement = () => {
                   ))}
                   {manualReports.length === 0 && (
                     <tr>
-                      <td colSpan="4" className="px-6 py-4 text-center text-text-grey">
+                      <td colSpan="4" className="px-6 py-4 text-center text-text-muted">
                         No custom reports found. Add one to get started.
                       </td>
                     </tr>
@@ -381,60 +384,54 @@ const ReportsManagement = () => {
 
       {/* Modal */}
       {showModal && (
-        <div className="fixed inset-0 bg-navy/50 overflow-y-auto h-full w-full z-50">
-          <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+        <div className="fixed inset-0 bg-secondary/50 overflow-y-auto h-full w-full z-50 backdrop-blur-sm flex items-center justify-center">
+          <div className="relative p-5 border w-96 shadow-lg rounded-md bg-white">
             <div className="mt-3">
-              <h3 className="text-lg font-medium text-navy mb-4">
+              <h3 className="text-lg font-medium text-secondary mb-4 font-heading">
                 {editingReport ? 'Edit Report' : 'Add Custom Report'}
               </h3>
               <form onSubmit={handleManualSubmit} className="space-y-4">
+                <Input
+                  label="Title"
+                  value={formData.title}
+                  onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                  required
+                />
+
+                <Select
+                  label="Type"
+                  value={formData.type}
+                  onChange={(e) => setFormData({ ...formData, type: e.target.value })}
+                >
+                  <option value="Administrative">Administrative</option>
+                  <option value="Academic">Academic</option>
+                  <option value="Financial">Financial</option>
+                  <option value="Other">Other</option>
+                </Select>
+
                 <div>
-                  <label className="block text-sm font-medium text-text-grey">Title</label>
-                  <input
-                    type="text"
-                    value={formData.title}
-                    onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                    className="mt-1 block w-full border border-soft-grey rounded-md px-3 py-2 focus:ring-sky-blue focus:border-sky-blue"
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-text-grey">Type</label>
-                  <select
-                    value={formData.type}
-                    onChange={(e) => setFormData({ ...formData, type: e.target.value })}
-                    className="mt-1 block w-full border border-soft-grey rounded-md px-3 py-2 focus:ring-sky-blue focus:border-sky-blue"
-                  >
-                    <option value="Administrative">Administrative</option>
-                    <option value="Academic">Academic</option>
-                    <option value="Financial">Financial</option>
-                    <option value="Other">Other</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-text-grey">Content</label>
+                  <label className="block text-sm font-medium text-text-secondary mb-1">Content</label>
                   <textarea
                     value={formData.content}
                     onChange={(e) => setFormData({ ...formData, content: e.target.value })}
-                    className="mt-1 block w-full border border-soft-grey rounded-md px-3 py-2 focus:ring-sky-blue focus:border-sky-blue"
+                    className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-primary focus:border-primary transition-all duration-200"
                     rows="4"
                     required
                   />
                 </div>
                 <div className="flex justify-end space-x-3 pt-4">
-                  <button
+                  <Button
+                    variant="ghost"
                     type="button"
                     onClick={() => setShowModal(false)}
-                    className="px-4 py-2 bg-soft-grey text-navy rounded-md hover:bg-soft-grey/80"
                   >
                     Cancel
-                  </button>
-                  <button
+                  </Button>
+                  <Button
                     type="submit"
-                    className="px-4 py-2 bg-sky-blue text-white rounded-md hover:bg-sky-blue/80"
                   >
                     {editingReport ? 'Update' : 'Create'}
-                  </button>
+                  </Button>
                 </div>
               </form>
             </div>

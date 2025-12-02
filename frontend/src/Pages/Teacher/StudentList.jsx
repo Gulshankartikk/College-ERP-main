@@ -3,6 +3,11 @@ import { BASE_URL } from '../../constants/api';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import Cookies from 'js-cookie';
+import Card, { CardContent } from '../../components/ui/Card';
+import Button from '../../components/ui/Button';
+import Select from '../../components/ui/Select';
+import Input from '../../components/ui/Input';
+import LoadingSpinner from '../../components/LoadingSpinner';
 
 const StudentList = () => {
   const [students, setStudents] = useState([]);
@@ -137,99 +142,95 @@ const StudentList = () => {
         <div className="max-w-7xl mx-auto px-4">
 
           <div className="mb-6">
-            <h1 className="text-3xl font-bold text-navy">Student Attendance</h1>
-            <p className="text-text-grey mt-2">Mark attendance for all students</p>
+            <h1 className="text-3xl font-bold text-secondary font-heading">Student Attendance</h1>
+            <p className="text-text-secondary mt-2">Mark attendance for all students</p>
           </div>
 
-          <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-              <div>
-                <label className="block text-sm font-medium mb-2">Subject</label>
-                <select
+          <Card className="border border-gray-200 mb-6">
+            <CardContent className="p-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                <Select
+                  label="Subject"
                   value={selectedSubject}
                   onChange={(e) => setSelectedSubject(e.target.value)}
-                  className="w-full p-2 border rounded-lg"
                 >
                   {subjects.map(subject => (
                     <option key={subject._id} value={subject._id}>
                       {subject.subjectName} ({subject.subjectCode})
                     </option>
                   ))}
-                </select>
-              </div>
+                </Select>
 
-              <div>
-                <label className="block text-sm font-medium mb-2">Date</label>
-                <input
+                <Input
+                  label="Date"
                   type="date"
                   value={selectedDate}
                   onChange={(e) => setSelectedDate(e.target.value)}
-                  className="w-full p-2 border rounded-lg"
                 />
               </div>
-            </div>
 
-            <div className="flex space-x-2 mb-4">
-              <button
-                onClick={markAllPresent}
-                className="px-4 py-2 bg-sky-blue text-white rounded-lg hover:bg-sky-blue/80"
-              >
-                Mark All Present
-              </button>
-              <button
-                onClick={markAllAbsent}
-                className="px-4 py-2 bg-navy text-white rounded-lg hover:bg-navy/80"
-              >
-                Mark All Absent
-              </button>
-            </div>
-          </div>
+              <div className="flex space-x-2">
+                <Button
+                  onClick={markAllPresent}
+                  variant="success"
+                >
+                  Mark All Present
+                </Button>
+                <Button
+                  onClick={markAllAbsent}
+                  variant="danger"
+                >
+                  Mark All Absent
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
 
           {loading ? (
             <div className="flex justify-center items-center py-12">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+              <LoadingSpinner message="Loading students..." />
             </div>
           ) : (
             <>
-              <div className="bg-white rounded-lg shadow-md overflow-hidden mb-6">
-                <div className="overflow-x-auto">
-                  <table className="min-w-full divide-y divide-soft-grey">
-                    <thead className="bg-background">
+              <Card className="border border-gray-200 overflow-hidden mb-6">
+                <CardContent className="p-0 overflow-x-auto">
+                  <table className="min-w-full divide-y divide-gray-200">
+                    <thead className="bg-gray-50">
                       <tr>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-text-grey uppercase">
+                        <th className="px-6 py-3 text-left text-xs font-medium text-text-muted uppercase font-heading">
                           Roll No
                         </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-text-grey uppercase">
+                        <th className="px-6 py-3 text-left text-xs font-medium text-text-muted uppercase font-heading">
                           Student Name
                         </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-text-grey uppercase">
+                        <th className="px-6 py-3 text-left text-xs font-medium text-text-muted uppercase font-heading">
                           Course
                         </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-text-grey uppercase">
+                        <th className="px-6 py-3 text-left text-xs font-medium text-text-muted uppercase font-heading">
                           Status
                         </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-text-grey uppercase">
+                        <th className="px-6 py-3 text-left text-xs font-medium text-text-muted uppercase font-heading">
                           Action
                         </th>
                       </tr>
                     </thead>
-                    <tbody className="bg-white divide-y divide-soft-grey">
+                    <tbody className="bg-white divide-y divide-gray-200">
                       {students.map((student) => (
-                        <tr key={student._id} className="hover:bg-soft-grey/20">
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-navy">
+                        <tr key={student._id} className="hover:bg-gray-50 transition-colors">
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-secondary">
                             {student.rollNo}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="text-sm font-medium text-navy">{student.name}</div>
-                            <div className="text-sm text-text-grey">{student.email}</div>
+                            <div className="text-sm font-medium text-secondary">{student.name}</div>
+                            <div className="text-sm text-text-secondary">{student.email}</div>
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-navy">
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-secondary">
                             {student.courseId?.courseName}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap">
                             <span className={`px-3 py-1 rounded-full text-xs font-medium ${student.status === 'Present'
-                              ? 'bg-sky-blue/10 text-sky-blue'
-                              : 'bg-navy/10 text-navy'
+                              ? 'bg-success/10 text-success'
+                              : 'bg-danger/10 text-danger'
                               }`}>
                               {student.status}
                             </span>
@@ -239,8 +240,8 @@ const StudentList = () => {
                               <button
                                 onClick={() => handleStatusChange(student._id, 'Present')}
                                 className={`px-3 py-1 rounded text-sm font-medium transition-colors ${student.status === 'Present'
-                                  ? 'bg-sky-blue text-white'
-                                  : 'bg-sky-blue/10 text-sky-blue hover:bg-sky-blue/20'
+                                  ? 'bg-success text-white'
+                                  : 'bg-success/10 text-success hover:bg-success/20'
                                   }`}
                               >
                                 Present
@@ -248,8 +249,8 @@ const StudentList = () => {
                               <button
                                 onClick={() => handleStatusChange(student._id, 'Absent')}
                                 className={`px-3 py-1 rounded text-sm font-medium transition-colors ${student.status === 'Absent'
-                                  ? 'bg-navy text-white'
-                                  : 'bg-navy/10 text-navy hover:bg-navy/20'
+                                  ? 'bg-danger text-white'
+                                  : 'bg-danger/10 text-danger hover:bg-danger/20'
                                   }`}
                               >
                                 Absent
@@ -260,25 +261,28 @@ const StudentList = () => {
                       ))}
                     </tbody>
                   </table>
-                </div>
-              </div>
+                </CardContent>
+              </Card>
 
-              <div className="bg-white rounded-lg shadow-md p-4 mb-6">
-                <div className="flex justify-between items-center">
-                  <div className="flex space-x-6 text-sm">
-                    <span className="text-text-grey">Total Students: <span className="font-semibold">{students.length}</span></span>
-                    <span className="text-sky-blue">Present: <span className="font-semibold">{students.filter(s => s.status === 'Present').length}</span></span>
-                    <span className="text-navy">Absent: <span className="font-semibold">{students.filter(s => s.status === 'Absent').length}</span></span>
+              <Card className="border border-gray-200 mb-6">
+                <CardContent className="p-4">
+                  <div className="flex justify-between items-center">
+                    <div className="flex space-x-6 text-sm">
+                      <span className="text-text-secondary">Total Students: <span className="font-semibold text-secondary">{students.length}</span></span>
+                      <span className="text-success">Present: <span className="font-semibold">{students.filter(s => s.status === 'Present').length}</span></span>
+                      <span className="text-danger">Absent: <span className="font-semibold">{students.filter(s => s.status === 'Absent').length}</span></span>
+                    </div>
+                    <Button
+                      onClick={handleSaveAttendance}
+                      disabled={saving}
+                      isLoading={saving}
+                      className="px-6"
+                    >
+                      {saving ? 'Saving...' : 'Save Attendance'}
+                    </Button>
                   </div>
-                  <button
-                    onClick={handleSaveAttendance}
-                    disabled={saving}
-                    className="px-6 py-2 bg-sky-blue text-white rounded-lg hover:bg-sky-blue/80 disabled:opacity-50"
-                  >
-                    {saving ? 'Saving...' : 'Save Attendance'}
-                  </button>
-                </div>
-              </div>
+                </CardContent>
+              </Card>
             </>
           )}
         </div>

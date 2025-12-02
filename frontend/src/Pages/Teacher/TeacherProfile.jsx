@@ -12,6 +12,7 @@ import { toast } from 'react-toastify';
 import Button from '../../components/ui/Button';
 import Card, { CardContent } from '../../components/ui/Card';
 import Badge from '../../components/ui/Badge';
+import Input from '../../components/ui/Input';
 
 const TeacherProfile = () => {
   const { id: teacherId } = useParams();
@@ -146,21 +147,21 @@ const TeacherProfile = () => {
   if (loading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-sky-blue"></div>
+        <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary"></div>
       </div>
     );
   }
 
   return (
     <div className="min-h-screen bg-background pb-12">
-      <div className="bg-navy text-white py-12">
+      <div className="bg-secondary text-white py-12">
         <div className="max-w-7xl mx-auto px-4 flex flex-col md:flex-row justify-between items-end">
           <div className="flex items-center gap-6">
             <div className="w-24 h-24 rounded-full bg-white/10 flex items-center justify-center text-4xl border-4 border-white/20">
               <FaUser />
             </div>
             <div>
-              <h1 className="text-4xl font-bold mb-2">{teacher?.name}</h1>
+              <h1 className="text-4xl font-bold mb-2 font-heading">{teacher?.name}</h1>
               <div className="flex gap-4 text-sm text-gray-300">
                 <span className="flex items-center gap-1"><FaBuilding /> {teacher?.department || 'Department N/A'}</span>
                 <span className="flex items-center gap-1"><FaIdBadge /> {teacher?.designation || 'Designation N/A'}</span>
@@ -169,7 +170,8 @@ const TeacherProfile = () => {
           </div>
           <Button
             onClick={handleEditToggle}
-            className={`mt-4 md:mt-0 flex items-center gap-2 ${isEditing ? 'bg-red-500 hover:bg-red-600' : 'bg-sky-blue hover:bg-sky-600'}`}
+            variant={isEditing ? "danger" : "primary"}
+            className="mt-4 md:mt-0 flex items-center gap-2"
           >
             {isEditing ? <><FaTimes /> Cancel Editing</> : <><FaEdit /> Edit Profile</>}
           </Button>
@@ -182,19 +184,19 @@ const TeacherProfile = () => {
         <div className="lg:col-span-2 space-y-8">
 
           {/* 1. Basic Information */}
-          <Card>
+          <Card className="border border-gray-200">
             <CardContent className="p-6">
-              <h2 className="text-xl font-bold text-navy mb-4 flex items-center gap-2 border-b pb-2">
-                <FaUser className="text-sky-blue" /> Basic Information
+              <h2 className="text-xl font-bold text-secondary mb-4 flex items-center gap-2 border-b border-gray-100 pb-2 font-heading">
+                <FaUser className="text-primary" /> Basic Information
               </h2>
               {isEditing ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <InputGroup label="Full Name" name="name" value={editData.name} onChange={handleInputChange} />
-                  <InputGroup label="Employee ID" name="employeeId" value={editData.employeeId} onChange={handleInputChange} />
-                  <InputGroup label="Email" name="email" value={editData.email} onChange={handleInputChange} />
-                  <InputGroup label="Phone" name="phone" value={editData.phone} onChange={handleInputChange} />
-                  <InputGroup label="Gender" name="gender" value={editData.gender} onChange={handleInputChange} placeholder="Male/Female/Other" />
-                  <InputGroup label="Date of Birth" name="dob" type="date" value={editData.dob} onChange={handleInputChange} />
+                  <Input label="Full Name" name="name" value={editData.name} onChange={handleInputChange} />
+                  <Input label="Employee ID" name="employeeId" value={editData.employeeId} onChange={handleInputChange} />
+                  <Input label="Email" name="email" value={editData.email} onChange={handleInputChange} />
+                  <Input label="Phone" name="phone" value={editData.phone} onChange={handleInputChange} />
+                  <Input label="Gender" name="gender" value={editData.gender} onChange={handleInputChange} placeholder="Male/Female/Other" />
+                  <Input label="Date of Birth" name="dob" type="date" value={editData.dob} onChange={handleInputChange} />
                 </div>
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-8">
@@ -211,25 +213,25 @@ const TeacherProfile = () => {
           </Card>
 
           {/* 2. Academic & Professional Details */}
-          <Card>
+          <Card className="border border-gray-200">
             <CardContent className="p-6">
-              <h2 className="text-xl font-bold text-navy mb-4 flex items-center gap-2 border-b pb-2">
-                <FaGraduationCap className="text-sky-blue" /> Academic & Professional Details
+              <h2 className="text-xl font-bold text-secondary mb-4 flex items-center gap-2 border-b border-gray-100 pb-2 font-heading">
+                <FaGraduationCap className="text-primary" /> Academic & Professional Details
               </h2>
               {isEditing ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <InputGroup label="Qualifications" name="qualifications" value={editData.qualifications} onChange={handleInputChange} placeholder="e.g. PhD, M.Tech" />
-                  <InputGroup label="Specialization" name="specialization" value={editData.specialization} onChange={handleInputChange} />
-                  <InputGroup label="Experience (Years)" name="experience" type="number" value={editData.experience} onChange={handleInputChange} />
-                  <InputGroup label="Department" name="department" value={editData.department} onChange={handleInputChange} />
-                  <InputGroup label="Designation" name="designation" value={editData.designation} onChange={handleInputChange} />
+                  <Input label="Qualifications" name="qualifications" value={editData.qualifications} onChange={handleInputChange} placeholder="e.g. PhD, M.Tech" />
+                  <Input label="Specialization" name="specialization" value={editData.specialization} onChange={handleInputChange} />
+                  <Input label="Experience (Years)" name="experience" type="number" value={editData.experience} onChange={handleInputChange} />
+                  <Input label="Department" name="department" value={editData.department} onChange={handleInputChange} />
+                  <Input label="Designation" name="designation" value={editData.designation} onChange={handleInputChange} />
                   <div className="md:col-span-2">
                     <label className="block text-sm font-medium text-gray-700 mb-1">Research Areas / Skills</label>
                     <textarea
                       name="researchInterests"
                       value={editData.researchInterests}
                       onChange={handleInputChange}
-                      className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-sky-blue outline-none"
+                      className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none"
                       rows="3"
                     />
                   </div>
@@ -243,8 +245,8 @@ const TeacherProfile = () => {
                     <InfoRow label="Designation" value={teacher?.designation} />
                   </div>
                   <div>
-                    <p className="text-sm text-gray-500 font-medium">Research Areas / Skills</p>
-                    <p className="text-navy font-medium mt-1">{teacher?.researchInterests || 'N/A'}</p>
+                    <p className="text-sm text-text-muted font-medium">Research Areas / Skills</p>
+                    <p className="text-secondary font-medium mt-1">{teacher?.researchInterests || 'N/A'}</p>
                   </div>
                 </div>
               )}
@@ -252,22 +254,22 @@ const TeacherProfile = () => {
           </Card>
 
           {/* 3. CV / Resume Section */}
-          <Card>
+          <Card className="border border-gray-200">
             <CardContent className="p-6">
-              <h2 className="text-xl font-bold text-navy mb-4 flex items-center gap-2 border-b pb-2">
-                <FaFilePdf className="text-sky-blue" /> CV / Resume
+              <h2 className="text-xl font-bold text-secondary mb-4 flex items-center gap-2 border-b border-gray-100 pb-2 font-heading">
+                <FaFilePdf className="text-primary" /> CV / Resume
               </h2>
               {isEditing ? (
                 <div>
-                  <InputGroup label="CV URL (Public Link)" name="cvUrl" value={editData.cvUrl} onChange={handleInputChange} placeholder="https://drive.google.com/..." />
+                  <Input label="CV URL (Public Link)" name="cvUrl" value={editData.cvUrl} onChange={handleInputChange} placeholder="https://drive.google.com/..." />
                 </div>
               ) : (
                 <div className="flex items-center justify-between bg-gray-50 p-4 rounded-lg border border-gray-100">
                   <div className="flex items-center gap-3">
                     <div className="p-2 bg-red-100 rounded text-red-600"><FaFilePdf size={24} /></div>
                     <div>
-                      <p className="font-bold text-navy">Curriculum Vitae</p>
-                      <p className="text-xs text-gray-500">PDF Document</p>
+                      <p className="font-bold text-secondary">Curriculum Vitae</p>
+                      <p className="text-xs text-text-muted">PDF Document</p>
                     </div>
                   </div>
                   {teacher?.cvUrl ? (
@@ -275,7 +277,7 @@ const TeacherProfile = () => {
                       <Button size="sm" variant="outline">View CV</Button>
                     </a>
                   ) : (
-                    <span className="text-sm text-gray-400 italic">No CV Uploaded</span>
+                    <span className="text-sm text-text-muted italic">No CV Uploaded</span>
                   )}
                 </div>
               )}
@@ -291,31 +293,31 @@ const TeacherProfile = () => {
           )}
 
           {/* 4. Teaching Responsibilities (Read Only) */}
-          <Card>
+          <Card className="border border-gray-200">
             <CardContent className="p-6">
-              <h2 className="text-xl font-bold text-navy mb-4 flex items-center gap-2 border-b pb-2">
-                <FaChalkboardTeacher className="text-sky-blue" /> Teaching Responsibilities
+              <h2 className="text-xl font-bold text-secondary mb-4 flex items-center gap-2 border-b border-gray-100 pb-2 font-heading">
+                <FaChalkboardTeacher className="text-primary" /> Teaching Responsibilities
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="bg-sky-50 p-4 rounded-lg border border-sky-100">
-                  <h3 className="font-bold text-navy mb-2">Assigned Subjects</h3>
+                <div className="bg-primary/5 p-4 rounded-lg border border-primary/10">
+                  <h3 className="font-bold text-secondary mb-2">Assigned Subjects</h3>
                   {teacher?.assignedSubjects?.length > 0 ? (
-                    <ul className="list-disc list-inside text-sm text-gray-700 space-y-1">
+                    <ul className="list-disc list-inside text-sm text-text-secondary space-y-1">
                       {teacher.assignedSubjects.map((sub, idx) => (
                         <li key={idx}>{sub.subjectName} ({sub.subjectCode})</li>
                       ))}
                     </ul>
-                  ) : <p className="text-sm text-gray-500">No subjects assigned.</p>}
+                  ) : <p className="text-sm text-text-muted">No subjects assigned.</p>}
                 </div>
-                <div className="bg-blue-50 p-4 rounded-lg border border-blue-100">
-                  <h3 className="font-bold text-navy mb-2">Assigned Courses</h3>
+                <div className="bg-secondary/5 p-4 rounded-lg border border-secondary/10">
+                  <h3 className="font-bold text-secondary mb-2">Assigned Courses</h3>
                   {teacher?.assignedCourse?.length > 0 ? (
-                    <ul className="list-disc list-inside text-sm text-gray-700 space-y-1">
+                    <ul className="list-disc list-inside text-sm text-text-secondary space-y-1">
                       {teacher.assignedCourse.map((course, idx) => (
                         <li key={idx}>{course.courseName}</li>
                       ))}
                     </ul>
-                  ) : <p className="text-sm text-gray-500">No courses assigned.</p>}
+                  ) : <p className="text-sm text-text-muted">No courses assigned.</p>}
                 </div>
               </div>
             </CardContent>
@@ -328,33 +330,33 @@ const TeacherProfile = () => {
 
           {/* Quick Stats */}
           <div className="grid grid-cols-2 gap-4">
-            <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 text-center">
-              <p className="text-3xl font-bold text-sky-blue">{assignments.length}</p>
-              <p className="text-xs text-gray-500 uppercase font-bold mt-1">Assignments</p>
+            <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-200 text-center">
+              <p className="text-3xl font-bold text-primary">{assignments.length}</p>
+              <p className="text-xs text-text-muted uppercase font-bold mt-1">Assignments</p>
             </div>
-            <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 text-center">
-              <p className="text-3xl font-bold text-navy">{materials.length}</p>
-              <p className="text-xs text-gray-500 uppercase font-bold mt-1">Materials</p>
+            <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-200 text-center">
+              <p className="text-3xl font-bold text-secondary">{materials.length}</p>
+              <p className="text-xs text-text-muted uppercase font-bold mt-1">Materials</p>
             </div>
           </div>
 
           {/* Administrative Controls */}
-          <Card>
+          <Card className="border border-gray-200">
             <CardContent className="p-6">
-              <h3 className="font-bold text-navy mb-4 flex items-center gap-2">
-                <FaTasks className="text-sky-blue" /> Admin Controls
+              <h3 className="font-bold text-secondary mb-4 flex items-center gap-2 font-heading">
+                <FaTasks className="text-primary" /> Admin Controls
               </h3>
               <div className="space-y-2">
-                <Link to={`/teacher/${teacherId}/assignments`} className="block w-full text-left px-4 py-2 rounded-lg hover:bg-gray-50 text-sm font-medium text-gray-700 transition-colors">
+                <Link to={`/teacher/${teacherId}/assignments`} className="block w-full text-left px-4 py-2 rounded-lg hover:bg-gray-50 text-sm font-medium text-text-secondary transition-colors">
                   • Upload Assignments
                 </Link>
-                <Link to={`/teacher/${teacherId}/materials`} className="block w-full text-left px-4 py-2 rounded-lg hover:bg-gray-50 text-sm font-medium text-gray-700 transition-colors">
+                <Link to={`/teacher/${teacherId}/materials`} className="block w-full text-left px-4 py-2 rounded-lg hover:bg-gray-50 text-sm font-medium text-text-secondary transition-colors">
                   • Upload Study Materials
                 </Link>
-                <Link to={`/teacher/${teacherId}/marks`} className="block w-full text-left px-4 py-2 rounded-lg hover:bg-gray-50 text-sm font-medium text-gray-700 transition-colors">
+                <Link to={`/teacher/${teacherId}/marks`} className="block w-full text-left px-4 py-2 rounded-lg hover:bg-gray-50 text-sm font-medium text-text-secondary transition-colors">
                   • Manage Marks
                 </Link>
-                <Link to={`/teacher/${teacherId}/attendance`} className="block w-full text-left px-4 py-2 rounded-lg hover:bg-gray-50 text-sm font-medium text-gray-700 transition-colors">
+                <Link to={`/teacher/${teacherId}/attendance`} className="block w-full text-left px-4 py-2 rounded-lg hover:bg-gray-50 text-sm font-medium text-text-secondary transition-colors">
                   • Mark Attendance
                 </Link>
               </div>
@@ -362,16 +364,16 @@ const TeacherProfile = () => {
           </Card>
 
           {/* Student Interaction */}
-          <Card>
+          <Card className="border border-gray-200">
             <CardContent className="p-6">
-              <h3 className="font-bold text-navy mb-4 flex items-center gap-2">
-                <FaUser className="text-sky-blue" /> Student Interaction
+              <h3 className="font-bold text-secondary mb-4 flex items-center gap-2 font-heading">
+                <FaUser className="text-primary" /> Student Interaction
               </h3>
               <div className="space-y-2">
-                <button className="w-full text-left px-4 py-2 rounded-lg hover:bg-gray-50 text-sm font-medium text-gray-700 transition-colors">
+                <button className="w-full text-left px-4 py-2 rounded-lg hover:bg-gray-50 text-sm font-medium text-text-secondary transition-colors">
                   • View Leave Requests <Badge variant="warning" className="ml-2 text-xs">2 New</Badge>
                 </button>
-                <button className="w-full text-left px-4 py-2 rounded-lg hover:bg-gray-50 text-sm font-medium text-gray-700 transition-colors">
+                <button className="w-full text-left px-4 py-2 rounded-lg hover:bg-gray-50 text-sm font-medium text-text-secondary transition-colors">
                   • Student Queries
                 </button>
               </div>
@@ -379,16 +381,16 @@ const TeacherProfile = () => {
           </Card>
 
           {/* Performance */}
-          <Card>
+          <Card className="border border-gray-200">
             <CardContent className="p-6">
-              <h3 className="font-bold text-navy mb-4 flex items-center gap-2">
-                <FaChartLine className="text-sky-blue" /> Performance
+              <h3 className="font-bold text-secondary mb-4 flex items-center gap-2 font-heading">
+                <FaChartLine className="text-primary" /> Performance
               </h3>
               <div className="space-y-4">
                 <div>
                   <div className="flex justify-between text-sm mb-1">
-                    <span className="text-gray-600">Attendance</span>
-                    <span className="font-bold text-navy">92%</span>
+                    <span className="text-text-secondary">Attendance</span>
+                    <span className="font-bold text-secondary">92%</span>
                   </div>
                   <div className="w-full bg-gray-100 rounded-full h-2">
                     <div className="bg-green-500 h-2 rounded-full" style={{ width: '92%' }}></div>
@@ -396,11 +398,11 @@ const TeacherProfile = () => {
                 </div>
                 <div>
                   <div className="flex justify-between text-sm mb-1">
-                    <span className="text-gray-600">Syllabus Covered</span>
-                    <span className="font-bold text-navy">75%</span>
+                    <span className="text-text-secondary">Syllabus Covered</span>
+                    <span className="font-bold text-secondary">75%</span>
                   </div>
                   <div className="w-full bg-gray-100 rounded-full h-2">
-                    <div className="bg-sky-blue h-2 rounded-full" style={{ width: '75%' }}></div>
+                    <div className="bg-primary h-2 rounded-full" style={{ width: '75%' }}></div>
                   </div>
                 </div>
               </div>
@@ -416,22 +418,8 @@ const TeacherProfile = () => {
 // Helper Components
 const InfoRow = ({ label, value }) => (
   <div className="border-b border-gray-50 pb-2 last:border-0">
-    <p className="text-xs text-gray-400 uppercase font-bold tracking-wider">{label}</p>
-    <p className="text-navy font-medium text-base mt-0.5">{value || 'N/A'}</p>
-  </div>
-);
-
-const InputGroup = ({ label, name, value, onChange, type = "text", placeholder }) => (
-  <div>
-    <label className="block text-sm font-medium text-gray-700 mb-1">{label}</label>
-    <input
-      type={type}
-      name={name}
-      value={value}
-      onChange={onChange}
-      placeholder={placeholder}
-      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-blue focus:border-sky-blue outline-none transition-all"
-    />
+    <p className="text-xs text-text-muted uppercase font-bold tracking-wider">{label}</p>
+    <p className="text-secondary font-medium text-base mt-0.5">{value || 'N/A'}</p>
   </div>
 );
 

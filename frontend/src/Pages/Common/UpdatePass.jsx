@@ -5,6 +5,9 @@ import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import Cookies from "js-cookie";
 import { useSelector } from "react-redux";
+import Input from "../../components/ui/Input";
+import Button from "../../components/ui/Button";
+import { Lock } from "lucide-react";
 
 const UpdatePass = () => {
   const { id } = useParams();
@@ -18,6 +21,7 @@ const UpdatePass = () => {
     newpass: "",
     confirmpass: "",
   });
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -30,6 +34,7 @@ const UpdatePass = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
     try {
       const payload = {
@@ -60,17 +65,6 @@ const UpdatePass = () => {
             }
           );
 
-      // let res = await axios.put(
-      //   `http://localhost:4000/student/updatePass/${id}`,
-      //   data,
-      //   {
-      //     headers: {
-      //       "Content-Type": "application/json",
-      //       Authorization: `Bearer ${Cookies.get("token")}`,
-      //     },
-      //   }
-      // );
-
       setData({
         currpass: "",
         newpass: "",
@@ -84,82 +78,66 @@ const UpdatePass = () => {
         : navigate(`/student/${id}/dashboard`);
     } catch (err) {
       console.log("Something Went Wrong", err);
-      toast.error(err.response.data.msg);
+      toast.error(err.response?.data?.msg || "Failed to update password");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <>
-      <div className="flex w-full relative">
-        <div className="w-full min-h-[100vh] font-oswald">
-          {/* heading */}
-          <div className="w-full cursor-default">
-            <h1 className="overflow-hidden w-full text-center font-oswald font-bold text-5xl md:text-8xl lg:text-7xl xl:text-9xl my-9">
-              Update Password
-            </h1>
+    <div className="min-h-screen bg-background flex items-center justify-center px-4">
+      <div className="max-w-md w-full bg-white rounded-xl shadow-lg p-8 border border-gray-200">
+        <div className="text-center mb-8">
+          <div className="bg-primary/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+            <Lock className="w-8 h-8 text-primary" />
           </div>
-
-          {/* main page */}
-
-          <div className="w-full flex justify-center items-center">
-            <form
-              onSubmit={handleSubmit}
-              className="mx-5 text-xl font-medium mt-8 mb-10 xl:mt-7 min-h-[30vh] min-w-[80vw] lg:min-w-[50vw] border-2 rounded-lg border-black flex flex-col gap-2 px-5 py-7"
-            >
-              <div className="overflow-hidden flex flex-col gap-2">
-                <label htmlFor="currpass" className="overflow-hidden">
-                  Current Password
-                </label>
-                <input
-                  type="password"
-                  placeholder="Enter Current Password"
-                  className="w-full border border-black rounded-md py-2 px-2 text-sm"
-                  name="currpass"
-                  value={data.currpass}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-              <div className="overflow-hidden flex flex-col gap-2">
-                <label htmlFor="newpass" className="overflow-hidden">
-                  New Password
-                </label>
-                <input
-                  type="password"
-                  placeholder="Enter Current Password"
-                  className="w-full border border-black rounded-md py-2 px-2 text-sm"
-                  name="newpass"
-                  value={data.newpass}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-              <div className="overflow-hidden flex flex-col gap-2">
-                <label htmlFor="confirmpass" className="overflow-hidden">
-                  Confirm Password
-                </label>
-                <input
-                  type="password"
-                  placeholder="Enter Current Password"
-                  className="w-full border border-black rounded-md py-2 px-2 text-sm"
-                  name="confirmpass"
-                  value={data.confirmpass}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-
-              <button
-                type="submit"
-                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4"
-              >
-                Update Password
-              </button>
-            </form>
-          </div>
+          <h1 className="text-3xl font-bold text-secondary font-heading">
+            Update Password
+          </h1>
+          <p className="text-text-secondary mt-2">
+            Ensure your account stays secure by updating your password.
+          </p>
         </div>
+
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <Input
+            label="Current Password"
+            type="password"
+            placeholder="Enter Current Password"
+            name="currpass"
+            value={data.currpass}
+            onChange={handleChange}
+            required
+          />
+          <Input
+            label="New Password"
+            type="password"
+            placeholder="Enter New Password"
+            name="newpass"
+            value={data.newpass}
+            onChange={handleChange}
+            required
+          />
+          <Input
+            label="Confirm Password"
+            type="password"
+            placeholder="Confirm New Password"
+            name="confirmpass"
+            value={data.confirmpass}
+            onChange={handleChange}
+            required
+          />
+
+          <Button
+            type="submit"
+            className="w-full"
+            isLoading={loading}
+          >
+            Update Password
+          </Button>
+        </form>
       </div>
-    </>
+    </div>
   );
 };
 

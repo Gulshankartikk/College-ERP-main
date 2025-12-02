@@ -3,11 +3,12 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { BASE_URL } from '../../constants/api';
 import Cookies from 'js-cookie';
-import { FaChartBar, FaFilter, FaTrophy } from 'react-icons/fa';
+import { FaTrophy } from 'react-icons/fa';
 import Card, { CardHeader, CardTitle, CardContent } from '../../components/ui/Card';
 import Table, { TableHeader, TableBody, TableRow, TableHead, TableCell } from '../../components/ui/Table';
 import Badge from '../../components/ui/Badge';
 import Select from '../../components/ui/Select';
+import LoadingSpinner from '../../components/LoadingSpinner';
 
 const StudentMarks = () => {
     const { studentId } = useParams();
@@ -19,7 +20,13 @@ const StudentMarks = () => {
         examType: ''
     });
 
-    const examTypes = ['Mid Term', 'Final', 'Quiz', 'Assignment', 'Project'];
+    const examTypes = [
+        { value: 'Mid Term', label: 'Mid Term' },
+        { value: 'Final', label: 'Final' },
+        { value: 'Quiz', label: 'Quiz' },
+        { value: 'Assignment', label: 'Assignment' },
+        { value: 'Project', label: 'Project' }
+    ];
 
     useEffect(() => {
         fetchSubjects();
@@ -77,16 +84,16 @@ const StudentMarks = () => {
     };
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-6 p-6">
             <div className="flex flex-col md:flex-row justify-between items-center gap-4">
                 <div>
-                    <h1 className="text-2xl font-bold text-navy">My Results</h1>
-                    <p className="text-text-grey">View your academic performance and grades</p>
+                    <h1 className="text-2xl font-bold text-secondary font-heading">My Results</h1>
+                    <p className="text-text-secondary">View your academic performance and grades</p>
                 </div>
             </div>
 
             {/* Filters */}
-            <Card>
+            <Card className="border border-gray-200">
                 <CardContent className="p-6">
                     <div className="flex flex-col md:flex-row gap-4 items-end">
                         <div className="w-full md:w-1/3">
@@ -94,34 +101,32 @@ const StudentMarks = () => {
                                 label="Filter by Subject"
                                 value={filters.subjectId}
                                 onChange={(e) => setFilters({ ...filters, subjectId: e.target.value })}
-                            >
-                                <option value="">All Subjects</option>
-                                {subjects.map(sub => (
-                                    <option key={sub._id} value={sub._id}>{sub.subjectName}</option>
-                                ))}
-                            </Select>
+                                options={[
+                                    { value: '', label: 'All Subjects' },
+                                    ...subjects.map(sub => ({ value: sub._id, label: sub.subjectName }))
+                                ]}
+                            />
                         </div>
                         <div className="w-full md:w-1/3">
                             <Select
                                 label="Filter by Exam Type"
                                 value={filters.examType}
                                 onChange={(e) => setFilters({ ...filters, examType: e.target.value })}
-                            >
-                                <option value="">All Exams</option>
-                                {examTypes.map(type => (
-                                    <option key={type} value={type}>{type}</option>
-                                ))}
-                            </Select>
+                                options={[
+                                    { value: '', label: 'All Exams' },
+                                    ...examTypes
+                                ]}
+                            />
                         </div>
                     </div>
                 </CardContent>
             </Card>
 
             {/* Marks Table */}
-            <Card>
+            <Card className="border border-gray-200">
                 <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                        <FaTrophy className="text-navy" />
+                    <CardTitle className="flex items-center gap-2 font-heading text-secondary">
+                        <FaTrophy className="text-primary" />
                         Performance Report
                     </CardTitle>
                 </CardHeader>
@@ -142,14 +147,12 @@ const StudentMarks = () => {
                             {loading ? (
                                 <TableRow>
                                     <TableCell colSpan="7" className="text-center py-8">
-                                        <div className="flex justify-center">
-                                            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-sky-blue"></div>
-                                        </div>
+                                        <LoadingSpinner />
                                     </TableCell>
                                 </TableRow>
                             ) : marks.length === 0 ? (
                                 <TableRow>
-                                    <TableCell colSpan="7" className="text-center py-8 text-text-grey">
+                                    <TableCell colSpan="7" className="text-center py-8 text-text-secondary">
                                         No marks records found matching your criteria.
                                     </TableCell>
                                 </TableRow>
@@ -159,20 +162,20 @@ const StudentMarks = () => {
                                     const { grade, color } = getGrade(percentage);
                                     return (
                                         <TableRow key={record._id}>
-                                            <TableCell className="font-medium text-navy">
+                                            <TableCell className="font-medium text-secondary">
                                                 {record.subjectId?.subjectName || 'Unknown Subject'}
-                                                <div className="text-xs text-text-grey">{record.subjectId?.subjectCode}</div>
+                                                <div className="text-xs text-text-muted">{record.subjectId?.subjectCode}</div>
                                             </TableCell>
                                             <TableCell>
-                                                <Badge variant="info">{record.examType}</Badge>
+                                                <Badge variant="secondary">{record.examType}</Badge>
                                             </TableCell>
-                                            <TableCell className="font-bold text-navy">{record.marks}</TableCell>
-                                            <TableCell className="text-text-grey">{record.totalMarks}</TableCell>
+                                            <TableCell className="font-bold text-secondary">{record.marks}</TableCell>
+                                            <TableCell className="text-text-secondary">{record.totalMarks}</TableCell>
                                             <TableCell>
                                                 <div className="flex items-center gap-2">
-                                                    <div className="w-16 bg-soft-grey rounded-full h-1.5">
+                                                    <div className="w-16 bg-gray-200 rounded-full h-1.5">
                                                         <div
-                                                            className={`h-1.5 rounded-full ${parseFloat(percentage) >= 50 ? 'bg-sky-blue' : 'bg-red-500'}`}
+                                                            className={`h-1.5 rounded-full ${parseFloat(percentage) >= 50 ? 'bg-success' : 'bg-danger'}`}
                                                             style={{ width: `${percentage}%` }}
                                                         ></div>
                                                     </div>
@@ -182,7 +185,7 @@ const StudentMarks = () => {
                                             <TableCell>
                                                 <Badge variant={color}>{grade}</Badge>
                                             </TableCell>
-                                            <TableCell className="text-text-grey text-sm">
+                                            <TableCell className="text-text-secondary text-sm">
                                                 {new Date(record.createdAt).toLocaleDateString()}
                                             </TableCell>
                                         </TableRow>

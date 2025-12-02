@@ -5,6 +5,9 @@ import Cookies from "js-cookie";
 import { toast } from "react-toastify";
 import BackButton from "../../components/BackButton";
 import { useNavigate } from "react-router-dom";
+import Button from "../../components/ui/Button";
+import Input from "../../components/ui/Input";
+import Select from "../../components/ui/Select";
 
 const AddSubject = () => {
   const [courses, setCourses] = useState([]);
@@ -160,10 +163,10 @@ const AddSubject = () => {
   if (userRole && userRole !== 'admin') {
     return (
       <div className="flex flex-col w-full min-h-[100vh] pb-10 items-center justify-center bg-background">
-        <div className="bg-white p-8 rounded-lg shadow-xl text-center">
-          <h2 className="text-2xl font-bold mb-4 text-navy">Access Denied</h2>
-          <p className="text-text-grey mb-4">Only administrators can add subjects.</p>
-          <p className="text-sm text-text-grey/80">Please login as admin to access this page.</p>
+        <div className="bg-white p-8 rounded-lg shadow-xl text-center border border-gray-200">
+          <h2 className="text-2xl font-bold mb-4 text-secondary font-heading">Access Denied</h2>
+          <p className="text-text-secondary mb-4">Only administrators can add subjects.</p>
+          <p className="text-sm text-text-muted">Please login as admin to access this page.</p>
         </div>
       </div>
     );
@@ -171,10 +174,12 @@ const AddSubject = () => {
 
   return (
     <div className="flex flex-col w-full min-h-[100vh] pb-10 bg-background">
-      <BackButton />
+      <div className="px-4 py-8">
+        <BackButton />
+      </div>
 
       <div className="text-white flex items-center justify-center py-11">
-        <h1 className="font-extrabold text-5xl md:text-8xl text-center overflow-hidden text-navy">
+        <h1 className="font-extrabold text-5xl md:text-8xl text-center overflow-hidden text-secondary font-heading">
           Add Subject
         </h1>
       </div>
@@ -182,142 +187,105 @@ const AddSubject = () => {
       <div className="w-full flex justify-center px-5 lg:px-44">
         <form
           method="post"
-          className="bg-white flex flex-col gap-4 justify-evenly py-10 w-full md:w-[50vw] px-10 rounded-xl shadow-xl border-t-4 border-sky-blue"
+          className="bg-white flex flex-col gap-4 justify-evenly py-10 w-full md:w-[50vw] px-10 rounded-xl shadow-xl border border-gray-200"
           onSubmit={handleSubmit}
         >
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="flex flex-col">
-              <label className="block font-bold mb-2 text-navy">
-                Subject Name *
-              </label>
-              <input
-                type="text"
-                name="subject_name"
-                placeholder="e.g., Data Structures"
-                className="shadow border border-soft-grey rounded w-full py-2 px-3 leading-tight focus:outline-none focus:ring-2 focus:ring-sky-blue focus:border-sky-blue transition-colors"
-                value={formData.subject_name}
-                onChange={handleChange}
-                required
-              />
-            </div>
+            <Input
+              label="Subject Name *"
+              name="subject_name"
+              value={formData.subject_name}
+              onChange={handleChange}
+              placeholder="e.g., Data Structures"
+              required
+            />
 
-            <div className="flex flex-col">
-              <label className="block font-bold mb-2 text-navy">
-                Subject Code *
-              </label>
-              <input
-                type="text"
-                name="subject_code"
-                placeholder="e.g., CSE201"
-                className="shadow border border-soft-grey rounded w-full py-2 px-3 leading-tight focus:outline-none focus:ring-2 focus:ring-sky-blue focus:border-sky-blue transition-colors"
-                value={formData.subject_code}
-                onChange={handleChange}
-                required
-              />
-            </div>
+            <Input
+              label="Subject Code *"
+              name="subject_code"
+              value={formData.subject_code}
+              onChange={handleChange}
+              placeholder="e.g., CSE201"
+              required
+            />
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="flex flex-col">
-              <label className="block font-bold mb-2 text-navy">
-                Subject Type *
-              </label>
-              <select
-                name="subject_type"
-                className="shadow border border-soft-grey rounded w-full py-2 px-3 leading-tight focus:outline-none focus:ring-2 focus:ring-sky-blue focus:border-sky-blue transition-colors"
-                value={formData.subject_type}
-                onChange={handleChange}
-                required
-              >
-                {subjectTypes.map(type => (
-                  <option key={type} value={type}>{type}</option>
-                ))}
-              </select>
-            </div>
+            <Select
+              label="Subject Type *"
+              name="subject_type"
+              value={formData.subject_type}
+              onChange={handleChange}
+              required
+            >
+              {subjectTypes.map(type => (
+                <option key={type} value={type}>{type}</option>
+              ))}
+            </Select>
 
-            <div className="flex flex-col">
-              <label className="block font-bold mb-2 text-navy">
-                Credits *
-              </label>
-              <select
-                name="credits"
-                className="shadow border border-soft-grey rounded w-full py-2 px-3 leading-tight focus:outline-none focus:ring-2 focus:ring-sky-blue focus:border-sky-blue transition-colors"
-                value={formData.credits}
-                onChange={handleChange}
-                required
-              >
-                <option value="">Select Credits</option>
-                {creditOptions.map(credit => (
-                  <option key={credit} value={credit}>{credit}</option>
-                ))}
-              </select>
-            </div>
+            <Select
+              label="Credits *"
+              name="credits"
+              value={formData.credits}
+              onChange={handleChange}
+              required
+            >
+              <option value="">Select Credits</option>
+              {creditOptions.map(credit => (
+                <option key={credit} value={credit}>{credit}</option>
+              ))}
+            </Select>
 
-            <div className="flex flex-col">
-              <label className="block font-bold mb-2 text-navy">
-                Semester *
-              </label>
-              <select
-                name="semester"
-                className="shadow border border-soft-grey rounded w-full py-2 px-3 leading-tight focus:outline-none focus:ring-2 focus:ring-sky-blue focus:border-sky-blue transition-colors"
-                value={formData.semester}
-                onChange={handleChange}
-                required
-              >
-                <option value="">Select Semester</option>
-                {semesters.map(sem => (
-                  <option key={sem} value={sem}>Semester {sem}</option>
-                ))}
-              </select>
-            </div>
+            <Select
+              label="Semester *"
+              name="semester"
+              value={formData.semester}
+              onChange={handleChange}
+              required
+            >
+              <option value="">Select Semester</option>
+              {semesters.map(sem => (
+                <option key={sem} value={sem}>Semester {sem}</option>
+              ))}
+            </Select>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="flex flex-col">
-              <label className="block font-bold mb-2 text-navy">
-                Branch *
-              </label>
-              <select
-                name="branch"
-                className="shadow border border-soft-grey rounded w-full py-2 px-3 leading-tight focus:outline-none focus:ring-2 focus:ring-sky-blue focus:border-sky-blue transition-colors"
-                value={formData.branch}
-                onChange={handleChange}
-                required
-              >
-                <option value="">Select Branch</option>
-                {branches.map(branch => (
-                  <option key={branch} value={branch}>{branch}</option>
-                ))}
-              </select>
-            </div>
+            <Select
+              label="Branch *"
+              name="branch"
+              value={formData.branch}
+              onChange={handleChange}
+              required
+            >
+              <option value="">Select Branch</option>
+              {branches.map(branch => (
+                <option key={branch} value={branch}>{branch}</option>
+              ))}
+            </Select>
 
-            <div className="flex flex-col">
-              <label className="block font-bold mb-2 text-navy">
-                Assign Teacher (Optional)
-              </label>
-              <select
-                name="teacher"
-                className="shadow border border-soft-grey rounded w-full py-2 px-3 leading-tight focus:outline-none focus:ring-2 focus:ring-sky-blue focus:border-sky-blue transition-colors"
-                value={formData.teacher}
-                onChange={handleChange}
-              >
-                <option value="">Select Teacher</option>
-                {teachers && teachers.map(teacher => (
-                  <option key={teacher._id} value={teacher._id}>
-                    {teacher.name}
-                  </option>
-                ))}
-              </select>
-            </div>
+            <Select
+              label="Assign Teacher (Optional)"
+              name="teacher"
+              value={formData.teacher}
+              onChange={handleChange}
+            >
+              <option value="">Select Teacher</option>
+              {teachers && teachers.map(teacher => (
+                <option key={teacher._id} value={teacher._id}>
+                  {teacher.name}
+                </option>
+              ))}
+            </Select>
           </div>
 
           <div className="flex justify-center mt-6 w-full">
-            <button
+            <Button
               type="submit"
-              className="w-full text-white font-bold py-3 px-4 rounded focus:outline-none transition-colors bg-navy hover:bg-navy/90"
+              className="w-full"
             >
               Add Subject
-            </button>
+            </Button>
           </div>
         </form>
       </div>

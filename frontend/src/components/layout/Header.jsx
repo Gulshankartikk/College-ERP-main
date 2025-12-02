@@ -17,8 +17,8 @@ const Header = ({
           {/* Left Section */}
           <div className="flex items-center space-x-4">
             <div>
-              <h1 className="text-2xl font-bold text-navy">{title}</h1>
-              {subtitle && <p className="text-sm text-text-grey">{subtitle}</p>}
+              <h1 className="text-2xl font-bold text-secondary">{title}</h1>
+              {subtitle && <p className="text-sm text-text-secondary">{subtitle}</p>}
             </div>
           </div>
 
@@ -30,8 +30,8 @@ const Header = ({
                 key={index}
                 onClick={action.onClick}
                 className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-colors ${action.variant === 'primary'
-                    ? 'bg-sky-blue text-white hover:bg-sky-blue/80'
-                    : 'bg-background text-navy hover:bg-soft-grey'
+                  ? 'bg-primary text-white hover:bg-primary/80'
+                  : 'bg-background text-secondary hover:bg-gray-100'
                   }`}
               >
                 {action.icon && <action.icon />}
@@ -43,8 +43,8 @@ const Header = ({
             {user && (
               <div className="flex items-center space-x-2">
                 <div className="text-right">
-                  <p className="text-sm font-medium text-navy">{user.name}</p>
-                  <p className="text-xs text-text-grey">{user.role}</p>
+                  <p className="text-sm font-medium text-secondary">{user.name}</p>
+                  <p className="text-xs text-text-secondary">{user.role}</p>
                 </div>
                 {user.avatar && (
                   <img

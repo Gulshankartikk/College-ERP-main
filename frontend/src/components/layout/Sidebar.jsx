@@ -84,24 +84,24 @@ const Sidebar = ({ isOpen, onClose, userRole }) => {
     <>
       {/* Mobile Overlay */}
       <div
-        className={`fixed inset-0 bg-gray-900/50 backdrop-blur-sm z-40 lg:hidden transition-all duration-300 ${isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+        className={`fixed inset-0 bg-secondary/50 backdrop-blur-sm z-40 lg:hidden transition-all duration-300 ${isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
         onClick={onClose}
       />
 
       {/* Sidebar */}
       <aside
-        className={`fixed lg:static inset-y-0 left-0 z-50 w-72 bg-navy border-r border-white/5 transform transition-transform duration-300 lg:transform-none shadow-2xl lg:shadow-none ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}
+        className={`fixed lg:static inset-y-0 left-0 z-50 w-72 bg-secondary border-r border-white/5 transform transition-transform duration-300 lg:transform-none shadow-2xl lg:shadow-none ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}
       >
         <div className="h-full flex flex-col">
           {/* Logo */}
-          <div className="h-20 flex items-center justify-between px-6 border-b border-white/10 bg-navy/50">
+          <div className="h-20 flex items-center justify-between px-6 border-b border-white/10 bg-secondary/50">
             <div className="flex items-center gap-3">
-              <div className="bg-sky-blue/20 p-2 rounded-lg">
-                <GraduationCap className="text-sky-blue w-6 h-6" />
+              <div className="bg-primary/20 p-2 rounded-lg">
+                <GraduationCap className="text-primary w-6 h-6" />
               </div>
               <div>
-                <span className="text-lg font-bold text-white block leading-none">College ERP</span>
-                <span className="text-xs text-soft-grey font-medium">Management System</span>
+                <span className="text-lg font-bold text-white block leading-none font-heading">College ERP</span>
+                <span className="text-xs text-gray-400 font-medium">Management System</span>
               </div>
             </div>
             <button onClick={onClose} className="lg:hidden text-gray-400 hover:text-white transition-colors">
@@ -117,8 +117,8 @@ const Sidebar = ({ isOpen, onClose, userRole }) => {
                 to={link.path}
                 className={({ isActive }) =>
                   `flex items-center px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 group ${isActive
-                    ? 'bg-sky-blue text-white shadow-lg shadow-sky-blue/20 translate-x-1'
-                    : 'text-soft-grey hover:bg-white/5 hover:text-white hover:translate-x-1'
+                    ? 'bg-primary text-white shadow-lg shadow-primary/20 translate-x-1'
+                    : 'text-gray-400 hover:bg-white/5 hover:text-white hover:translate-x-1'
                   }`
                 }
                 onClick={() => window.innerWidth < 1024 && onClose()}
@@ -130,7 +130,7 @@ const Sidebar = ({ isOpen, onClose, userRole }) => {
           </nav>
 
           {/* User Profile & Logout */}
-          <div className="p-4 border-t border-white/10 bg-navy/50">
+          <div className="p-4 border-t border-white/10 bg-secondary/50">
             <button
               onClick={logout}
               className="flex items-center w-full px-4 py-3 text-sm font-medium text-red-400 rounded-xl hover:bg-red-500/10 hover:text-red-300 transition-all duration-200 group"

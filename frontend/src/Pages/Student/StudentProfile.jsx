@@ -3,15 +3,16 @@ import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
 import { BASE_URL } from '../../constants/api';
 import {
-  FaUser, FaEnvelope, FaPhone, FaIdCard, FaGraduationCap, FaChartLine,
-  FaCalendarAlt, FaFilePdf, FaBus, FaBuilding, FaBook, FaMoneyBillWave,
-  FaEdit, FaSave, FaTimes, FaClipboardList, FaBell
+  FaUser, FaIdCard, FaGraduationCap, FaChartLine,
+  FaFilePdf, FaBus, FaBook, FaMoneyBillWave,
+  FaEdit, FaSave, FaTimes, FaBell
 } from 'react-icons/fa';
 import Cookies from 'js-cookie';
 import { toast } from 'react-toastify';
 import Button from '../../components/ui/Button';
 import Card, { CardContent } from '../../components/ui/Card';
-import Badge from '../../components/ui/Badge';
+import Input from '../../components/ui/Input';
+import LoadingSpinner from '../../components/LoadingSpinner';
 
 const StudentProfile = () => {
   const { studentId } = useParams();
@@ -133,7 +134,7 @@ const StudentProfile = () => {
   if (loading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-sky-blue"></div>
+        <LoadingSpinner message="Loading profile..." />
       </div>
     );
   }
@@ -145,14 +146,14 @@ const StudentProfile = () => {
   return (
     <div className="min-h-screen bg-background pb-12">
       {/* Header Section */}
-      <div className="bg-navy text-white py-12">
+      <div className="bg-secondary text-white py-12">
         <div className="max-w-7xl mx-auto px-4 flex flex-col md:flex-row justify-between items-end">
           <div className="flex items-center gap-6">
             <div className="w-24 h-24 rounded-full bg-white/10 flex items-center justify-center text-4xl border-4 border-white/20">
               <FaUser />
             </div>
             <div>
-              <h1 className="text-4xl font-bold mb-2">{student?.name}</h1>
+              <h1 className="text-4xl font-bold mb-2 font-heading">{student?.name}</h1>
               <div className="flex gap-4 text-sm text-gray-300">
                 <span className="flex items-center gap-1"><FaIdCard /> {student?.rollNo || 'Roll No N/A'}</span>
                 <span className="flex items-center gap-1"><FaGraduationCap /> {student?.courseId?.courseName || 'Course N/A'}</span>
@@ -161,7 +162,8 @@ const StudentProfile = () => {
           </div>
           <Button
             onClick={handleEditToggle}
-            className={`mt-4 md:mt-0 flex items-center gap-2 ${isEditing ? 'bg-red-500 hover:bg-red-600' : 'bg-sky-blue hover:bg-sky-600'}`}
+            variant={isEditing ? "danger" : "primary"}
+            className="mt-4 md:mt-0 flex items-center gap-2"
           >
             {isEditing ? <><FaTimes /> Cancel Editing</> : <><FaEdit /> Edit Profile</>}
           </Button>
@@ -174,18 +176,18 @@ const StudentProfile = () => {
         <div className="lg:col-span-2 space-y-8">
 
           {/* 1. Basic Information */}
-          <Card>
+          <Card className="border border-gray-200">
             <CardContent className="p-6">
-              <h2 className="text-xl font-bold text-navy mb-4 flex items-center gap-2 border-b pb-2">
-                <FaUser className="text-sky-blue" /> Basic Information
+              <h2 className="text-xl font-bold text-secondary mb-4 flex items-center gap-2 border-b border-gray-100 pb-2 font-heading">
+                <FaUser className="text-primary" /> Basic Information
               </h2>
               {isEditing ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <InputGroup label="Full Name" name="name" value={editData.name} onChange={handleInputChange} />
-                  <InputGroup label="Email" name="email" value={editData.email} onChange={handleInputChange} />
-                  <InputGroup label="Phone" name="phone" value={editData.phone} onChange={handleInputChange} />
-                  <InputGroup label="Gender" name="gender" value={editData.gender} onChange={handleInputChange} placeholder="Male/Female/Other" />
-                  <InputGroup label="Date of Birth" name="dob" type="date" value={editData.dob} onChange={handleInputChange} />
+                  <Input label="Full Name" name="name" value={editData.name} onChange={handleInputChange} />
+                  <Input label="Email" name="email" value={editData.email} onChange={handleInputChange} />
+                  <Input label="Phone" name="phone" value={editData.phone} onChange={handleInputChange} />
+                  <Input label="Gender" name="gender" value={editData.gender} onChange={handleInputChange} placeholder="Male/Female/Other" />
+                  <Input label="Date of Birth" name="dob" type="date" value={editData.dob} onChange={handleInputChange} />
                 </div>
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-8">
@@ -203,15 +205,15 @@ const StudentProfile = () => {
           </Card>
 
           {/* 2. Additional Details (Hostel, Transport) */}
-          <Card>
+          <Card className="border border-gray-200">
             <CardContent className="p-6">
-              <h2 className="text-xl font-bold text-navy mb-4 flex items-center gap-2 border-b pb-2">
-                <FaBus className="text-sky-blue" /> Additional Details
+              <h2 className="text-xl font-bold text-secondary mb-4 flex items-center gap-2 border-b border-gray-100 pb-2 font-heading">
+                <FaBus className="text-primary" /> Additional Details
               </h2>
               {isEditing ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <InputGroup label="Hostel Info" name="hostelInfo" value={editData.hostelInfo} onChange={handleInputChange} placeholder="Block/Room No" />
-                  <InputGroup label="Transport Info" name="transportInfo" value={editData.transportInfo} onChange={handleInputChange} placeholder="Bus Route/Stop" />
+                  <Input label="Hostel Info" name="hostelInfo" value={editData.hostelInfo} onChange={handleInputChange} placeholder="Block/Room No" />
+                  <Input label="Transport Info" name="transportInfo" value={editData.transportInfo} onChange={handleInputChange} placeholder="Bus Route/Stop" />
                 </div>
               ) : (
                 <div className="space-y-4">
@@ -230,22 +232,22 @@ const StudentProfile = () => {
           </Card>
 
           {/* 3. CV / Resume Section */}
-          <Card>
+          <Card className="border border-gray-200">
             <CardContent className="p-6">
-              <h2 className="text-xl font-bold text-navy mb-4 flex items-center gap-2 border-b pb-2">
-                <FaFilePdf className="text-sky-blue" /> CV / Resume
+              <h2 className="text-xl font-bold text-secondary mb-4 flex items-center gap-2 border-b border-gray-100 pb-2 font-heading">
+                <FaFilePdf className="text-primary" /> CV / Resume
               </h2>
               {isEditing ? (
                 <div>
-                  <InputGroup label="CV URL (Public Link)" name="cvUrl" value={editData.cvUrl} onChange={handleInputChange} placeholder="https://drive.google.com/..." />
+                  <Input label="CV URL (Public Link)" name="cvUrl" value={editData.cvUrl} onChange={handleInputChange} placeholder="https://drive.google.com/..." />
                 </div>
               ) : (
                 <div className="flex items-center justify-between bg-gray-50 p-4 rounded-lg border border-gray-100">
                   <div className="flex items-center gap-3">
                     <div className="p-2 bg-red-100 rounded text-red-600"><FaFilePdf size={24} /></div>
                     <div>
-                      <p className="font-bold text-navy">Curriculum Vitae</p>
-                      <p className="text-xs text-gray-500">PDF Document</p>
+                      <p className="font-bold text-secondary">Curriculum Vitae</p>
+                      <p className="text-xs text-text-muted">PDF Document</p>
                     </div>
                   </div>
                   {student?.cvUrl ? (
@@ -253,7 +255,7 @@ const StudentProfile = () => {
                       <Button size="sm" variant="outline">View CV</Button>
                     </a>
                   ) : (
-                    <span className="text-sm text-gray-400 italic">No CV Uploaded</span>
+                    <span className="text-sm text-text-muted italic">No CV Uploaded</span>
                   )}
                 </div>
               )}
@@ -269,36 +271,36 @@ const StudentProfile = () => {
           )}
 
           {/* 4. Academic Performance (Marks) */}
-          <Card>
+          <Card className="border border-gray-200">
             <CardContent className="p-6">
-              <h2 className="text-xl font-bold text-navy mb-4 flex items-center gap-2 border-b pb-2">
-                <FaBook className="text-sky-blue" /> Academic Performance
+              <h2 className="text-xl font-bold text-secondary mb-4 flex items-center gap-2 border-b border-gray-100 pb-2 font-heading">
+                <FaBook className="text-primary" /> Academic Performance
               </h2>
               {marks.length > 0 ? (
                 <div className="overflow-x-auto">
                   <table className="min-w-full divide-y divide-gray-200">
                     <thead className="bg-gray-50">
                       <tr>
-                        <th className="px-4 py-3 text-left text-xs font-bold text-gray-500 uppercase">Subject</th>
-                        <th className="px-4 py-3 text-left text-xs font-bold text-gray-500 uppercase">Exam</th>
-                        <th className="px-4 py-3 text-left text-xs font-bold text-gray-500 uppercase">Score</th>
-                        <th className="px-4 py-3 text-left text-xs font-bold text-gray-500 uppercase">%</th>
+                        <th className="px-4 py-3 text-left text-xs font-bold text-text-muted uppercase">Subject</th>
+                        <th className="px-4 py-3 text-left text-xs font-bold text-text-muted uppercase">Exam</th>
+                        <th className="px-4 py-3 text-left text-xs font-bold text-text-muted uppercase">Score</th>
+                        <th className="px-4 py-3 text-left text-xs font-bold text-text-muted uppercase">%</th>
                       </tr>
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200">
                       {marks.map((mark, index) => (
                         <tr key={index}>
-                          <td className="px-4 py-3 text-sm font-medium text-navy">{mark.subjectId?.subjectName}</td>
-                          <td className="px-4 py-3 text-sm text-gray-500">{mark.examType}</td>
-                          <td className="px-4 py-3 text-sm font-bold text-sky-blue">{mark.marks} / {mark.totalMarks}</td>
-                          <td className="px-4 py-3 text-sm font-bold text-navy">{((mark.marks / mark.totalMarks) * 100).toFixed(1)}%</td>
+                          <td className="px-4 py-3 text-sm font-medium text-secondary">{mark.subjectId?.subjectName}</td>
+                          <td className="px-4 py-3 text-sm text-text-secondary">{mark.examType}</td>
+                          <td className="px-4 py-3 text-sm font-bold text-primary">{mark.marks} / {mark.totalMarks}</td>
+                          <td className="px-4 py-3 text-sm font-bold text-secondary">{((mark.marks / mark.totalMarks) * 100).toFixed(1)}%</td>
                         </tr>
                       ))}
                     </tbody>
                   </table>
                 </div>
               ) : (
-                <p className="text-gray-500 text-center py-4">No marks recorded yet.</p>
+                <p className="text-text-secondary text-center py-4">No marks recorded yet.</p>
               )}
             </CardContent>
           </Card>
@@ -310,63 +312,63 @@ const StudentProfile = () => {
 
           {/* Quick Stats */}
           <div className="grid grid-cols-2 gap-4">
-            <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 text-center">
-              <p className="text-3xl font-bold text-sky-blue">{overallAttendance}%</p>
-              <p className="text-xs text-gray-500 uppercase font-bold mt-1">Attendance</p>
+            <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-200 text-center">
+              <p className="text-3xl font-bold text-primary">{overallAttendance}%</p>
+              <p className="text-xs text-text-muted uppercase font-bold mt-1">Attendance</p>
             </div>
-            <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 text-center">
-              <p className="text-3xl font-bold text-navy">{assignments.length}</p>
-              <p className="text-xs text-gray-500 uppercase font-bold mt-1">Assignments</p>
+            <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-200 text-center">
+              <p className="text-3xl font-bold text-secondary">{assignments.length}</p>
+              <p className="text-xs text-text-muted uppercase font-bold mt-1">Assignments</p>
             </div>
           </div>
 
           {/* Fee & Financial (Mock) */}
-          <Card>
+          <Card className="border border-gray-200">
             <CardContent className="p-6">
-              <h3 className="font-bold text-navy mb-4 flex items-center gap-2">
-                <FaMoneyBillWave className="text-sky-blue" /> Fee Status
+              <h3 className="font-bold text-secondary mb-4 flex items-center gap-2 font-heading">
+                <FaMoneyBillWave className="text-primary" /> Fee Status
               </h3>
               <div className="bg-green-50 border border-green-100 p-4 rounded-lg mb-3">
                 <p className="text-sm text-green-800 font-bold">No Dues Pending</p>
                 <p className="text-xs text-green-600">Last payment: 15th Nov 2024</p>
               </div>
-              <button className="w-full text-center py-2 border border-navy text-navy rounded-lg hover:bg-navy hover:text-white transition-colors text-sm font-bold">
+              <Link to={`/student/${studentId}/fees`} className="block w-full text-center py-2 border border-secondary text-secondary rounded-lg hover:bg-secondary hover:text-white transition-colors text-sm font-bold">
                 View Receipts
-              </button>
+              </Link>
             </CardContent>
           </Card>
 
           {/* Learning Materials */}
-          <Card>
+          <Card className="border border-gray-200">
             <CardContent className="p-6">
-              <h3 className="font-bold text-navy mb-4 flex items-center gap-2">
-                <FaBook className="text-sky-blue" /> Learning Materials
+              <h3 className="font-bold text-secondary mb-4 flex items-center gap-2 font-heading">
+                <FaBook className="text-primary" /> Learning Materials
               </h3>
               <div className="space-y-2">
-                <Link to={`/student/${studentId}/materials`} className="block w-full text-left px-4 py-2 rounded-lg hover:bg-gray-50 text-sm font-medium text-gray-700 transition-colors">
+                <Link to={`/student/${studentId}/notes`} className="block w-full text-left px-4 py-2 rounded-lg hover:bg-gray-50 text-sm font-medium text-text-secondary transition-colors">
                   • Download Notes
                 </Link>
-                <Link to={`/student/${studentId}/assignments`} className="block w-full text-left px-4 py-2 rounded-lg hover:bg-gray-50 text-sm font-medium text-gray-700 transition-colors">
+                <Link to={`/student/${studentId}/assignments`} className="block w-full text-left px-4 py-2 rounded-lg hover:bg-gray-50 text-sm font-medium text-text-secondary transition-colors">
                   • View Assignments
                 </Link>
-                <button className="block w-full text-left px-4 py-2 rounded-lg hover:bg-gray-50 text-sm font-medium text-gray-700 transition-colors">
+                <Link to={`/student/${studentId}/materials`} className="block w-full text-left px-4 py-2 rounded-lg hover:bg-gray-50 text-sm font-medium text-text-secondary transition-colors">
                   • Previous Year Papers
-                </button>
+                </Link>
               </div>
             </CardContent>
           </Card>
 
           {/* Support & Communication */}
-          <Card>
+          <Card className="border border-gray-200">
             <CardContent className="p-6">
-              <h3 className="font-bold text-navy mb-4 flex items-center gap-2">
-                <FaBell className="text-sky-blue" /> Support
+              <h3 className="font-bold text-secondary mb-4 flex items-center gap-2 font-heading">
+                <FaBell className="text-primary" /> Support
               </h3>
               <div className="space-y-2">
-                <button className="w-full text-left px-4 py-2 rounded-lg hover:bg-gray-50 text-sm font-medium text-gray-700 transition-colors">
+                <button className="w-full text-left px-4 py-2 rounded-lg hover:bg-gray-50 text-sm font-medium text-text-secondary transition-colors">
                   • Complaint Box
                 </button>
-                <button className="w-full text-left px-4 py-2 rounded-lg hover:bg-gray-50 text-sm font-medium text-gray-700 transition-colors">
+                <button className="w-full text-left px-4 py-2 rounded-lg hover:bg-gray-50 text-sm font-medium text-text-secondary transition-colors">
                   • Teacher Chat
                 </button>
               </div>
@@ -374,23 +376,23 @@ const StudentProfile = () => {
           </Card>
 
           {/* Attendance Breakdown */}
-          <Card>
+          <Card className="border border-gray-200">
             <CardContent className="p-6">
-              <h3 className="font-bold text-navy mb-4 flex items-center gap-2">
-                <FaChartLine className="text-sky-blue" /> Attendance
+              <h3 className="font-bold text-secondary mb-4 flex items-center gap-2 font-heading">
+                <FaChartLine className="text-primary" /> Attendance
               </h3>
               <div className="space-y-3">
                 {attendance.slice(0, 3).map((record, idx) => (
                   <div key={idx}>
                     <div className="flex justify-between text-xs mb-1">
-                      <span className="text-gray-600 font-medium">{record.subjectName}</span>
-                      <span className={`font-bold ${parseFloat(record.percentage) < 75 ? 'text-red-500' : 'text-green-600'}`}>
+                      <span className="text-text-secondary font-medium">{record.subjectName}</span>
+                      <span className={`font-bold ${parseFloat(record.percentage) < 75 ? 'text-danger' : 'text-success'}`}>
                         {record.percentage}%
                       </span>
                     </div>
                     <div className="w-full bg-gray-100 rounded-full h-1.5">
                       <div
-                        className={`h-1.5 rounded-full ${parseFloat(record.percentage) < 75 ? 'bg-red-500' : 'bg-green-500'}`}
+                        className={`h-1.5 rounded-full ${parseFloat(record.percentage) < 75 ? 'bg-danger' : 'bg-success'}`}
                         style={{ width: `${record.percentage}%` }}
                       ></div>
                     </div>
@@ -409,22 +411,8 @@ const StudentProfile = () => {
 // Helper Components
 const InfoRow = ({ label, value }) => (
   <div className="border-b border-gray-50 pb-2 last:border-0">
-    <p className="text-xs text-gray-400 uppercase font-bold tracking-wider">{label}</p>
-    <p className="text-navy font-medium text-base mt-0.5">{value || 'N/A'}</p>
-  </div>
-);
-
-const InputGroup = ({ label, name, value, onChange, type = "text", placeholder }) => (
-  <div>
-    <label className="block text-sm font-medium text-gray-700 mb-1">{label}</label>
-    <input
-      type={type}
-      name={name}
-      value={value}
-      onChange={onChange}
-      placeholder={placeholder}
-      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-blue focus:border-sky-blue outline-none transition-all"
-    />
+    <p className="text-xs text-text-muted uppercase font-bold tracking-wider">{label}</p>
+    <p className="text-secondary font-medium text-base mt-0.5">{value || 'N/A'}</p>
   </div>
 );
 

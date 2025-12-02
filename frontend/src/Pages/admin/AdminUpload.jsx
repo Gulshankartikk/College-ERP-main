@@ -5,6 +5,10 @@ import Cookies from 'js-cookie';
 import { toast } from 'react-toastify';
 import { FaUpload, FaFileAlt, FaUsers, FaCalendarAlt } from 'react-icons/fa';
 import AdminHeader from '../../components/AdminHeader';
+import Button from '../../components/ui/Button';
+import Input from '../../components/ui/Input';
+import Select from '../../components/ui/Select';
+import BackButton from '../../components/BackButton';
 
 const AdminUpload = () => {
   const [activeTab, setActiveTab] = useState('notice');
@@ -108,8 +112,8 @@ const AdminUpload = () => {
     <button
       onClick={() => setActiveTab(id)}
       className={`flex items-center px-4 py-2 rounded-lg font-medium transition-colors ${activeTab === id
-        ? 'bg-sky-blue text-white'
-        : 'bg-background text-navy hover:bg-soft-grey'
+        ? 'bg-primary text-white'
+        : 'bg-gray-100 text-secondary hover:bg-gray-200'
         }`}
     >
       {icon}
@@ -122,7 +126,8 @@ const AdminUpload = () => {
       <AdminHeader currentRole="admin" />
       <div className="py-8">
         <div className="max-w-4xl mx-auto px-4">
-          <h1 className="text-3xl font-bold mb-6 text-navy">Admin Content Upload</h1>
+          <BackButton className="mb-4" />
+          <h1 className="text-3xl font-bold mb-6 text-secondary font-heading">Admin Content Upload</h1>
 
           {/* Tab Navigation */}
           <div className="flex gap-4 mb-6">
@@ -131,78 +136,68 @@ const AdminUpload = () => {
           </div>
 
           {/* Upload Form */}
-          <div className="bg-white rounded-lg shadow-md p-6 border border-soft-grey">
+          <div className="bg-white rounded-lg shadow-md p-6 border border-gray-200">
             <form onSubmit={handleSubmit} className="space-y-6">
-              <div>
-                <label className="block text-sm font-medium mb-2 text-text-grey">Title *</label>
-                <input
-                  type="text"
-                  name="title"
-                  value={formData.title}
-                  onChange={handleInputChange}
-                  className="w-full p-3 border border-soft-grey rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-blue"
-                  placeholder={`Enter ${activeTab} title`}
-                  required
-                />
-              </div>
+              <Input
+                label="Title *"
+                name="title"
+                value={formData.title}
+                onChange={handleInputChange}
+                placeholder={`Enter ${activeTab} title`}
+                required
+              />
 
               <div>
-                <label className="block text-sm font-medium mb-2 text-text-grey">Description *</label>
+                <label className="block text-sm font-medium mb-2 text-text-secondary">Description *</label>
                 <textarea
                   name="description"
                   value={formData.description}
                   onChange={handleInputChange}
                   rows="4"
-                  className="w-full p-3 border border-soft-grey rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-blue"
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-all duration-200"
                   placeholder={`Enter ${activeTab} description`}
                   required
                 />
               </div>
 
               {activeTab === 'notice' ? (
-                <div>
-                  <label className="block text-sm font-medium mb-2 text-text-grey">Target Course *</label>
-                  <select
-                    name="courseId"
-                    value={formData.courseId}
-                    onChange={handleInputChange}
-                    className="w-full p-3 border border-soft-grey rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-blue"
-                    required
-                  >
-                    <option value="">Select Course</option>
-                    {courses.map(course => (
-                      <option key={course._id} value={course._id}>
-                        {course.courseName} ({course.courseCode})
-                      </option>
-                    ))}
-                  </select>
-                </div>
+                <Select
+                  label="Target Course *"
+                  name="courseId"
+                  value={formData.courseId}
+                  onChange={handleInputChange}
+                  required
+                >
+                  <option value="">Select Course</option>
+                  {courses.map(course => (
+                    <option key={course._id} value={course._id}>
+                      {course.courseName} ({course.courseCode})
+                    </option>
+                  ))}
+                </Select>
               ) : (
-                <div>
-                  <label className="block text-sm font-medium mb-2 text-text-grey">Subject *</label>
-                  <select
-                    name="subjectId"
-                    value={formData.subjectId}
-                    onChange={handleInputChange}
-                    className="w-full p-3 border border-soft-grey rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-blue"
-                    required
-                  >
-                    <option value="">Select Subject</option>
-                    {subjects.map(subject => (
-                      <option key={subject._id} value={subject._id}>
-                        {subject.subjectName} ({subject.subjectCode})
-                      </option>
-                    ))}
-                  </select>
-                </div>
+                <Select
+                  label="Subject *"
+                  name="subjectId"
+                  value={formData.subjectId}
+                  onChange={handleInputChange}
+                  required
+                >
+                  <option value="">Select Subject</option>
+                  {subjects.map(subject => (
+                    <option key={subject._id} value={subject._id}>
+                      {subject.subjectName} ({subject.subjectCode})
+                    </option>
+                  ))}
+                </Select>
               )}
 
               <div>
-                <label className="block text-sm font-medium mb-2 text-text-grey">
+                <label className="block text-sm font-medium mb-2 text-text-secondary">
                   Upload File (Optional)
                 </label>
-                <div className="border-2 border-dashed border-soft-grey rounded-lg p-6 text-center">
-                  <FaFileAlt className="mx-auto text-text-grey/50 text-3xl mb-2" />
+                <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-primary transition-colors">
+                  <FaFileAlt className="mx-auto text-text-muted text-3xl mb-2" />
                   <input
                     type="file"
                     onChange={handleFileChange}
@@ -212,25 +207,25 @@ const AdminUpload = () => {
                   />
                   <label
                     htmlFor="file-upload"
-                    className="cursor-pointer text-sky-blue hover:text-sky-blue/80"
+                    className="cursor-pointer text-primary hover:text-primary/80 font-medium"
                   >
                     Click to upload file
                   </label>
-                  <p className="text-sm text-text-grey mt-1">
+                  <p className="text-sm text-text-muted mt-1">
                     PDF, DOC, DOCX, PPT, PPTX, Images (Max 10MB)
                   </p>
                   {formData.file && (
-                    <p className="text-sm text-sky-blue mt-2">
+                    <p className="text-sm text-primary mt-2 font-medium">
                       Selected: {formData.file.name}
                     </p>
                   )}
                 </div>
               </div>
 
-              <button
+              <Button
                 type="submit"
                 disabled={uploading}
-                className="w-full bg-sky-blue text-white py-3 px-6 rounded-lg hover:bg-sky-blue/80 disabled:opacity-50 flex items-center justify-center"
+                className="w-full flex items-center justify-center"
               >
                 {uploading ? (
                   <>
@@ -243,7 +238,7 @@ const AdminUpload = () => {
                     Publish {activeTab}
                   </>
                 )}
-              </button>
+              </Button>
             </form>
           </div>
         </div>

@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import { FaClipboardList, FaCalendarAlt, FaDownload, FaSearch, FaTimes, FaEdit, FaEye, FaCheck } from 'react-icons/fa';
 import AdminHeader from '../../components/AdminHeader';
 import BackButton from '../../components/BackButton';
+import Button from '../../components/ui/Button';
+import Input from '../../components/ui/Input';
+import Select from '../../components/ui/Select';
 
 const AttendanceManagement = () => {
   const [attendanceData, setAttendanceData] = useState([
@@ -96,405 +99,387 @@ const AttendanceManagement = () => {
   return (
     <div className="min-h-screen bg-background">
       <AdminHeader />
-      <BackButton />
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        <div className="flex justify-between items-center mb-6">
-          <div>
-            <h1 className="text-3xl font-bold text-navy">Attendance Management</h1>
-            <p className="text-text-grey">Monitor and manage student attendance</p>
+      <div className="py-8">
+        <div className="max-w-7xl mx-auto px-4">
+          <BackButton className="mb-4" />
+          <div className="flex justify-between items-center mb-6">
+            <div>
+              <h1 className="text-3xl font-bold text-secondary font-heading">Attendance Management</h1>
+              <p className="text-text-secondary">Monitor and manage student attendance</p>
+            </div>
+            <div className="flex space-x-3">
+              <Button
+                variant="outline"
+                onClick={exportReport}
+                className="flex items-center space-x-2"
+              >
+                <FaDownload />
+                <span>Export Report</span>
+              </Button>
+              <Button
+                onClick={() => setShowMarkModal(true)}
+                className="flex items-center space-x-2"
+              >
+                <FaCalendarAlt />
+                <span>Mark Attendance</span>
+              </Button>
+            </div>
           </div>
-          <div className="flex space-x-3">
-            <button
-              onClick={exportReport}
-              className="flex items-center space-x-2 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600"
-            >
-              <FaDownload />
-              <span>Export Report</span>
-            </button>
-            <button
-              onClick={() => setShowMarkModal(true)}
-              className="flex items-center space-x-2 px-4 py-2 bg-sky-blue text-white rounded-lg hover:bg-sky-blue/80"
-            >
-              <FaCalendarAlt />
-              <span>Mark Attendance</span>
-            </button>
-          </div>
-        </div>
 
-        {/* Summary Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <div className="bg-white p-6 rounded-lg shadow-md">
-            <div className="flex items-center">
-              <FaClipboardList className="text-3xl text-green-500 mr-4" />
-              <div>
-                <p className="text-text-grey">Average Attendance</p>
-                <p className="text-2xl font-bold">85%</p>
+          {/* Summary Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200">
+              <div className="flex items-center">
+                <FaClipboardList className="text-3xl text-success mr-4" />
+                <div>
+                  <p className="text-text-secondary">Average Attendance</p>
+                  <p className="text-2xl font-bold text-secondary">85%</p>
+                </div>
+              </div>
+            </div>
+            <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200">
+              <div className="flex items-center">
+                <FaClipboardList className="text-3xl text-primary mr-4" />
+                <div>
+                  <p className="text-text-secondary">Present Today</p>
+                  <p className="text-2xl font-bold text-secondary">1,082</p>
+                </div>
+              </div>
+            </div>
+            <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200">
+              <div className="flex items-center">
+                <FaClipboardList className="text-3xl text-danger mr-4" />
+                <div>
+                  <p className="text-text-secondary">Absent Today</p>
+                  <p className="text-2xl font-bold text-secondary">163</p>
+                </div>
+              </div>
+            </div>
+            <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200">
+              <div className="flex items-center">
+                <FaClipboardList className="text-3xl text-warning mr-4" />
+                <div>
+                  <p className="text-text-secondary">Low Attendance</p>
+                  <p className="text-2xl font-bold text-secondary">45</p>
+                </div>
               </div>
             </div>
           </div>
-          <div className="bg-white p-6 rounded-lg shadow-md">
-            <div className="flex items-center">
-              <FaClipboardList className="text-3xl text-sky-blue mr-4" />
-              <div>
-                <p className="text-text-grey">Present Today</p>
-                <p className="text-2xl font-bold">1,082</p>
-              </div>
-            </div>
-          </div>
-          <div className="bg-white p-6 rounded-lg shadow-md">
-            <div className="flex items-center">
-              <FaClipboardList className="text-3xl text-red-500 mr-4" />
-              <div>
-                <p className="text-text-grey">Absent Today</p>
-                <p className="text-2xl font-bold">163</p>
-              </div>
-            </div>
-          </div>
-          <div className="bg-white p-6 rounded-lg shadow-md">
-            <div className="flex items-center">
-              <FaClipboardList className="text-3xl text-yellow-500 mr-4" />
-              <div>
-                <p className="text-text-grey">Low Attendance</p>
-                <p className="text-2xl font-bold">45</p>
-              </div>
-            </div>
-          </div>
-        </div>
 
-        {/* Filters */}
-        <div className="bg-white p-4 rounded-lg shadow-md mb-6">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <div className="relative">
-              <FaSearch className="absolute left-3 top-3 text-gray-400" />
-              <input
-                type="text"
+          {/* Filters */}
+          <div className="bg-white p-4 rounded-lg shadow-md mb-6 border border-gray-200">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+              <Input
+                icon={FaSearch}
                 placeholder="Search students..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-blue"
               />
+              <Select
+                value={selectedCourse}
+                onChange={(e) => setSelectedCourse(e.target.value)}
+              >
+                <option>All Courses</option>
+                <option>Computer Science</option>
+                <option>Mechanical Engineering</option>
+                <option>Business Administration</option>
+              </Select>
+              <Input
+                type="date"
+                value={selectedDate}
+                onChange={(e) => setSelectedDate(e.target.value)}
+              />
+              <Select
+                value={selectedStatus}
+                onChange={(e) => setSelectedStatus(e.target.value)}
+              >
+                <option>All Status</option>
+                <option>Good (Above 80%)</option>
+                <option>Average (60-80%)</option>
+                <option>Poor (Below 60%)</option>
+              </Select>
             </div>
-            <select
-              value={selectedCourse}
-              onChange={(e) => setSelectedCourse(e.target.value)}
-              className="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-blue"
-            >
-              <option>All Courses</option>
-              <option>Computer Science</option>
-              <option>Mechanical Engineering</option>
-              <option>Business Administration</option>
-            </select>
-            <input
-              type="date"
-              value={selectedDate}
-              onChange={(e) => setSelectedDate(e.target.value)}
-              className="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-blue"
-            />
-            <select
-              value={selectedStatus}
-              onChange={(e) => setSelectedStatus(e.target.value)}
-              className="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-blue"
-            >
-              <option>All Status</option>
-              <option>Good (Above 80%)</option>
-              <option>Average (60-80%)</option>
-              <option>Poor (Below 60%)</option>
-            </select>
           </div>
-        </div>
 
-        {/* Attendance Table */}
-        <div className="bg-white rounded-lg shadow-md overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead className="bg-background">
-                <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-text-grey uppercase">Roll No</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-text-grey uppercase">Student</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-text-grey uppercase">Course</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-text-grey uppercase">Present Days</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-text-grey uppercase">Total Days</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-text-grey uppercase">Percentage</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-text-grey uppercase">Status</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-text-grey uppercase">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-200">
-                {filteredData.map((record) => (
-                  <tr key={record.id}>
-                    <td className="px-6 py-4 whitespace-nowrap font-medium text-navy">{record.rollNo}</td>
-                    <td className="px-6 py-4 whitespace-nowrap font-medium text-navy">{record.student}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-navy">{record.course}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-navy">{record.present}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-navy">{record.total}</td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="flex items-center">
-                        <div className="w-16 bg-soft-grey rounded-full h-2 mr-2">
-                          <div
-                            className={`h-2 rounded-full ${record.percentage >= 80 ? 'bg-green-500' :
-                              record.percentage >= 60 ? 'bg-yellow-500' : 'bg-red-500'
-                              }`}
-                            style={{ width: `${record.percentage}%` }}
-                          ></div>
-                        </div>
-                        <span className="text-sm font-medium">{record.percentage}%</span>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <span className={`px-2 py-1 text-xs font-semibold rounded-full ${record.percentage >= 80 ? 'bg-green-100 text-green-800' :
-                        record.percentage >= 60 ? 'bg-yellow-100 text-yellow-800' :
-                          'bg-red-100 text-red-800'
-                        }`}>
-                        {record.percentage >= 80 ? 'Good' : record.percentage >= 60 ? 'Average' : 'Poor'}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                      <button
-                        onClick={() => viewDetails(record)}
-                        className="text-sky-blue hover:text-sky-blue/80 mr-3 flex items-center"
-                      >
-                        <FaEye className="mr-1" /> View
-                      </button>
-                      <button
-                        onClick={() => editAttendance(record)}
-                        className="text-green-600 hover:text-green-900 flex items-center"
-                      >
-                        <FaEdit className="mr-1" /> Edit
-                      </button>
-                    </td>
+          {/* Attendance Table */}
+          <div className="bg-white rounded-lg shadow-md overflow-hidden border border-gray-200">
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase">Roll No</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase">Student</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase">Course</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase">Present Days</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase">Total Days</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase">Percentage</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase">Status</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase">Actions</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        {/* Mark Attendance Modal */}
-        {showMarkModal && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white rounded-lg p-6 w-full max-w-4xl max-h-[90vh] overflow-y-auto">
-              <div className="flex justify-between items-center mb-4">
-                <h2 className="text-2xl font-bold text-navy">Mark Attendance - {selectedDate}</h2>
-                <button
-                  onClick={() => setShowMarkModal(false)}
-                  className="text-gray-500 hover:text-gray-700"
-                >
-                  <FaTimes size={24} />
-                </button>
-              </div>
-
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-text-grey mb-2">Select Date</label>
-                <input
-                  type="date"
-                  value={selectedDate}
-                  onChange={(e) => setSelectedDate(e.target.value)}
-                  className="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-blue"
-                />
-              </div>
-
-              <div className="overflow-x-auto">
-                <table className="w-full">
-                  <thead className="bg-background">
-                    <tr>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-text-grey uppercase">Roll No</th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-text-grey uppercase">Student Name</th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-text-grey uppercase">Course</th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-text-grey uppercase">Status</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-gray-200">
-                    {markAttendanceData.map((student) => (
-                      <tr key={student.id}>
-                        <td className="px-4 py-4 whitespace-nowrap font-medium text-navy">{student.rollNo}</td>
-                        <td className="px-4 py-4 whitespace-nowrap text-navy">{student.student}</td>
-                        <td className="px-4 py-4 whitespace-nowrap text-navy">{student.course}</td>
-                        <td className="px-4 py-4 whitespace-nowrap">
-                          <div className="flex space-x-2">
-                            <button
-                              onClick={() => updateAttendanceStatus(student.id, 'Present')}
-                              className={`px-3 py-1 rounded-full text-sm font-medium ${student.status === 'Present'
-                                ? 'bg-green-500 text-white'
-                                : 'bg-soft-grey text-navy hover:bg-green-100'
+                </thead>
+                <tbody className="divide-y divide-gray-200">
+                  {filteredData.map((record) => (
+                    <tr key={record.id} className="hover:bg-gray-50 transition-colors">
+                      <td className="px-6 py-4 whitespace-nowrap font-medium text-secondary">{record.rollNo}</td>
+                      <td className="px-6 py-4 whitespace-nowrap font-medium text-secondary">{record.student}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-secondary">{record.course}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-secondary">{record.present}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-secondary">{record.total}</td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="flex items-center">
+                          <div className="w-16 bg-gray-200 rounded-full h-2 mr-2">
+                            <div
+                              className={`h-2 rounded-full ${record.percentage >= 80 ? 'bg-success' :
+                                record.percentage >= 60 ? 'bg-warning' : 'bg-danger'
                                 }`}
-                            >
-                              <FaCheck className="inline mr-1" /> Present
-                            </button>
-                            <button
-                              onClick={() => updateAttendanceStatus(student.id, 'Absent')}
-                              className={`px-3 py-1 rounded-full text-sm font-medium ${student.status === 'Absent'
-                                ? 'bg-red-500 text-white'
-                                : 'bg-soft-grey text-navy hover:bg-red-100'
-                                }`}
-                            >
-                              <FaTimes className="inline mr-1" /> Absent
-                            </button>
+                              style={{ width: `${record.percentage}%` }}
+                            ></div>
                           </div>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-
-              <div className="flex justify-end space-x-3 mt-6">
-                <button
-                  onClick={() => setShowMarkModal(false)}
-                  className="px-4 py-2 bg-soft-grey text-navy rounded-lg hover:bg-soft-grey/80"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={saveAttendance}
-                  className="px-4 py-2 bg-sky-blue text-white rounded-lg hover:bg-sky-blue/80"
-                >
-                  Save Attendance
-                </button>
-              </div>
+                          <span className="text-sm font-medium text-text-secondary">{record.percentage}%</span>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <span className={`px-2 py-1 text-xs font-semibold rounded-full ${record.percentage >= 80 ? 'bg-success/10 text-success' :
+                          record.percentage >= 60 ? 'bg-warning/10 text-warning' :
+                            'bg-danger/10 text-danger'
+                          }`}>
+                          {record.percentage >= 80 ? 'Good' : record.percentage >= 60 ? 'Average' : 'Poor'}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                        <button
+                          onClick={() => viewDetails(record)}
+                          className="text-primary hover:text-primary/80 mr-3 flex items-center"
+                        >
+                          <FaEye className="mr-1" /> View
+                        </button>
+                        <button
+                          onClick={() => editAttendance(record)}
+                          className="text-success hover:text-success/80 flex items-center"
+                        >
+                          <FaEdit className="mr-1" /> Edit
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           </div>
-        )}
 
-        {/* Edit Attendance Modal */}
-        {showEditModal && selectedStudent && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white rounded-lg p-6 w-full max-w-2xl">
-              <div className="flex justify-between items-center mb-4">
-                <h2 className="text-2xl font-bold text-navy">Edit Attendance - {selectedStudent.student}</h2>
-                <button
-                  onClick={() => setShowEditModal(false)}
-                  className="text-gray-500 hover:text-gray-700"
-                >
-                  <FaTimes size={24} />
-                </button>
+          {/* Mark Attendance Modal */}
+          {showMarkModal && (
+            <div className="fixed inset-0 bg-secondary/50 flex items-center justify-center z-50 backdrop-blur-sm">
+              <div className="bg-white rounded-lg p-6 w-full max-w-4xl max-h-[90vh] overflow-y-auto border border-gray-200 shadow-xl">
+                <div className="flex justify-between items-center mb-4">
+                  <h2 className="text-2xl font-bold text-secondary font-heading">Mark Attendance - {selectedDate}</h2>
+                  <button
+                    onClick={() => setShowMarkModal(false)}
+                    className="text-text-secondary hover:text-secondary"
+                  >
+                    <FaTimes size={24} />
+                  </button>
+                </div>
+
+                <div className="mb-4">
+                  <Input
+                    label="Select Date"
+                    type="date"
+                    value={selectedDate}
+                    onChange={(e) => setSelectedDate(e.target.value)}
+                  />
+                </div>
+
+                <div className="overflow-x-auto border border-gray-200 rounded-lg">
+                  <table className="w-full">
+                    <thead className="bg-gray-50">
+                      <tr>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-text-secondary uppercase">Roll No</th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-text-secondary uppercase">Student Name</th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-text-secondary uppercase">Course</th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-text-secondary uppercase">Status</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-200">
+                      {markAttendanceData.map((student) => (
+                        <tr key={student.id} className="hover:bg-gray-50 transition-colors">
+                          <td className="px-4 py-4 whitespace-nowrap font-medium text-secondary">{student.rollNo}</td>
+                          <td className="px-4 py-4 whitespace-nowrap text-secondary">{student.student}</td>
+                          <td className="px-4 py-4 whitespace-nowrap text-secondary">{student.course}</td>
+                          <td className="px-4 py-4 whitespace-nowrap">
+                            <div className="flex space-x-2">
+                              <button
+                                onClick={() => updateAttendanceStatus(student.id, 'Present')}
+                                className={`px-3 py-1 rounded-full text-sm font-medium transition-colors ${student.status === 'Present'
+                                  ? 'bg-success text-white'
+                                  : 'bg-gray-100 text-secondary hover:bg-success/20'
+                                  }`}
+                              >
+                                <FaCheck className="inline mr-1" /> Present
+                              </button>
+                              <button
+                                onClick={() => updateAttendanceStatus(student.id, 'Absent')}
+                                className={`px-3 py-1 rounded-full text-sm font-medium transition-colors ${student.status === 'Absent'
+                                  ? 'bg-danger text-white'
+                                  : 'bg-gray-100 text-secondary hover:bg-danger/20'
+                                  }`}
+                              >
+                                <FaTimes className="inline mr-1" /> Absent
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+
+                <div className="flex justify-end space-x-3 mt-6">
+                  <Button
+                    variant="ghost"
+                    onClick={() => setShowMarkModal(false)}
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    onClick={saveAttendance}
+                  >
+                    Save Attendance
+                  </Button>
+                </div>
               </div>
+            </div>
+          )}
 
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-text-grey mb-2">Student Name</label>
-                  <input
+          {/* Edit Attendance Modal */}
+          {showEditModal && selectedStudent && (
+            <div className="fixed inset-0 bg-secondary/50 flex items-center justify-center z-50 backdrop-blur-sm">
+              <div className="bg-white rounded-lg p-6 w-full max-w-2xl border border-gray-200 shadow-xl">
+                <div className="flex justify-between items-center mb-4">
+                  <h2 className="text-2xl font-bold text-secondary font-heading">Edit Attendance - {selectedStudent.student}</h2>
+                  <button
+                    onClick={() => setShowEditModal(false)}
+                    className="text-text-secondary hover:text-secondary"
+                  >
+                    <FaTimes size={24} />
+                  </button>
+                </div>
+
+                <div className="space-y-4">
+                  <Input
+                    label="Student Name"
                     type="text"
                     value={selectedStudent.student}
                     disabled
-                    className="w-full px-4 py-2 border rounded-lg bg-background"
+                    className="bg-gray-50"
                   />
-                </div>
 
-                <div>
-                  <label className="block text-sm font-medium text-text-grey mb-2">Present Days</label>
-                  <input
+                  <Input
+                    label="Present Days"
                     type="number"
                     value={selectedStudent.present}
                     onChange={(e) => setSelectedStudent({ ...selectedStudent, present: parseInt(e.target.value) })}
-                    className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-blue"
                   />
-                </div>
 
-                <div>
-                  <label className="block text-sm font-medium text-text-grey mb-2">Total Days</label>
-                  <input
+                  <Input
+                    label="Total Days"
                     type="number"
                     value={selectedStudent.total}
                     onChange={(e) => setSelectedStudent({ ...selectedStudent, total: parseInt(e.target.value) })}
-                    className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-blue"
                   />
-                </div>
 
-                <div>
-                  <label className="block text-sm font-medium text-text-grey mb-2">Attendance Percentage</label>
-                  <input
+                  <Input
+                    label="Attendance Percentage"
                     type="text"
                     value={`${Math.round((selectedStudent.present / selectedStudent.total) * 100)}%`}
                     disabled
-                    className="w-full px-4 py-2 border rounded-lg bg-background"
+                    className="bg-gray-50"
                   />
                 </div>
-              </div>
 
-              <div className="flex justify-end space-x-3 mt-6">
-                <button
-                  onClick={() => setShowEditModal(false)}
-                  className="px-4 py-2 bg-soft-grey text-navy rounded-lg hover:bg-soft-grey/80"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={saveEditedAttendance}
-                  className="px-4 py-2 bg-sky-blue text-white rounded-lg hover:bg-sky-blue/80"
-                >
-                  Save Changes
-                </button>
+                <div className="flex justify-end space-x-3 mt-6">
+                  <Button
+                    variant="ghost"
+                    onClick={() => setShowEditModal(false)}
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    onClick={saveEditedAttendance}
+                  >
+                    Save Changes
+                  </Button>
+                </div>
               </div>
             </div>
-          </div>
-        )}
+          )}
 
-        {/* View Details Modal */}
-        {showDetailsModal && selectedStudent && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white rounded-lg p-6 w-full max-w-3xl">
-              <div className="flex justify-between items-center mb-4">
-                <h2 className="text-2xl font-bold text-navy">Attendance Details - {selectedStudent.student}</h2>
-                <button
-                  onClick={() => setShowDetailsModal(false)}
-                  className="text-gray-500 hover:text-gray-700"
-                >
-                  <FaTimes size={24} />
-                </button>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                <div className="bg-background p-4 rounded-lg">
-                  <h3 className="font-semibold text-navy mb-2">Student Information</h3>
-                  <p><strong>Name:</strong> {selectedStudent.student}</p>
-                  <p><strong>Roll No:</strong> {selectedStudent.rollNo}</p>
-                  <p><strong>Course:</strong> {selectedStudent.course}</p>
+          {/* View Details Modal */}
+          {showDetailsModal && selectedStudent && (
+            <div className="fixed inset-0 bg-secondary/50 flex items-center justify-center z-50 backdrop-blur-sm">
+              <div className="bg-white rounded-lg p-6 w-full max-w-3xl border border-gray-200 shadow-xl">
+                <div className="flex justify-between items-center mb-4">
+                  <h2 className="text-2xl font-bold text-secondary font-heading">Attendance Details - {selectedStudent.student}</h2>
+                  <button
+                    onClick={() => setShowDetailsModal(false)}
+                    className="text-text-secondary hover:text-secondary"
+                  >
+                    <FaTimes size={24} />
+                  </button>
                 </div>
 
-                <div className="bg-background p-4 rounded-lg">
-                  <h3 className="font-semibold text-navy mb-2">Attendance Summary</h3>
-                  <p><strong>Present Days:</strong> {selectedStudent.present}</p>
-                  <p><strong>Total Days:</strong> {selectedStudent.total}</p>
-                  <p><strong>Percentage:</strong> {selectedStudent.percentage}%</p>
-                  <p><strong>Status:</strong>
-                    <span className={`ml-2 px-2 py-1 text-xs font-semibold rounded-full ${selectedStudent.percentage >= 80 ? 'bg-green-100 text-green-800' :
-                      selectedStudent.percentage >= 60 ? 'bg-yellow-100 text-yellow-800' :
-                        'bg-red-100 text-red-800'
-                      }`}>
-                      {selectedStudent.percentage >= 80 ? 'Good' : selectedStudent.percentage >= 60 ? 'Average' : 'Poor'}
-                    </span>
-                  </p>
-                </div>
-              </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                  <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                    <h3 className="font-semibold text-secondary mb-2">Student Information</h3>
+                    <p className="text-text-secondary"><strong>Name:</strong> {selectedStudent.student}</p>
+                    <p className="text-text-secondary"><strong>Roll No:</strong> {selectedStudent.rollNo}</p>
+                    <p className="text-text-secondary"><strong>Course:</strong> {selectedStudent.course}</p>
+                  </div>
 
-              <div className="bg-background p-4 rounded-lg mb-6">
-                <h3 className="font-semibold text-navy mb-3">Recent Attendance (Last 10 Days)</h3>
-                <div className="grid grid-cols-10 gap-2">
-                  {[...Array(10)].map((_, index) => (
-                    <div key={index} className="text-center">
-                      <div className={`w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold ${Math.random() > 0.2 ? 'bg-green-500' : 'bg-red-500'
+                  <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                    <h3 className="font-semibold text-secondary mb-2">Attendance Summary</h3>
+                    <p className="text-text-secondary"><strong>Present Days:</strong> {selectedStudent.present}</p>
+                    <p className="text-text-secondary"><strong>Total Days:</strong> {selectedStudent.total}</p>
+                    <p className="text-text-secondary"><strong>Percentage:</strong> {selectedStudent.percentage}%</p>
+                    <p className="text-text-secondary"><strong>Status:</strong>
+                      <span className={`ml-2 px-2 py-1 text-xs font-semibold rounded-full ${selectedStudent.percentage >= 80 ? 'bg-success/10 text-success' :
+                        selectedStudent.percentage >= 60 ? 'bg-warning/10 text-warning' :
+                          'bg-danger/10 text-danger'
                         }`}>
-                        {Math.random() > 0.2 ? 'P' : 'A'}
+                        {selectedStudent.percentage >= 80 ? 'Good' : selectedStudent.percentage >= 60 ? 'Average' : 'Poor'}
+                      </span>
+                    </p>
+                  </div>
+                </div>
+
+                <div className="bg-gray-50 p-4 rounded-lg mb-6 border border-gray-200">
+                  <h3 className="font-semibold text-secondary mb-3">Recent Attendance (Last 10 Days)</h3>
+                  <div className="grid grid-cols-10 gap-2">
+                    {[...Array(10)].map((_, index) => (
+                      <div key={index} className="text-center">
+                        <div className={`w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold ${Math.random() > 0.2 ? 'bg-success' : 'bg-danger'
+                          }`}>
+                          {Math.random() > 0.2 ? 'P' : 'A'}
+                        </div>
+                        <div className="text-xs text-text-muted mt-1">
+                          {new Date(Date.now() - (9 - index) * 24 * 60 * 60 * 1000).getDate()}
+                        </div>
                       </div>
-                      <div className="text-xs text-text-grey mt-1">
-                        {new Date(Date.now() - (9 - index) * 24 * 60 * 60 * 1000).getDate()}
-                      </div>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
+                </div>
+
+                <div className="flex justify-end">
+                  <Button
+                    onClick={() => setShowDetailsModal(false)}
+                  >
+                    Close
+                  </Button>
                 </div>
               </div>
-
-              <div className="flex justify-end">
-                <button
-                  onClick={() => setShowDetailsModal(false)}
-                  className="px-4 py-2 bg-sky-blue text-white rounded-lg hover:bg-sky-blue/80"
-                >
-                  Close
-                </button>
-              </div>
             </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </div>
   );

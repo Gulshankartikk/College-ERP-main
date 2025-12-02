@@ -129,11 +129,11 @@ const Login = () => {
       <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4 animate-fade-in">
         <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
           <div className="text-center mb-8">
-            <div className="bg-blue-100 p-3 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
-              <Lock className="text-blue-600 w-8 h-8" />
+            <div className="bg-primary/10 p-3 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+              <Lock className="text-primary w-8 h-8" />
             </div>
-            <h2 className="text-2xl font-bold text-navy">Change Password</h2>
-            <p className="text-text-grey mt-2">For security, please update your default password.</p>
+            <h2 className="text-2xl font-bold text-secondary">Change Password</h2>
+            <p className="text-text-secondary mt-2">For security, please update your default password.</p>
           </div>
 
           <form onSubmit={handleChangePassword} className="space-y-6">
@@ -144,7 +144,6 @@ const Login = () => {
               onChange={(e) => setNewPassword(e.target.value)}
               required
               placeholder="Enter new password"
-              className="input-field"
             />
             <Input
               label="Confirm Password"
@@ -153,9 +152,8 @@ const Login = () => {
               onChange={(e) => setConfirmPassword(e.target.value)}
               required
               placeholder="Confirm new password"
-              className="input-field"
             />
-            <Button type="submit" className="w-full py-3 btn-primary" isLoading={isLoading}>
+            <Button type="submit" className="w-full py-3" isLoading={isLoading}>
               Update Password & Login
             </Button>
           </form>
@@ -169,7 +167,7 @@ const Login = () => {
       {/* Left Side - Form */}
       <div className="w-full lg:w-1/2 flex flex-col justify-center px-8 sm:px-12 lg:px-24 xl:px-32 relative bg-white shadow-2xl z-10 animate-fade-in">
         <div className="absolute top-8 left-8">
-          <Link to="/" className="flex items-center text-text-grey hover:text-sky-blue transition-colors font-medium group">
+          <Link to="/" className="flex items-center text-text-secondary hover:text-primary transition-colors font-medium group">
             <ArrowLeft size={20} className="mr-2 group-hover:-translate-x-1 transition-transform" />
             Back to Home
           </Link>
@@ -177,16 +175,16 @@ const Login = () => {
 
         <div className="mb-8 mt-16 lg:mt-0">
           <div className="flex items-center space-x-3 mb-6">
-            <div className="bg-gradient-to-tr from-sky-blue to-blue-600 p-3 rounded-xl shadow-lg shadow-sky-blue/20">
+            <div className="bg-gradient-to-tr from-primary to-blue-600 p-3 rounded-xl shadow-lg shadow-primary/20">
               <GraduationCap className="h-8 w-8 text-white" />
             </div>
             <div>
-              <span className="text-2xl font-extrabold text-navy tracking-tight">College ERP</span>
-              <p className="text-xs text-text-grey font-medium uppercase tracking-wider">Management System</p>
+              <span className="text-2xl font-extrabold text-secondary tracking-tight font-heading">College ERP</span>
+              <p className="text-xs text-text-secondary font-medium uppercase tracking-wider">Management System</p>
             </div>
           </div>
-          <h1 className="text-4xl font-bold text-navy mb-3 tracking-tight">Welcome Back</h1>
-          <p className="text-text-grey text-lg">Please sign in to continue to your dashboard.</p>
+          <h1 className="text-4xl font-bold text-secondary mb-3 tracking-tight font-heading">Welcome Back</h1>
+          <p className="text-text-secondary text-lg">Please sign in to continue to your dashboard.</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -199,8 +197,8 @@ const Login = () => {
                   type="button"
                   onClick={() => setRole(r)}
                   className={`flex items-center justify-center py-2.5 px-4 rounded-xl text-sm font-semibold capitalize transition-all duration-300 ${role === r
-                    ? 'bg-white text-sky-blue shadow-md transform scale-[1.02] ring-1 ring-gray-100'
-                    : 'text-text-grey hover:text-navy hover:bg-gray-100'
+                    ? 'bg-white text-primary shadow-md transform scale-[1.02] ring-1 ring-gray-100'
+                    : 'text-text-secondary hover:text-secondary hover:bg-gray-100'
                     }`}
                 >
                   <span className="mr-2">{getRoleIcon(r)}</span>
@@ -218,7 +216,6 @@ const Login = () => {
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               required
-              className="input-field"
             />
 
             <div className="relative">
@@ -229,12 +226,11 @@ const Login = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                className="input-field"
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-[38px] text-gray-400 hover:text-sky-blue transition-colors"
+                className="absolute right-3 top-[38px] text-gray-400 hover:text-primary transition-colors focus:outline-none"
               >
                 {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
               </button>
@@ -243,12 +239,12 @@ const Login = () => {
 
           <div className="flex justify-between items-center pt-2">
             <div className="flex items-center">
-              <input id="remember-me" name="remember-me" type="checkbox" className="h-4 w-4 text-sky-blue focus:ring-sky-blue border-gray-300 rounded" />
-              <label htmlFor="remember-me" className="ml-2 block text-sm text-text-grey">Remember me</label>
+              <input id="remember-me" name="remember-me" type="checkbox" className="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded" />
+              <label htmlFor="remember-me" className="ml-2 block text-sm text-text-secondary">Remember me</label>
             </div>
             <Link
               to="/forgetPassword"
-              className="text-sm font-semibold text-sky-blue hover:text-blue-700 hover:underline"
+              className="text-sm font-semibold text-primary hover:text-primary-hover hover:underline"
             >
               Forgot password?
             </Link>
@@ -256,16 +252,16 @@ const Login = () => {
 
           <Button
             type="submit"
-            className="w-full py-3.5 text-lg font-bold btn-primary"
+            className="w-full py-3.5 text-lg font-bold"
             isLoading={isLoading}
           >
             Sign in to Dashboard
           </Button>
 
           {role === 'student' && (
-            <p className="text-center text-sm text-text-grey mt-6">
+            <p className="text-center text-sm text-text-secondary mt-6">
               Don't have an account?{' '}
-              <Link to="/register" className="font-bold text-sky-blue hover:text-blue-700 hover:underline">
+              <Link to="/register" className="font-bold text-primary hover:text-primary-hover hover:underline">
                 Create an account
               </Link>
             </p>
@@ -275,24 +271,14 @@ const Login = () => {
 
 
         <div className="mt-6 text-center">
-          <p className="text-xs text-gray-400">© 2024 College ERP System. All rights reserved.</p>
+          <p className="text-xs text-text-muted">© 2024 College ERP System. All rights reserved.</p>
         </div>
       </div>
 
       {/* Right Side - Image/Decoration */}
       <div className="hidden lg:block w-1/2 relative overflow-hidden">
-        {/* Top Right Button */}
-        {/* Top Right Button - Removed as per request */}
-        {/* <div className="absolute top-8 right-8 z-30">
-          <Link to="/achievers">
-            <button className="bg-white/20 hover:bg-white/30 backdrop-blur-md border border-white/30 text-white px-6 py-2.5 rounded-full font-semibold transition-all flex items-center gap-2 group shadow-lg">
-              <span className="group-hover:scale-110 transition-transform">🏆</span>
-              Student Achievers
-            </button>
-          </Link>
-        </div> */}
-        <div className="absolute inset-0 bg-gradient-to-br from-navy/90 to-black/80 z-10 mix-blend-multiply"></div>
-        <div className="absolute inset-0 bg-sky-blue/20 z-10"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-secondary/90 to-black/80 z-10 mix-blend-multiply"></div>
+        <div className="absolute inset-0 bg-primary/20 z-10"></div>
         <img
           src={collegeImg}
           alt="College Campus"
@@ -300,7 +286,7 @@ const Login = () => {
         />
         <div className="absolute bottom-0 left-0 right-0 p-16 z-20 text-white">
           <div className="bg-white/10 backdrop-blur-md p-8 rounded-2xl border border-white/10 shadow-2xl">
-            <h2 className="text-4xl font-bold mb-4 leading-tight">Empowering Education Through Technology</h2>
+            <h2 className="text-4xl font-bold mb-4 leading-tight font-heading">Empowering Education Through Technology</h2>
             <p className="text-lg text-blue-50 leading-relaxed max-w-lg">
               Streamline your academic journey with our comprehensive management system. Access resources, track progress, and stay connected.
             </p>

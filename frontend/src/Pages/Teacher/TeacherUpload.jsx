@@ -4,6 +4,10 @@ import { BASE_URL } from "../../constants/api";
 import Cookies from "js-cookie";
 import { toast } from "react-toastify";
 import { FaUpload, FaFileAlt } from "react-icons/fa";
+import Card, { CardContent } from "../../components/ui/Card";
+import Button from "../../components/ui/Button";
+import Input from "../../components/ui/Input";
+import Select from "../../components/ui/Select";
 
 const TeacherUpload = ({ teacherId }) => {
   const [activeTab, setActiveTab] = useState("assignment");
@@ -135,23 +139,21 @@ const TeacherUpload = ({ teacherId }) => {
 
   // ============================= UI =============================
   const TabButton = ({ id, label }) => (
-    <button
+    <Button
+      variant={activeTab === id ? "primary" : "outline"}
       onClick={() => setActiveTab(id)}
-      className={`px-4 py-2 rounded-lg font-medium transition-colors ${activeTab === id
-        ? "bg-sky-blue text-white"
-        : "bg-background text-text-grey hover:bg-soft-grey/20"
-        }`}
+      className="flex-1 md:flex-none"
     >
       {label}
-    </button>
+    </Button>
   );
 
   return (
-    <div className="p-6">
-      <h1 className="text-3xl font-bold mb-6">Upload Content</h1>
+    <div className="p-6 max-w-4xl mx-auto">
+      <h1 className="text-3xl font-bold mb-6 text-secondary font-heading">Upload Content</h1>
 
       {/* TABS */}
-      <div className="flex gap-4 mb-6">
+      <div className="flex flex-wrap gap-4 mb-6">
         <TabButton id="assignment" label="Assignment" />
         <TabButton id="note" label="Notes" />
         <TabButton id="material" label="Study Material" />
@@ -159,152 +161,118 @@ const TeacherUpload = ({ teacherId }) => {
       </div>
 
       {/* FORM */}
-      <div className="bg-white rounded-lg shadow-md p-6">
-        <form onSubmit={handleSubmit} className="space-y-6">
+      <Card className="border border-gray-200">
+        <CardContent className="p-6">
+          <form onSubmit={handleSubmit} className="space-y-6">
 
-          {/* TITLE */}
-          <Input label="Title *" name="title" value={formData.title} onChange={handleInputChange} />
+            {/* TITLE */}
+            <Input label="Title *" name="title" value={formData.title} onChange={handleInputChange} />
 
-          {/* DESCRIPTION */}
-          <TextArea
-            label="Description"
-            name="description"
-            value={formData.description}
-            onChange={handleInputChange}
-          />
-
-          {/* SUBJECT SELECT (not for notice) */}
-          {activeTab !== "notice" && (
-            <Select
-              label="Subject *"
-              name="subjectId"
-              value={formData.subjectId}
-              options={subjects}
-              onChange={handleInputChange}
-              display={(s) => `${s.subjectName} (${s.subjectCode})`}
-            />
-          )}
-
-          {/* COURSE SELECT (for notice only) */}
-          {activeTab === "notice" && (
-            <Select
-              label="Course *"
-              name="courseId"
-              value={formData.courseId}
-              options={courses}
-              onChange={handleInputChange}
-              display={(c) => `${c.courseName} (${c.courseCode})`}
-            />
-          )}
-
-          {/* DEADLINE (assignment only) */}
-          {activeTab === "assignment" && (
-            <Input
-              type="datetime-local"
-              label="Deadline *"
-              name="deadline"
-              value={formData.deadline}
-              onChange={handleInputChange}
-            />
-          )}
-
-          {/* FILE UPLOAD */}
-          <div>
-            <label className="block text-sm font-medium mb-2">
-              Upload File {activeTab !== "notice" && "*"}
-            </label>
-
-            <div className="border-2 border-dashed border-soft-grey rounded-lg p-6 text-center">
-              <FaFileAlt className="mx-auto text-text-grey/50 text-3xl mb-2" />
-
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept=".pdf,.doc,.docx,.ppt,.pptx"
-                onChange={handleFileChange}
-                className="hidden"
-                id="file-upload"
-                required={activeTab !== "notice"}
+            {/* DESCRIPTION */}
+            <div>
+              <label className="block text-sm font-medium text-text-secondary mb-1">Description</label>
+              <textarea
+                name="description"
+                rows="3"
+                value={formData.description}
+                onChange={handleInputChange}
+                className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all"
               />
+            </div>
 
-              <label htmlFor="file-upload" className="cursor-pointer text-sky-blue hover:text-sky-blue/80">
-                Click to upload a file
+            {/* SUBJECT SELECT (not for notice) */}
+            {activeTab !== "notice" && (
+              <Select
+                label="Subject *"
+                name="subjectId"
+                value={formData.subjectId}
+                onChange={handleInputChange}
+              >
+                <option value="">Select Subject</option>
+                {subjects.map((s) => (
+                  <option key={s._id} value={s._id}>
+                    {s.subjectName} ({s.subjectCode})
+                  </option>
+                ))}
+              </Select>
+            )}
+
+            {/* COURSE SELECT (for notice only) */}
+            {activeTab === "notice" && (
+              <Select
+                label="Course *"
+                name="courseId"
+                value={formData.courseId}
+                onChange={handleInputChange}
+              >
+                <option value="">Select Course</option>
+                {courses.map((c) => (
+                  <option key={c._id} value={c._id}>
+                    {c.courseName} ({c.courseCode})
+                  </option>
+                ))}
+              </Select>
+            )}
+
+            {/* DEADLINE (assignment only) */}
+            {activeTab === "assignment" && (
+              <Input
+                type="datetime-local"
+                label="Deadline *"
+                name="deadline"
+                value={formData.deadline}
+                onChange={handleInputChange}
+              />
+            )}
+
+            {/* FILE UPLOAD */}
+            <div>
+              <label className="block text-sm font-medium text-text-secondary mb-2">
+                Upload File {activeTab !== "notice" && "*"}
               </label>
 
-              <p className="text-sm text-text-grey mt-1">
-                PDF, DOC, DOCX, PPT, PPTX (Max 10MB)
-              </p>
+              <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-primary transition-colors bg-gray-50">
+                <FaFileAlt className="mx-auto text-text-muted text-3xl mb-2" />
 
-              {formData.file && (
-                <p className="text-sm text-sky-blue mt-2">Selected: {formData.file.name}</p>
-              )}
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept=".pdf,.doc,.docx,.ppt,.pptx"
+                  onChange={handleFileChange}
+                  className="hidden"
+                  id="file-upload"
+                  required={activeTab !== "notice"}
+                />
+
+                <label htmlFor="file-upload" className="cursor-pointer text-primary hover:text-primary/80 font-medium">
+                  Click to upload a file
+                </label>
+
+                <p className="text-sm text-text-secondary mt-1">
+                  PDF, DOC, DOCX, PPT, PPTX (Max 10MB)
+                </p>
+
+                {formData.file && (
+                  <p className="text-sm text-primary mt-2 font-medium">Selected: {formData.file.name}</p>
+                )}
+              </div>
             </div>
-          </div>
 
-          {/* SUBMIT BTN */}
-          <button
-            type="submit"
-            disabled={uploading}
-            className="w-full bg-sky-blue text-white py-3 px-6 rounded-lg hover:bg-sky-blue/80 disabled:opacity-50 flex items-center justify-center"
-          >
-            {uploading ? (
-              <>
-                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
-                Uploading...
-              </>
-            ) : (
-              <>
-                <FaUpload className="mr-2" />
-                Upload {activeTab}
-              </>
-            )}
-          </button>
-        </form>
-      </div>
+            {/* SUBMIT BTN */}
+            <Button
+              type="submit"
+              disabled={uploading}
+              className="w-full flex items-center justify-center"
+              isLoading={uploading}
+            >
+              {!uploading && <FaUpload className="mr-2" />}
+              {uploading ? "Uploading..." : `Upload ${activeTab}`}
+            </Button>
+          </form>
+        </CardContent>
+      </Card>
     </div>
   );
 };
 
 export default TeacherUpload;
-
-/* ============================= REUSABLE COMPONENTS ============================= */
-
-const Input = ({ label, ...props }) => (
-  <div>
-    <label className="block text-sm font-medium mb-2">{label}</label>
-    <input
-      {...props}
-      className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-blue"
-    />
-  </div>
-);
-
-const TextArea = ({ label, ...props }) => (
-  <div>
-    <label className="block text-sm font-medium mb-2">{label}</label>
-    <textarea
-      rows="3"
-      {...props}
-      className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-blue"
-    />
-  </div>
-);
-
-const Select = ({ label, name, value, options, onChange, display }) => (
-  <div>
-    <label className="block text-sm font-medium mb-2">{label}</label>
-    <select
-      name={name}
-      value={value}
-      onChange={onChange}
-      className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-blue"
-    >
-      <option value="">Select</option>
-      {options.map((opt) => (
-        <option key={opt._id} value={opt._id}>
-          {display(opt)}
-        </option>
-      ))}
-    </select>
-  </div>
-);

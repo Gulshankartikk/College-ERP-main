@@ -4,21 +4,39 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        openSans: ["Open Sans", "sans-serif"],
-        oswald: ["Oswald", "sans-serif"],
+        sans: ["Inter", "sans-serif"],
+        heading: ["Poppins", "sans-serif"],
       },
       colors: {
-        'night-blue': '#2d545e',
-        'night-blue-shadow': '#12343b',
-        'sand-tan': '#e1b382',
-        'sand-tan-shadow': '#c89666',
-        // New Palette
-        'navy': '#1E293B',
+        primary: {
+          DEFAULT: '#0EA5E9', // sky-blue
+          hover: '#0284C7',
+          active: '#0369A1',
+        },
+        secondary: {
+          DEFAULT: '#1E293B', // navy
+          hover: '#0F172A',
+        },
+        success: '#10B981',
+        warning: '#F59E0B',
+        danger: '#EF4444',
+        background: '#F8FAFC',
+        surface: '#FFFFFF',
+        text: {
+          primary: '#1E293B',
+          secondary: '#64748B',
+          muted: '#94A3B8',
+        },
+        // Keep existing for backward compatibility if needed, but prefer above
+        navy: '#1E293B',
         'sky-blue': '#0EA5E9',
         'soft-grey': '#CBD5E1',
-        'background': '#F1F5F9',
         'text-grey': '#475569',
       },
+      boxShadow: {
+        'soft': '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+        'glow': '0 0 15px rgba(14, 165, 233, 0.3)',
+      }
     },
   },
   plugins: [],

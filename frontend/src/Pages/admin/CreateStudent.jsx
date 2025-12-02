@@ -5,6 +5,9 @@ import { BASE_URL } from '../../constants/api';
 import { toast } from 'react-toastify';
 import Cookies from 'js-cookie';
 import BackButton from '../../components/BackButton';
+import Button from '../../components/ui/Button';
+import Input from '../../components/ui/Input';
+import Select from '../../components/ui/Select';
 
 const CreateStudent = () => {
   const navigate = useNavigate();
@@ -66,99 +69,69 @@ const CreateStudent = () => {
   };
 
   return (
-    <div className="min-h-screen py-8 bg-background">
-      <BackButton />
-      <div className="max-w-4xl mx-auto px-4">
-        <div className="bg-white rounded-lg shadow-xl p-8 border-t-4 border-sky-blue">
-          <h1 className="text-3xl font-bold mb-8 text-navy">Create Student Profile</h1>
+    <div className="min-h-screen bg-background">
+      <div className="py-8">
+        <div className="max-w-4xl mx-auto px-4">
+          <BackButton className="mb-4" />
+          <div className="bg-white rounded-lg shadow-xl p-8 border border-gray-200">
+            <h1 className="text-3xl font-bold mb-8 text-secondary font-heading">Create Student Profile</h1>
 
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <label className="block text-sm font-medium mb-2 text-navy">
-                  Full Name *
-                </label>
-                <input
-                  type="text"
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <Input
+                  label="Full Name *"
                   name="name"
                   value={formData.name}
                   onChange={handleInputChange}
                   required
-                  className="w-full p-3 border border-soft-grey rounded-lg focus:ring-2 focus:ring-sky-blue focus:border-sky-blue outline-none transition-colors"
                   placeholder="Gulshan Kartik"
                 />
-              </div>
 
-              <div>
-                <label className="block text-sm font-medium mb-2 text-navy">
-                  Email Address *
-                </label>
-                <input
+                <Input
+                  label="Email Address *"
                   type="email"
                   name="email"
                   value={formData.email}
                   onChange={handleInputChange}
                   required
-                  className="w-full p-3 border border-soft-grey rounded-lg focus:ring-2 focus:ring-sky-blue focus:border-sky-blue outline-none transition-colors"
                   placeholder="kartik@student.edu"
                 />
-              </div>
 
-              <div>
-                <label className="block text-sm font-medium mb-2 text-navy">
-                  Phone Number *
-                </label>
-                <input
+                <Input
+                  label="Phone Number *"
                   type="tel"
                   name="phone"
                   value={formData.phone}
                   onChange={handleInputChange}
                   required
-                  className="w-full p-3 border border-soft-grey rounded-lg focus:ring-2 focus:ring-sky-blue focus:border-sky-blue outline-none transition-colors"
                   placeholder="+91-9876543220"
                 />
-              </div>
 
-              <div>
-                <label className="block text-sm font-medium mb-2 text-navy">
-                  Roll Number *
-                </label>
-                <input
-                  type="text"
+                <Input
+                  label="Roll Number *"
                   name="rollNo"
                   value={formData.rollNo}
                   onChange={handleInputChange}
                   required
-                  className="w-full p-3 border border-soft-grey rounded-lg focus:ring-2 focus:ring-sky-blue focus:border-sky-blue outline-none transition-colors"
                   placeholder="CSE2021001"
                 />
-              </div>
 
-              <div>
-                <label className="block text-sm font-medium mb-2 text-navy">
-                  Password *
-                </label>
-                <input
+                <Input
+                  label="Password *"
                   type="password"
                   name="password"
                   value={formData.password}
                   onChange={handleInputChange}
                   required
-                  className="w-full p-3 border border-soft-grey rounded-lg focus:ring-2 focus:ring-sky-blue focus:border-sky-blue outline-none transition-colors"
                   placeholder="Enter password"
                 />
-              </div>
 
-              <div>
-                <label className="block text-sm font-medium mb-2 text-navy">
-                  Course *
-                </label>
-                <select
+                <Select
+                  label="Course *"
                   name="courseId"
                   value={formData.courseId}
                   onChange={handleInputChange}
                   required
-                  className="w-full p-3 border border-soft-grey rounded-lg focus:ring-2 focus:ring-sky-blue focus:border-sky-blue outline-none transition-colors"
                 >
                   <option value="">Select Course</option>
                   {courses.map(course => (
@@ -166,44 +139,38 @@ const CreateStudent = () => {
                       {course.courseName} ({course.courseCode})
                     </option>
                   ))}
-                </select>
-              </div>
+                </Select>
 
-              <div>
-                <label className="block text-sm font-medium mb-2 text-navy">
-                  Semester *
-                </label>
-                <select
+                <Select
+                  label="Semester *"
                   name="semester"
                   value={formData.semester}
                   onChange={handleInputChange}
                   required
-                  className="w-full p-3 border border-soft-grey rounded-lg focus:ring-2 focus:ring-sky-blue focus:border-sky-blue outline-none transition-colors"
                 >
                   {[1, 2, 3, 4, 5, 6, 7, 8].map(sem => (
                     <option key={sem} value={sem}>Semester {sem}</option>
                   ))}
-                </select>
+                </Select>
               </div>
-            </div>
 
-            <div className="flex justify-end gap-4">
-              <button
-                type="button"
-                onClick={() => navigate('/admin/dashboard')}
-                className="px-6 py-3 text-navy bg-soft-grey rounded-lg transition-colors font-semibold hover:bg-soft-grey/80"
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                disabled={loading}
-                className="px-6 py-3 text-white bg-navy rounded-lg transition-colors disabled:opacity-50 font-semibold hover:bg-navy/90"
-              >
-                {loading ? 'Creating...' : 'Create Student'}
-              </button>
-            </div>
-          </form>
+              <div className="flex justify-end gap-4">
+                <Button
+                  type="button"
+                  variant="ghost"
+                  onClick={() => navigate('/admin/dashboard')}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  type="submit"
+                  disabled={loading}
+                >
+                  {loading ? 'Creating...' : 'Create Student'}
+                </Button>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
     </div>

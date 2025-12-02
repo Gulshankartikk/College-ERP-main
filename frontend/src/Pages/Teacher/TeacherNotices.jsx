@@ -91,15 +91,15 @@ const TeacherNotices = () => {
     <div className="space-y-6">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-navy">My Notices</h1>
-          <p className="text-text-grey">Manage and post notices for your classes</p>
+          <h1 className="text-2xl font-bold text-secondary font-heading">My Notices</h1>
+          <p className="text-text-secondary">Manage and post notices for your classes</p>
         </div>
         <Button onClick={() => setShowModal(true)}>
           <FaPlus className="mr-2" /> Create Notice
         </Button>
       </div>
 
-      <Card>
+      <Card className="border border-gray-200">
         <CardContent className="p-6">
           <div className="max-w-md">
             <Select
@@ -120,35 +120,35 @@ const TeacherNotices = () => {
 
       <div className="grid grid-cols-1 gap-4">
         {notices.length > 0 ? notices.map(notice => (
-          <Card key={notice._id} className="hover:shadow-md transition-shadow">
+          <Card key={notice._id} className="hover:shadow-md transition-shadow border border-gray-200">
             <CardContent className="p-6">
               <div className="flex justify-between items-start mb-3">
                 <div>
-                  <h3 className="text-xl font-bold text-navy">{notice.title}</h3>
-                  <p className="text-sm text-sky-blue font-medium">
+                  <h3 className="text-xl font-bold text-secondary font-heading">{notice.title}</h3>
+                  <p className="text-sm text-primary font-medium">
                     Course: {notice.courseId?.courseName || 'All'}
                   </p>
                 </div>
-                <span className="text-sm text-text-grey flex items-center">
+                <span className="text-sm text-text-secondary flex items-center">
                   <FaCalendarAlt className="mr-2" />
                   {new Date(notice.createdAt).toLocaleDateString()}
                 </span>
               </div>
-              <p className="text-text-grey">{notice.description}</p>
+              <p className="text-text-secondary">{notice.description}</p>
             </CardContent>
           </Card>
         )) : (
-          <div className="text-center py-12 bg-background rounded-xl border-2 border-dashed border-soft-grey">
-            <FaBell className="mx-auto h-12 w-12 text-soft-grey mb-4" />
-            <p className="text-text-grey text-lg">No notices found</p>
+          <div className="text-center py-12 bg-gray-50 rounded-xl border-2 border-dashed border-gray-200">
+            <FaBell className="mx-auto h-12 w-12 text-text-muted mb-4" />
+            <p className="text-text-secondary text-lg">No notices found</p>
           </div>
         )}
       </div>
 
       {showModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-xl shadow-xl max-w-md w-full p-6">
-            <h2 className="text-xl font-bold mb-4">Create Notice</h2>
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-xl shadow-2xl max-w-md w-full p-6 border border-gray-200">
+            <h2 className="text-xl font-bold mb-4 font-heading text-secondary">Create Notice</h2>
             <form onSubmit={handleSubmit} className="space-y-4">
               <Select
                 label="Course/Subject"
@@ -172,11 +172,11 @@ const TeacherNotices = () => {
               />
 
               <div>
-                <label className="block text-sm font-medium text-navy mb-1">Description</label>
+                <label className="block text-sm font-medium text-text-secondary mb-1">Description</label>
                 <textarea
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  className="w-full px-3 py-2 border border-soft-grey rounded-lg focus:ring-2 focus:ring-sky-blue focus:border-sky-blue outline-none transition-all"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all"
                   rows="3"
                   required
                 />

@@ -3,8 +3,6 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import { BASE_URL } from '../../constants/api';
-import TeacherHeader from '../../components/TeacherHeader';
-import BackButton from '../../components/BackButton';
 import LoadingSpinner from '../../components/LoadingSpinner';
 import { FaPlus, FaFileAlt, FaVideo, FaBook, FaLink, FaTrash, FaDownload, FaEye } from 'react-icons/fa';
 import Card, { CardContent } from '../../components/ui/Card';
@@ -159,14 +157,12 @@ const TeacherResources = () => {
 
     return (
         <div className="min-h-screen bg-background">
-            <TeacherHeader currentRole="teacher" />
             <div className="p-6 max-w-7xl mx-auto">
-                <BackButton className="mb-6" />
 
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
                     <div>
-                        <h1 className="text-3xl font-bold text-navy">Learning Resources</h1>
-                        <p className="text-text-grey mt-1">Manage notes, videos, syllabus, and more</p>
+                        <h1 className="text-3xl font-bold text-secondary font-heading">Learning Resources</h1>
+                        <p className="text-text-secondary mt-1">Manage notes, videos, syllabus, and more</p>
                     </div>
                     <Button onClick={() => setShowModal(true)} className="flex items-center gap-2">
                         <FaPlus /> Add Resource
@@ -174,7 +170,7 @@ const TeacherResources = () => {
                 </div>
 
                 {/* Filters */}
-                <Card className="mb-8">
+                <Card className="mb-8 border border-gray-200">
                     <CardContent className="p-4 flex flex-col md:flex-row gap-4">
                         <Select
                             label="Filter by Subject"
@@ -202,35 +198,35 @@ const TeacherResources = () => {
                 {/* Resource Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {filteredResources.map(resource => (
-                        <Card key={resource._id} className="hover:shadow-lg transition-shadow">
+                        <Card key={resource._id} className="hover:shadow-lg transition-shadow border border-gray-200">
                             <CardContent className="p-6">
                                 <div className="flex justify-between items-start mb-4">
-                                    <div className={`p-3 rounded-xl ${resource.type === 'video' ? 'bg-navy/10 text-navy' :
-                                        resource.type === 'syllabus' ? 'bg-sky-blue/10 text-sky-blue' :
-                                            'bg-sky-blue/10 text-sky-blue'
+                                    <div className={`p-3 rounded-xl ${resource.type === 'video' ? 'bg-secondary/10 text-secondary' :
+                                        resource.type === 'syllabus' ? 'bg-primary/10 text-primary' :
+                                            'bg-primary/10 text-primary'
                                         }`}>
                                         {getTypeIcon(resource.type)}
                                     </div>
                                     <div className="flex gap-2">
                                         <button
                                             onClick={() => handleDelete(resource._id)}
-                                            className="text-soft-grey hover:text-red-500 transition-colors"
+                                            className="text-text-muted hover:text-danger transition-colors"
                                         >
                                             <FaTrash />
                                         </button>
                                     </div>
                                 </div>
 
-                                <h3 className="text-lg font-bold text-navy mb-2 line-clamp-1">{resource.title}</h3>
-                                <p className="text-sm text-text-grey mb-4 line-clamp-2">{resource.description}</p>
+                                <h3 className="text-lg font-bold text-secondary mb-2 line-clamp-1 font-heading">{resource.title}</h3>
+                                <p className="text-sm text-text-secondary mb-4 line-clamp-2">{resource.description}</p>
 
                                 <div className="flex flex-wrap gap-2 mb-4">
                                     <Badge variant="outline">{resource.subjectId?.subjectName}</Badge>
                                     <Badge variant="secondary">{getTypeLabel(resource.type)}</Badge>
                                 </div>
 
-                                <div className="pt-4 border-t border-soft-grey flex justify-between items-center">
-                                    <span className="text-xs text-text-grey/70">
+                                <div className="pt-4 border-t border-gray-100 flex justify-between items-center">
+                                    <span className="text-xs text-text-muted">
                                         {new Date(resource.createdAt).toLocaleDateString()}
                                     </span>
                                     {resource.files && resource.files.length > 0 && (
@@ -238,7 +234,7 @@ const TeacherResources = () => {
                                             href={resource.files[0].url}
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            className="text-sky-blue hover:text-sky-blue/80 text-sm font-semibold flex items-center gap-1"
+                                            className="text-primary hover:text-primary/80 text-sm font-semibold flex items-center gap-1"
                                         >
                                             <FaDownload size={12} /> Download
                                         </a>
@@ -250,18 +246,18 @@ const TeacherResources = () => {
                 </div>
 
                 {filteredResources.length === 0 && (
-                    <div className="text-center py-12 bg-white rounded-xl border-2 border-dashed border-soft-grey">
-                        <p className="text-text-grey">No resources found matching your filters</p>
+                    <div className="text-center py-12 bg-white rounded-xl border-2 border-dashed border-gray-200">
+                        <p className="text-text-secondary">No resources found matching your filters</p>
                     </div>
                 )}
             </div>
 
             {/* Add Resource Modal */}
             {showModal && (
-                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-                    <div className="bg-white rounded-2xl shadow-xl max-w-lg w-full max-h-[90vh] overflow-y-auto">
-                        <div className="p-6 border-b border-soft-grey">
-                            <h2 className="text-xl font-bold text-navy">Add New Resource</h2>
+                <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+                    <div className="bg-white rounded-xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto border border-gray-200">
+                        <div className="p-6 border-b border-gray-100">
+                            <h2 className="text-xl font-bold text-secondary font-heading">Add New Resource</h2>
                         </div>
 
                         <form onSubmit={handleSubmit} className="p-6 space-y-4">
@@ -297,9 +293,9 @@ const TeacherResources = () => {
                             />
 
                             <div>
-                                <label className="block text-sm font-medium text-text-grey mb-1">Description</label>
+                                <label className="block text-sm font-medium text-text-secondary mb-1">Description</label>
                                 <textarea
-                                    className="w-full px-4 py-2 rounded-lg border border-soft-grey focus:ring-2 focus:ring-sky-blue outline-none"
+                                    className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all"
                                     rows="3"
                                     value={formData.description}
                                     onChange={(e) => setFormData({ ...formData, description: e.target.value })}
@@ -314,11 +310,11 @@ const TeacherResources = () => {
                             />
 
                             <div>
-                                <label className="block text-sm font-medium text-text-grey mb-1">Upload File</label>
+                                <label className="block text-sm font-medium text-text-secondary mb-1">Upload File</label>
                                 <input
                                     type="file"
                                     onChange={handleFileChange}
-                                    className="w-full text-sm text-text-grey file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-sky-blue/10 file:text-sky-blue hover:file:bg-sky-blue/20"
+                                    className="w-full text-sm text-text-secondary file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20 transition-colors"
                                 />
                             </div>
 

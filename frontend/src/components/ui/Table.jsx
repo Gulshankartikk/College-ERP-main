@@ -9,7 +9,7 @@ export const Table = ({ children, className = '' }) => (
 );
 
 export const TableHeader = ({ children, className = '' }) => (
-  <thead className={`bg-gray-50/50 border-b border-gray-100 text-text-grey font-semibold uppercase tracking-wider text-xs ${className}`}>
+  <thead className={`bg-gray-50/50 border-b border-gray-100 text-text-secondary font-semibold uppercase tracking-wider text-xs ${className}`}>
     {children}
   </thead>
 );
@@ -22,7 +22,7 @@ export const TableBody = ({ children, className = '' }) => (
 
 export const TableRow = ({ children, className = '', onClick }) => (
   <tr
-    className={`hover:bg-blue-50/30 transition-colors duration-150 ${onClick ? 'cursor-pointer' : ''} ${className}`}
+    className={`hover:bg-primary/5 transition-colors duration-150 ${onClick ? 'cursor-pointer' : ''} ${className}`}
     onClick={onClick}
   >
     {children}
@@ -30,13 +30,13 @@ export const TableRow = ({ children, className = '', onClick }) => (
 );
 
 export const TableHead = ({ children, className = '' }) => (
-  <th className={`px-6 py-4 font-semibold text-navy/80 ${className}`}>
+  <th className={`px-6 py-4 font-semibold text-secondary/80 ${className}`}>
     {children}
   </th>
 );
 
 export const TableCell = ({ children, className = '' }) => (
-  <td className={`px-6 py-4 whitespace-nowrap text-text-grey font-medium ${className}`}>
+  <td className={`px-6 py-4 whitespace-nowrap text-text-secondary font-medium ${className}`}>
     {children}
   </td>
 );

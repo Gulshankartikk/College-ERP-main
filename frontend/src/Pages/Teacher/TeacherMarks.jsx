@@ -101,8 +101,8 @@ const TeacherMarks = () => {
     <div className="space-y-6">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-navy">Manage Marks</h1>
-          <p className="text-text-grey">Record and track student performance</p>
+          <h1 className="text-2xl font-bold text-secondary font-heading">Manage Marks</h1>
+          <p className="text-text-secondary">Record and track student performance</p>
         </div>
         {selectedSubject && selectedSubject !== 'all' && (
           <Button onClick={() => setShowModal(true)}>
@@ -111,7 +111,7 @@ const TeacherMarks = () => {
         )}
       </div>
 
-      <Card>
+      <Card className="border border-gray-200">
         <CardContent className="p-6">
           <div className="max-w-md">
             <Select
@@ -133,12 +133,12 @@ const TeacherMarks = () => {
       {loading ? (
         <LoadingSpinner message="Loading marks..." />
       ) : selectedSubject === 'all' ? (
-        <div className="text-center py-12 bg-background rounded-xl border-2 border-dashed border-soft-grey">
-          <FaChartLine className="mx-auto h-12 w-12 text-soft-grey mb-4" />
-          <p className="text-text-grey text-lg">Please select a subject to view marks</p>
+        <div className="text-center py-12 bg-gray-50 rounded-xl border-2 border-dashed border-gray-200">
+          <FaChartLine className="mx-auto h-12 w-12 text-text-muted mb-4" />
+          <p className="text-text-secondary text-lg">Please select a subject to view marks</p>
         </div>
       ) : selectedSubject && studentMarks.length > 0 ? (
-        <div className="rounded-xl border border-soft-grey overflow-hidden bg-white shadow-sm">
+        <div className="rounded-xl border border-gray-200 overflow-hidden bg-white shadow-sm">
           <Table>
             <TableHeader>
               <tr>
@@ -158,9 +158,9 @@ const TeacherMarks = () => {
                   <TableCell className="text-center">{sm.totalPossible}</TableCell>
                   <TableCell className="text-center">
                     <span
-                      className={`px-3 py-1 rounded-full text-xs font-bold ${sm.percentage >= 75 ? 'bg-sky-blue/10 text-sky-blue' :
-                        sm.percentage >= 50 ? 'bg-navy/10 text-navy' :
-                          'bg-soft-grey/20 text-text-grey'
+                      className={`px-3 py-1 rounded-full text-xs font-bold ${sm.percentage >= 75 ? 'bg-primary/10 text-primary' :
+                        sm.percentage >= 50 ? 'bg-secondary/10 text-secondary' :
+                          'bg-gray-100 text-text-secondary'
                         }`}
                     >
                       {sm.percentage}%
@@ -172,15 +172,15 @@ const TeacherMarks = () => {
           </Table>
         </div>
       ) : selectedSubject && selectedSubject !== 'all' ? (
-        <div className="text-center py-12 bg-background rounded-xl">
-          <p className="text-text-grey">No marks recorded yet for this subject</p>
+        <div className="text-center py-12 bg-gray-50 rounded-xl border border-gray-200">
+          <p className="text-text-secondary">No marks recorded yet for this subject</p>
         </div>
       ) : null}
 
       {showModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-xl shadow-xl max-w-md w-full p-6">
-            <h2 className="text-xl font-bold mb-4">Add Marks</h2>
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-xl shadow-2xl max-w-md w-full p-6 border border-gray-200">
+            <h2 className="text-xl font-bold mb-4 font-heading text-secondary">Add Marks</h2>
             <form onSubmit={handleSubmit} className="space-y-4">
               <Select
                 label="Student"

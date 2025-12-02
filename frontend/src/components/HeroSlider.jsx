@@ -8,7 +8,7 @@ const SLIDES = [
         id: 1,
         title: "Manage Your Institute With Confidence",
         subtitle: "A comprehensive, modern ERP solution for colleges and universities. Streamline administration, empower teachers, and engage students.",
-        color: "from-navy to-sky-blue",
+        color: "from-secondary to-primary",
         image: "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80"
     },
     {
@@ -57,15 +57,15 @@ const HeroSlider = () => {
                     {/* Content */}
                     <div className="relative h-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center">
                         <div className="max-w-3xl text-white pt-20">
-                            <h1 className="text-5xl md:text-6xl font-extrabold tracking-tight mb-6 animate-fade-in-up">
+                            <h1 className="text-5xl md:text-6xl font-extrabold tracking-tight mb-6 animate-fade-in-up font-heading">
                                 {slide.title}
                             </h1>
-                            <p className="text-xl text-soft-grey mb-10 max-w-2xl animate-fade-in-up delay-100">
+                            <p className="text-xl text-gray-200 mb-10 max-w-2xl animate-fade-in-up delay-100">
                                 {slide.subtitle}
                             </p>
                             <div className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-4 animate-fade-in-up delay-200">
                                 <Link to="/login">
-                                    <Button size="lg" className="w-full sm:w-auto bg-white text-navy hover:bg-soft-grey border-none">
+                                    <Button size="lg" className="w-full sm:w-auto bg-white text-secondary hover:bg-gray-100 border-none">
                                         Get Started <ArrowRight className="ml-2 h-5 w-5" />
                                     </Button>
                                 </Link>

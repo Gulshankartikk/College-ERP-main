@@ -3,16 +3,16 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { BASE_URL } from '../../constants/api';
 import Cookies from 'js-cookie';
-import { FaDownload, FaEye, FaUser, FaClock } from 'react-icons/fa';
+import { FaDownload, FaEye, FaUser, FaClock, FaStickyNote } from 'react-icons/fa';
 import { toast } from 'react-toastify';
-import StudentHeader from '../../components/StudentHeader';
-import BackButton from '../../components/BackButton';
+import Card, { CardContent } from '../../components/ui/Card';
+import Button from '../../components/ui/Button';
+import LoadingSpinner from '../../components/LoadingSpinner';
 
 const StudentNotes = () => {
   const { studentId } = useParams();
   const [notes, setNotes] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [studentName, setStudentName] = useState('');
 
   useEffect(() => {
     fetchNotes();
@@ -25,7 +25,6 @@ const StudentNotes = () => {
 
       const response = await axios.get(`${BASE_URL}/api/student/${studentId}/notes`, { headers });
       setNotes(response.data.notes || []);
-      setStudentName(response.data.student?.name || '');
     } catch (error) {
       console.error('Error fetching notes:', error);
       toast.error('Failed to load notes');
@@ -43,41 +42,44 @@ const StudentNotes = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50">
-        <StudentHeader studentId={studentId} studentName={studentName} />
-        <div className="flex items-center justify-center h-64">
-          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-500"></div>
-        </div>
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <LoadingSpinner message="Loading notes..." />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <StudentHeader studentId={studentId} studentName={studentName} />
-      <BackButton />
-      
-      <div className="py-8">
-        <div className="max-w-7xl mx-auto px-4">
-          <h1 className="text-3xl font-bold text-gray-800 mb-6">My Notes</h1>
+    <div className="min-h-screen bg-background p-6">
+      <div className="max-w-7xl mx-auto">
+        <div className="flex items-center space-x-3 mb-6">
+          <FaStickyNote className="text-3xl text-primary" />
+          <div>
+            <h1 className="text-3xl font-bold text-secondary font-heading">My Notes</h1>
+            <p className="text-text-secondary">Access lecture notes and study materials</p>
+          </div>
+        </div>
 
-          {notes.length === 0 ? (
-            <div className="bg-white rounded-lg shadow-md p-8 text-center">
-              <p className="text-gray-500 text-lg">No notes available yet.</p>
-            </div>
-          ) : (
-            <div className="grid gap-6">
-              {notes.map((note) => (
-                <div key={note._id} className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
-                  <div className="flex items-start justify-between">
+        {notes.length === 0 ? (
+          <Card className="border border-gray-200">
+            <CardContent className="p-8 text-center">
+              <FaStickyNote className="mx-auto text-6xl text-gray-300 mb-4" />
+              <p className="text-text-secondary text-lg">No notes available yet.</p>
+            </CardContent>
+          </Card>
+        ) : (
+          <div className="grid gap-6">
+            {notes.map((note) => (
+              <Card key={note._id} className="border border-gray-200 hover:shadow-lg transition-shadow">
+                <CardContent className="p-6">
+                  <div className="flex flex-col md:flex-row items-start justify-between gap-4">
                     <div className="flex-1">
-                      <h3 className="text-xl font-semibold text-gray-800 mb-2">{note.title}</h3>
-                      <p className="text-gray-600 mb-3">{note.subjectId?.subjectName}</p>
+                      <h3 className="text-xl font-semibold text-secondary mb-2 font-heading">{note.title}</h3>
+                      <p className="text-primary font-medium mb-2">{note.subjectId?.subjectName}</p>
                       {note.description && (
-                        <p className="text-gray-700 mb-4">{note.description}</p>
+                        <p className="text-text-secondary mb-4">{note.description}</p>
                       )}
-                      
-                      <div className="flex items-center space-x-4 text-sm text-gray-500">
+
+                      <div className="flex flex-wrap items-center gap-4 text-sm text-text-muted">
                         <div className="flex items-center space-x-1">
                           <FaUser />
                           <span>By: {note.teacherId?.name}</span>
@@ -88,33 +90,33 @@ const StudentNotes = () => {
                         </div>
                       </div>
                     </div>
-                    
+
                     {note.fileUrl && (
-                      <div className="flex items-center space-x-2 ml-4">
-                        <button
+                      <div className="flex items-center space-x-2 w-full md:w-auto">
+                        <Button
                           onClick={() => window.open(note.fileUrl, '_blank')}
-                          className="flex items-center space-x-1 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+                          variant="primary"
+                          className="flex items-center gap-2"
                           title="View"
                         >
-                          <FaEye />
-                          <span>View</span>
-                        </button>
-                        <button
+                          <FaEye /> View
+                        </Button>
+                        <Button
                           onClick={() => handleDownload(note.fileUrl, `${note.title}.pdf`)}
-                          className="flex items-center space-x-1 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors"
+                          variant="success"
+                          className="flex items-center gap-2"
                           title="Download"
                         >
-                          <FaDownload />
-                          <span>Download</span>
-                        </button>
+                          <FaDownload /> Download
+                        </Button>
                       </div>
                     )}
                   </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

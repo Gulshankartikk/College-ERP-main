@@ -3,10 +3,9 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import { BASE_URL } from '../../constants/api';
-import TeacherHeader from '../../components/TeacherHeader';
-import BackButton from '../../components/BackButton';
 import LoadingSpinner from '../../components/LoadingSpinner';
 import { FaCalendarAlt, FaClock } from 'react-icons/fa';
+import Card, { CardContent } from '../../components/ui/Card';
 
 const TeacherTimetable = () => {
   const { id: teacherId } = useParams();
@@ -39,41 +38,45 @@ const TeacherTimetable = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <TeacherHeader currentRole="teacher" />
-      <div className="p-6">
-        <BackButton className="mb-4" />
-        <h1 className="text-3xl font-bold text-navy mb-6 flex items-center gap-3">
+      <div className="p-6 max-w-7xl mx-auto">
+        <h1 className="text-3xl font-bold text-secondary mb-6 flex items-center gap-3 font-heading">
           <FaCalendarAlt /> My Timetable
         </h1>
 
-        <div className="bg-white rounded-lg shadow-xl p-6 overflow-x-auto">
-          <table className="w-full border-collapse">
-            <thead>
-              <tr className="bg-navy">
-                <th className="p-3 text-white border border-soft-grey">Time</th>
-                {days.map(day => (
-                  <th key={day} className="p-3 text-white border border-soft-grey">{day}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {timeSlots.map((slot, idx) => (
-                <tr key={slot} className={idx % 2 === 0 ? 'bg-background' : 'bg-white'}>
-                  <td className="p-3 border border-soft-grey font-bold text-navy">
-                    <FaClock className="inline mr-2" />
-                    {slot}
-                  </td>
+        <Card className="border border-gray-200 overflow-hidden">
+          <CardContent className="p-0 overflow-x-auto">
+            <table className="w-full border-collapse">
+              <thead>
+                <tr className="bg-secondary">
+                  <th className="p-4 text-white border-b border-gray-200 text-left font-heading">Time</th>
                   {days.map(day => (
-                    <td key={`${day}-${slot}`} className="p-3 border border-soft-grey text-center text-text-grey">
-                      Free
-                    </td>
+                    <th key={day} className="p-4 text-white border-b border-gray-200 text-left font-heading">{day}</th>
                   ))}
                 </tr>
-              ))}
-            </tbody>
-          </table>
-          <p className="text-center text-text-grey mt-6">No classes scheduled yet</p>
-        </div>
+              </thead>
+              <tbody>
+                {timeSlots.map((slot, idx) => (
+                  <tr key={slot} className={idx % 2 === 0 ? 'bg-gray-50' : 'bg-white'}>
+                    <td className="p-4 border-b border-gray-200 font-bold text-secondary whitespace-nowrap">
+                      <FaClock className="inline mr-2 text-primary" />
+                      {slot}
+                    </td>
+                    {days.map(day => (
+                      <td key={`${day}-${slot}`} className="p-4 border-b border-gray-200 text-center text-text-secondary">
+                        <span className="inline-block px-3 py-1 rounded-full bg-gray-100 text-text-muted text-sm">
+                          Free
+                        </span>
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <div className="p-6 text-center text-text-secondary border-t border-gray-200">
+              No classes scheduled yet
+            </div>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );

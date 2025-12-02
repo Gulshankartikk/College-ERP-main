@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import { FaBookOpen, FaPlus, FaSearch, FaEdit, FaTrash, FaDownload, FaEye, FaTimes, FaCheck, FaBook, FaUser } from 'react-icons/fa';
 import AdminHeader from '../../components/AdminHeader';
 import BackButton from '../../components/BackButton';
+import Input from '../../components/ui/Input';
+import Select from '../../components/ui/Select';
+import Button from '../../components/ui/Button';
 
 const LibraryManagement = () => {
   const [books, setBooks] = useState([
@@ -106,224 +109,211 @@ const LibraryManagement = () => {
   return (
     <div className="min-h-screen bg-background">
       <AdminHeader />
-      <BackButton />
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        <div className="flex justify-between items-center mb-6">
-          <div>
-            <h1 className="text-3xl font-bold text-navy">Library Management</h1>
-            <p className="text-text-grey">Manage books and library resources</p>
-          </div>
-          <div className="flex space-x-3">
-            <button
-              onClick={exportReport}
-              className="flex items-center space-x-2 px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600"
-            >
-              <FaDownload />
-              <span>Export Report</span>
-            </button>
-            <button
-              onClick={() => setShowIssueModal(true)}
-              className="flex items-center space-x-2 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600"
-            >
-              <FaBookOpen />
-              <span>Issue Book</span>
-            </button>
-            <button
-              onClick={() => setShowAddModal(true)}
-              className="flex items-center space-x-2 px-4 py-2 bg-sky-blue text-white rounded-lg hover:bg-sky-blue/80"
-            >
-              <FaPlus />
-              <span>Add Book</span>
-            </button>
-          </div>
-        </div>
-
-        {/* Summary Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <div className="bg-white p-6 rounded-lg shadow-md">
-            <div className="flex items-center">
-              <FaBookOpen className="text-3xl text-sky-blue mr-4" />
-              <div>
-                <p className="text-text-grey">Total Books</p>
-                <p className="text-2xl font-bold">{books.reduce((sum, book) => sum + book.total, 0)}</p>
-              </div>
+      <div className="py-8">
+        <div className="max-w-7xl mx-auto px-4">
+          <BackButton className="mb-4" />
+          <div className="flex justify-between items-center mb-6">
+            <div>
+              <h1 className="text-3xl font-bold text-secondary font-heading">Library Management</h1>
+              <p className="text-text-secondary">Manage books and library resources</p>
+            </div>
+            <div className="flex space-x-3">
+              <Button
+                variant="outline"
+                onClick={exportReport}
+                className="flex items-center space-x-2"
+              >
+                <FaDownload />
+                <span>Export Report</span>
+              </Button>
+              <Button
+                variant="outline"
+                onClick={() => setShowIssueModal(true)}
+                className="flex items-center space-x-2"
+              >
+                <FaBookOpen />
+                <span>Issue Book</span>
+              </Button>
+              <Button
+                onClick={() => setShowAddModal(true)}
+                className="flex items-center space-x-2"
+              >
+                <FaPlus />
+                <span>Add Book</span>
+              </Button>
             </div>
           </div>
-          <div className="bg-white p-6 rounded-lg shadow-md">
-            <div className="flex items-center">
-              <FaBookOpen className="text-3xl text-green-500 mr-4" />
-              <div>
-                <p className="text-text-grey">Available</p>
-                <p className="text-2xl font-bold">{books.reduce((sum, book) => sum + book.available, 0)}</p>
-              </div>
-            </div>
-          </div>
-          <div className="bg-white p-6 rounded-lg shadow-md">
-            <div className="flex items-center">
-              <FaBookOpen className="text-3xl text-yellow-500 mr-4" />
-              <div>
-                <p className="text-text-grey">Issued</p>
-                <p className="text-2xl font-bold">{books.reduce((sum, book) => sum + (book.total - book.available), 0)}</p>
-              </div>
-            </div>
-          </div>
-          <div className="bg-white p-6 rounded-lg shadow-md">
-            <div className="flex items-center">
-              <FaBookOpen className="text-3xl text-red-500 mr-4" />
-              <div>
-                <p className="text-text-grey">Overdue</p>
-                <p className="text-2xl font-bold">{issuedBooks.filter(book => book.status === 'Overdue').length}</p>
-              </div>
-            </div>
-          </div>
-        </div>
 
-        {/* Search and Filter */}
-        <div className="bg-white p-4 rounded-lg shadow-md mb-6">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="relative">
-              <FaSearch className="absolute left-3 top-3 text-gray-400" />
-              <input
-                type="text"
-                placeholder="Search books..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-blue"
-              />
-            </div>
-            <select
-              value={selectedCategory}
-              onChange={(e) => setSelectedCategory(e.target.value)}
-              className="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-blue"
-            >
-              <option>All Categories</option>
-              <option>Computer Science</option>
-              <option>Mechanical</option>
-              <option>Business</option>
-              <option>Mathematics</option>
-              <option>Physics</option>
-            </select>
-            <select
-              value={selectedStatus}
-              onChange={(e) => setSelectedStatus(e.target.value)}
-              className="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-blue"
-            >
-              <option>All Status</option>
-              <option>Available</option>
-              <option>Out of Stock</option>
-            </select>
-          </div>
-        </div>
-
-        {/* Books Table */}
-        <div className="bg-white rounded-lg shadow-md overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead className="bg-background">
-                <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-text-grey uppercase">Book Title</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-text-grey uppercase">Author</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-text-grey uppercase">ISBN</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-text-grey uppercase">Category</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-text-grey uppercase">Available</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-text-grey uppercase">Total</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-text-grey uppercase">Location</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-text-grey uppercase">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-200">
-                {filteredBooks.map((book) => (
-                  <tr key={book.id}>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="flex items-center">
-                        <FaBookOpen className="text-sky-blue mr-3" />
-                        <span className="font-medium text-navy">{book.title}</span>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-navy">{book.author}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-navy">{book.isbn}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-navy">{book.category}</td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <span className={`font-medium ${book.available > 0 ? 'text-green-600' : 'text-red-600'}`}>
-                        {book.available}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-navy">{book.total}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-navy">{book.location}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                      <div className="flex space-x-2">
-                        <button
-                          onClick={() => viewDetails(book)}
-                          className="text-sky-blue hover:text-sky-blue/80"
-                        >
-                          <FaEye />
-                        </button>
-                        <button
-                          onClick={() => editBook(book)}
-                          className="text-green-600 hover:text-green-900"
-                        >
-                          <FaEdit />
-                        </button>
-                        <button
-                          onClick={() => deleteBook(book.id)}
-                          className="text-red-600 hover:text-red-900"
-                        >
-                          <FaTrash />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        {/* Add Book Modal */}
-        {showAddModal && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white rounded-lg p-6 w-full max-w-2xl">
-              <div className="flex justify-between items-center mb-4">
-                <h2 className="text-2xl font-bold text-navy">Add New Book</h2>
-                <button onClick={() => setShowAddModal(false)} className="text-gray-500 hover:text-gray-700">
-                  <FaTimes size={24} />
-                </button>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {/* Summary Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200">
+              <div className="flex items-center">
+                <FaBookOpen className="text-3xl text-primary mr-4" />
                 <div>
-                  <label className="block text-sm font-medium text-text-grey mb-2">Book Title</label>
-                  <input
-                    type="text"
+                  <p className="text-text-secondary">Total Books</p>
+                  <p className="text-2xl font-bold text-secondary">{books.reduce((sum, book) => sum + book.total, 0)}</p>
+                </div>
+              </div>
+            </div>
+            <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200">
+              <div className="flex items-center">
+                <FaBookOpen className="text-3xl text-success mr-4" />
+                <div>
+                  <p className="text-text-secondary">Available</p>
+                  <p className="text-2xl font-bold text-secondary">{books.reduce((sum, book) => sum + book.available, 0)}</p>
+                </div>
+              </div>
+            </div>
+            <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200">
+              <div className="flex items-center">
+                <FaBookOpen className="text-3xl text-warning mr-4" />
+                <div>
+                  <p className="text-text-secondary">Issued</p>
+                  <p className="text-2xl font-bold text-secondary">{books.reduce((sum, book) => sum + (book.total - book.available), 0)}</p>
+                </div>
+              </div>
+            </div>
+            <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200">
+              <div className="flex items-center">
+                <FaBookOpen className="text-3xl text-danger mr-4" />
+                <div>
+                  <p className="text-text-secondary">Overdue</p>
+                  <p className="text-2xl font-bold text-secondary">{issuedBooks.filter(book => book.status === 'Overdue').length}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Search and Filter */}
+          <div className="bg-white p-4 rounded-lg shadow-md mb-6 border border-gray-200">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="relative">
+                <FaSearch className="absolute left-3 top-3 text-gray-400" />
+                <input
+                  type="text"
+                  placeholder="Search books..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+                />
+              </div>
+              <Select
+                value={selectedCategory}
+                onChange={(e) => setSelectedCategory(e.target.value)}
+              >
+                <option>All Categories</option>
+                <option>Computer Science</option>
+                <option>Mechanical</option>
+                <option>Business</option>
+                <option>Mathematics</option>
+                <option>Physics</option>
+              </Select>
+              <Select
+                value={selectedStatus}
+                onChange={(e) => setSelectedStatus(e.target.value)}
+              >
+                <option>All Status</option>
+                <option>Available</option>
+                <option>Out of Stock</option>
+              </Select>
+            </div>
+          </div>
+
+          {/* Books Table */}
+          <div className="bg-white rounded-lg shadow-md overflow-hidden border border-gray-200">
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase">Book Title</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase">Author</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase">ISBN</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase">Category</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase">Available</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase">Total</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase">Location</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-200">
+                  {filteredBooks.map((book) => (
+                    <tr key={book.id} className="hover:bg-gray-50 transition-colors">
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="flex items-center">
+                          <FaBookOpen className="text-primary mr-3" />
+                          <span className="font-medium text-secondary">{book.title}</span>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-secondary">{book.author}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-secondary">{book.isbn}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-secondary">{book.category}</td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <span className={`font-medium ${book.available > 0 ? 'text-success' : 'text-danger'}`}>
+                          {book.available}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-secondary">{book.total}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-secondary">{book.location}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                        <div className="flex space-x-2">
+                          <button
+                            onClick={() => viewDetails(book)}
+                            className="text-primary hover:text-primary/80"
+                          >
+                            <FaEye />
+                          </button>
+                          <button
+                            onClick={() => editBook(book)}
+                            className="text-success hover:text-success/80"
+                          >
+                            <FaEdit />
+                          </button>
+                          <button
+                            onClick={() => deleteBook(book.id)}
+                            className="text-danger hover:text-danger/80"
+                          >
+                            <FaTrash />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          {/* Add Book Modal */}
+          {showAddModal && (
+            <div className="fixed inset-0 bg-secondary/50 flex items-center justify-center z-50 backdrop-blur-sm">
+              <div className="bg-white rounded-lg p-6 w-full max-w-2xl shadow-xl">
+                <div className="flex justify-between items-center mb-4">
+                  <h2 className="text-2xl font-bold text-secondary font-heading">Add New Book</h2>
+                  <button onClick={() => setShowAddModal(false)} className="text-text-secondary hover:text-secondary">
+                    <FaTimes size={24} />
+                  </button>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <Input
+                    label="Book Title"
                     value={newBook.title}
                     onChange={(e) => setNewBook({ ...newBook, title: e.target.value })}
-                    className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-blue"
                   />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-text-grey mb-2">Author</label>
-                  <input
-                    type="text"
+                  <Input
+                    label="Author"
                     value={newBook.author}
                     onChange={(e) => setNewBook({ ...newBook, author: e.target.value })}
-                    className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-blue"
                   />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-text-grey mb-2">ISBN</label>
-                  <input
-                    type="text"
+                  <Input
+                    label="ISBN"
                     value={newBook.isbn}
                     onChange={(e) => setNewBook({ ...newBook, isbn: e.target.value })}
-                    className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-blue"
                   />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-text-grey mb-2">Category</label>
-                  <select
+                  <Select
+                    label="Category"
                     value={newBook.category}
                     onChange={(e) => setNewBook({ ...newBook, category: e.target.value })}
-                    className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-blue"
                   >
                     <option value="">Select Category</option>
                     <option>Computer Science</option>
@@ -331,264 +321,222 @@ const LibraryManagement = () => {
                     <option>Business</option>
                     <option>Mathematics</option>
                     <option>Physics</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-text-grey mb-2">Total Copies</label>
-                  <input
+                  </Select>
+                  <Input
+                    label="Total Copies"
                     type="number"
                     value={newBook.total}
                     onChange={(e) => setNewBook({ ...newBook, total: parseInt(e.target.value) })}
-                    className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-blue"
                   />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-text-grey mb-2">Location</label>
-                  <input
-                    type="text"
+                  <Input
+                    label="Location"
                     value={newBook.location}
                     onChange={(e) => setNewBook({ ...newBook, location: e.target.value })}
-                    className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-blue"
                   />
                 </div>
-              </div>
 
-              <div className="flex justify-end space-x-3 mt-6">
-                <button
-                  onClick={() => setShowAddModal(false)}
-                  className="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={addBook}
-                  className="px-4 py-2 bg-sky-blue text-white rounded-lg hover:bg-sky-blue/80"
-                >
-                  Add Book
-                </button>
+                <div className="flex justify-end space-x-3 mt-6">
+                  <Button
+                    variant="ghost"
+                    onClick={() => setShowAddModal(false)}
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    onClick={addBook}
+                  >
+                    Add Book
+                  </Button>
+                </div>
               </div>
             </div>
-          </div>
-        )}
+          )}
 
-        {/* Issue Book Modal */}
-        {showIssueModal && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white rounded-lg p-6 w-full max-w-2xl">
-              <div className="flex justify-between items-center mb-4">
-                <h2 className="text-2xl font-bold text-navy">Issue Book</h2>
-                <button onClick={() => setShowIssueModal(false)} className="text-gray-500 hover:text-gray-700">
-                  <FaTimes size={24} />
-                </button>
-              </div>
+          {/* Issue Book Modal */}
+          {showIssueModal && (
+            <div className="fixed inset-0 bg-secondary/50 flex items-center justify-center z-50 backdrop-blur-sm">
+              <div className="bg-white rounded-lg p-6 w-full max-w-2xl shadow-xl">
+                <div className="flex justify-between items-center mb-4">
+                  <h2 className="text-2xl font-bold text-secondary font-heading">Issue Book</h2>
+                  <button onClick={() => setShowIssueModal(false)} className="text-text-secondary hover:text-secondary">
+                    <FaTimes size={24} />
+                  </button>
+                </div>
 
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-text-grey mb-2">Select Book</label>
-                  <select
+                <div className="space-y-4">
+                  <Select
+                    label="Select Book"
                     value={issueForm.bookId}
                     onChange={(e) => setIssueForm({ ...issueForm, bookId: e.target.value })}
-                    className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-blue"
                   >
                     <option value="">Select a book</option>
                     {books.filter(book => book.available > 0).map(book => (
                       <option key={book.id} value={book.id}>{book.title} - Available: {book.available}</option>
                     ))}
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-text-grey mb-2">Student Roll Number</label>
-                  <input
-                    type="text"
+                  </Select>
+                  <Input
+                    label="Student Roll Number"
                     value={issueForm.studentRoll}
                     onChange={(e) => setIssueForm({ ...issueForm, studentRoll: e.target.value })}
-                    className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-blue"
                   />
-                </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-text-grey mb-2">Issue Date</label>
-                    <input
+                  <div className="grid grid-cols-2 gap-4">
+                    <Input
+                      label="Issue Date"
                       type="date"
                       value={issueForm.issueDate}
                       onChange={(e) => setIssueForm({ ...issueForm, issueDate: e.target.value })}
-                      className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-blue"
                     />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-text-grey mb-2">Due Date</label>
-                    <input
+                    <Input
+                      label="Due Date"
                       type="date"
                       value={issueForm.dueDate}
                       onChange={(e) => setIssueForm({ ...issueForm, dueDate: e.target.value })}
-                      className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-blue"
                     />
                   </div>
                 </div>
-              </div>
 
-              <div className="flex justify-end space-x-3 mt-6">
-                <button
-                  onClick={() => setShowIssueModal(false)}
-                  className="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={issueBook}
-                  className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600"
-                >
-                  Issue Book
-                </button>
+                <div className="flex justify-end space-x-3 mt-6">
+                  <Button
+                    variant="ghost"
+                    onClick={() => setShowIssueModal(false)}
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    onClick={issueBook}
+                  >
+                    Issue Book
+                  </Button>
+                </div>
               </div>
             </div>
-          </div>
-        )}
+          )}
 
-        {/* Edit Book Modal */}
-        {showEditModal && selectedBook && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white rounded-lg p-6 w-full max-w-2xl">
-              <div className="flex justify-between items-center mb-4">
-                <h2 className="text-2xl font-bold text-navy">Edit Book</h2>
-                <button onClick={() => setShowEditModal(false)} className="text-gray-500 hover:text-gray-700">
-                  <FaTimes size={24} />
-                </button>
-              </div>
+          {/* Edit Book Modal */}
+          {showEditModal && selectedBook && (
+            <div className="fixed inset-0 bg-secondary/50 flex items-center justify-center z-50 backdrop-blur-sm">
+              <div className="bg-white rounded-lg p-6 w-full max-w-2xl shadow-xl">
+                <div className="flex justify-between items-center mb-4">
+                  <h2 className="text-2xl font-bold text-secondary font-heading">Edit Book</h2>
+                  <button onClick={() => setShowEditModal(false)} className="text-text-secondary hover:text-secondary">
+                    <FaTimes size={24} />
+                  </button>
+                </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-text-grey mb-2">Book Title</label>
-                  <input
-                    type="text"
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <Input
+                    label="Book Title"
                     value={selectedBook.title}
                     onChange={(e) => setSelectedBook({ ...selectedBook, title: e.target.value })}
-                    className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-blue"
                   />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-text-grey mb-2">Author</label>
-                  <input
-                    type="text"
+                  <Input
+                    label="Author"
                     value={selectedBook.author}
                     onChange={(e) => setSelectedBook({ ...selectedBook, author: e.target.value })}
-                    className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-blue"
                   />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-text-grey mb-2">Available Copies</label>
-                  <input
+                  <Input
+                    label="Available Copies"
                     type="number"
                     value={selectedBook.available}
                     onChange={(e) => setSelectedBook({ ...selectedBook, available: parseInt(e.target.value) })}
-                    className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-blue"
                   />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-text-grey mb-2">Total Copies</label>
-                  <input
+                  <Input
+                    label="Total Copies"
                     type="number"
                     value={selectedBook.total}
                     onChange={(e) => setSelectedBook({ ...selectedBook, total: parseInt(e.target.value) })}
-                    className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-blue"
                   />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-text-grey mb-2">Location</label>
-                  <input
-                    type="text"
+                  <Input
+                    label="Location"
                     value={selectedBook.location}
                     onChange={(e) => setSelectedBook({ ...selectedBook, location: e.target.value })}
-                    className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-blue"
                   />
                 </div>
-              </div>
 
-              <div className="flex justify-end space-x-3 mt-6">
-                <button
-                  onClick={() => setShowEditModal(false)}
-                  className="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={saveEditedBook}
-                  className="px-4 py-2 bg-sky-blue text-white rounded-lg hover:bg-sky-blue/80"
-                >
-                  Save Changes
-                </button>
+                <div className="flex justify-end space-x-3 mt-6">
+                  <Button
+                    variant="ghost"
+                    onClick={() => setShowEditModal(false)}
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    onClick={saveEditedBook}
+                  >
+                    Save Changes
+                  </Button>
+                </div>
               </div>
             </div>
-          </div>
-        )}
+          )}
 
-        {/* View Details Modal */}
-        {showDetailsModal && selectedBook && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white rounded-lg p-6 w-full max-w-3xl">
-              <div className="flex justify-between items-center mb-4">
-                <h2 className="text-2xl font-bold text-navy">Book Details</h2>
-                <button onClick={() => setShowDetailsModal(false)} className="text-gray-500 hover:text-gray-700">
-                  <FaTimes size={24} />
-                </button>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="bg-gray-50 p-4 rounded-lg">
-                  <h3 className="font-semibold text-navy mb-3">Book Information</h3>
-                  <p><strong>Title:</strong> {selectedBook.title}</p>
-                  <p><strong>Author:</strong> {selectedBook.author}</p>
-                  <p><strong>ISBN:</strong> {selectedBook.isbn}</p>
-                  <p><strong>Category:</strong> {selectedBook.category}</p>
-                  <p><strong>Location:</strong> {selectedBook.location}</p>
+          {/* View Details Modal */}
+          {showDetailsModal && selectedBook && (
+            <div className="fixed inset-0 bg-secondary/50 flex items-center justify-center z-50 backdrop-blur-sm">
+              <div className="bg-white rounded-lg p-6 w-full max-w-3xl shadow-xl">
+                <div className="flex justify-between items-center mb-4">
+                  <h2 className="text-2xl font-bold text-secondary font-heading">Book Details</h2>
+                  <button onClick={() => setShowDetailsModal(false)} className="text-text-secondary hover:text-secondary">
+                    <FaTimes size={24} />
+                  </button>
                 </div>
 
-                <div className="bg-gray-50 p-4 rounded-lg">
-                  <h3 className="font-semibold text-navy mb-3">Availability</h3>
-                  <p><strong>Available Copies:</strong> {selectedBook.available}</p>
-                  <p><strong>Total Copies:</strong> {selectedBook.total}</p>
-                  <p><strong>Issued Copies:</strong> {selectedBook.total - selectedBook.available}</p>
-                  <p><strong>Status:</strong>
-                    <span className={`ml-2 px-2 py-1 text-xs font-semibold rounded-full ${selectedBook.available > 0 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-                      }`}>
-                      {selectedBook.available > 0 ? 'Available' : 'Out of Stock'}
-                    </span>
-                  </p>
-                </div>
-              </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                    <h3 className="font-semibold text-secondary mb-3">Book Information</h3>
+                    <p className="text-text-secondary"><strong>Title:</strong> {selectedBook.title}</p>
+                    <p className="text-text-secondary"><strong>Author:</strong> {selectedBook.author}</p>
+                    <p className="text-text-secondary"><strong>ISBN:</strong> {selectedBook.isbn}</p>
+                    <p className="text-text-secondary"><strong>Category:</strong> {selectedBook.category}</p>
+                    <p className="text-text-secondary"><strong>Location:</strong> {selectedBook.location}</p>
+                  </div>
 
-              <div className="mt-6 bg-gray-50 p-4 rounded-lg">
-                <h3 className="font-semibold text-navy mb-3">Current Issues</h3>
-                <div className="space-y-2">
-                  {issuedBooks.filter(issue => issue.bookTitle === selectedBook.title).map((issue, index) => (
-                    <div key={index} className="flex justify-between items-center p-2 bg-white rounded">
-                      <div>
-                        <p className="text-sm font-medium">{issue.student} ({issue.rollNo})</p>
-                        <p className="text-xs text-gray-600">Due: {issue.dueDate}</p>
-                      </div>
-                      <span className={`px-2 py-1 text-xs font-semibold rounded-full ${issue.status === 'Active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                  <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                    <h3 className="font-semibold text-secondary mb-3">Availability</h3>
+                    <p className="text-text-secondary"><strong>Available Copies:</strong> {selectedBook.available}</p>
+                    <p className="text-text-secondary"><strong>Total Copies:</strong> {selectedBook.total}</p>
+                    <p className="text-text-secondary"><strong>Issued Copies:</strong> {selectedBook.total - selectedBook.available}</p>
+                    <p className="text-text-secondary"><strong>Status:</strong>
+                      <span className={`ml-2 px-2 py-1 text-xs font-semibold rounded-full ${selectedBook.available > 0 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
                         }`}>
-                        {issue.status}
+                        {selectedBook.available > 0 ? 'Available' : 'Out of Stock'}
                       </span>
-                    </div>
-                  ))}
-                  {issuedBooks.filter(issue => issue.bookTitle === selectedBook.title).length === 0 && (
-                    <p className="text-gray-500 text-sm">No current issues</p>
-                  )}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="mt-6 bg-gray-50 p-4 rounded-lg border border-gray-200">
+                  <h3 className="font-semibold text-secondary mb-3">Current Issues</h3>
+                  <div className="space-y-2">
+                    {issuedBooks.filter(issue => issue.bookTitle === selectedBook.title).map((issue, index) => (
+                      <div key={index} className="flex justify-between items-center p-2 bg-white rounded border border-gray-200">
+                        <div>
+                          <p className="text-sm font-medium text-secondary">{issue.student} ({issue.rollNo})</p>
+                          <p className="text-xs text-text-muted">Due: {issue.dueDate}</p>
+                        </div>
+                        <span className={`px-2 py-1 text-xs font-semibold rounded-full ${issue.status === 'Active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                          }`}>
+                          {issue.status}
+                        </span>
+                      </div>
+                    ))}
+                    {issuedBooks.filter(issue => issue.bookTitle === selectedBook.title).length === 0 && (
+                      <p className="text-text-muted text-sm">No current issues</p>
+                    )}
+                  </div>
+                </div>
+
+                <div className="flex justify-end mt-6">
+                  <Button
+                    onClick={() => setShowDetailsModal(false)}
+                  >
+                    Close
+                  </Button>
                 </div>
               </div>
-
-              <div className="flex justify-end mt-6">
-                <button
-                  onClick={() => setShowDetailsModal(false)}
-                  className="px-4 py-2 bg-sky-blue text-white rounded-lg hover:bg-sky-blue/80"
-                >
-                  Close
-                </button>
-              </div>
             </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </div>
   );
