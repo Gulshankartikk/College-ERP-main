@@ -8,11 +8,11 @@ import Select from '../../components/ui/Select';
 
 const AttendanceManagement = () => {
   const [attendanceData, setAttendanceData] = useState([
-    { id: 1, student: 'John Doe', rollNo: 'CS001', course: 'Computer Science', present: 85, total: 100, percentage: 85, status: 'Present' },
-    { id: 2, student: 'Jane Smith', rollNo: 'ME002', course: 'Mechanical Eng.', present: 92, total: 100, percentage: 92, status: 'Present' },
-    { id: 3, student: 'Mike Johnson', rollNo: 'BA003', course: 'Business Admin', present: 78, total: 100, percentage: 78, status: 'Absent' },
-    { id: 4, student: 'Sarah Wilson', rollNo: 'CS004', course: 'Computer Science', present: 88, total: 100, percentage: 88, status: 'Present' },
-    { id: 5, student: 'David Brown', rollNo: 'ME005', course: 'Mechanical Eng.', present: 65, total: 100, percentage: 65, status: 'Present' }
+    { id: 1, student: 'Gulshan ', rollNo: 'CS001', course: 'Computer Science', present: 85, total: 100, percentage: 85, status: 'Present' },
+    { id: 2, student: 'Ankita', rollNo: 'ME002', course: 'Mechanical Eng.', present: 92, total: 100, percentage: 92, status: 'Present' },
+    { id: 3, student: 'Aditya', rollNo: 'BA003', course: 'Business Admin', present: 78, total: 100, percentage: 78, status: 'Absent' },
+    { id: 4, student: 'Abhishek', rollNo: 'CS004', course: 'Computer Science', present: 88, total: 100, percentage: 88, status: 'Present' },
+    { id: 5, student: 'Krishana', rollNo: 'ME005', course: 'Mechanical Eng.', present: 65, total: 100, percentage: 65, status: 'Present' }
   ]);
 
   const [showMarkModal, setShowMarkModal] = useState(false);
@@ -25,11 +25,11 @@ const AttendanceManagement = () => {
   const [selectedStatus, setSelectedStatus] = useState('All Status');
 
   const [markAttendanceData, setMarkAttendanceData] = useState([
-    { id: 1, student: 'John Doe', rollNo: 'CS001', course: 'Computer Science', status: 'Present' },
-    { id: 2, student: 'Jane Smith', rollNo: 'ME002', course: 'Mechanical Eng.', status: 'Present' },
-    { id: 3, student: 'Mike Johnson', rollNo: 'BA003', course: 'Business Admin', status: 'Absent' },
-    { id: 4, student: 'Sarah Wilson', rollNo: 'CS004', course: 'Computer Science', status: 'Present' },
-    { id: 5, student: 'David Brown', rollNo: 'ME005', course: 'Mechanical Eng.', status: 'Present' }
+    { id: 1, student: 'Gulshan ', rollNo: 'CS001', course: 'Computer Science', status: 'Present' },
+    { id: 2, student: 'Ankita', rollNo: 'ME002', course: 'Mechanical Eng.', status: 'Present' },
+    { id: 3, student: 'Aditya', rollNo: 'BA003', course: 'Business Admin', status: 'Absent' },
+    { id: 4, student: 'Abhishek', rollNo: 'CS004', course: 'Computer Science', status: 'Present' },
+    { id: 5, student: 'Krishana', rollNo: 'ME005', course: 'Mechanical Eng.', status: 'Present' }
   ]);
 
   // Helper functions
