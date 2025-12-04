@@ -83,7 +83,7 @@ const Register = () => {
             <div className="bg-primary p-2 rounded-lg">
               <GraduationCap className="h-6 w-6 text-white" />
             </div>
-            <span className="text-xl font-bold text-secondary font-heading">College ERP</span>
+            <span className="text-xl font-bold text-secondary font-heading">Dr AITD</span>
           </div>
           <h1 className="text-3xl font-bold text-secondary mb-2 font-heading">Create an account</h1>
           <p className="text-text-secondary">Start your academic journey with us today.</p>

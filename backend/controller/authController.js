@@ -109,14 +109,6 @@ const logout = (req, res) => {
     res.status(200).json({ success: true, message: 'Logged out successfully' });
 };
 
-module.exports = {
-    login,
-    logout,
-    forgotPassword,
-    verifyOtp,
-    resetPassword
-};
-
 // Email Transporter
 const nodemailer = require('nodemailer');
 const transporter = nodemailer.createTransport({
@@ -238,4 +230,12 @@ const resetPassword = async (req, res, next) => {
     } catch (error) {
         next(error);
     }
+};
+
+module.exports = {
+    login,
+    logout,
+    forgotPassword,
+    verifyOtp,
+    resetPassword
 };

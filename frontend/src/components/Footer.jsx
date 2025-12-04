@@ -98,7 +98,7 @@ const Footer = () => {
         <div className="pt-8 mt-8 border-t border-gray-700">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-sm font-semibold text-gray-400 text-center md:text-left">
-              © 2025 College Management System. All Rights Reserved.
+              © 2025 Dr AITD Management system. All Rights Reserved.
             </p>
             <div className="flex flex-wrap justify-center gap-6">
               {['Privacy Policy', 'Terms of Service', 'Sitemap'].map((item) => (

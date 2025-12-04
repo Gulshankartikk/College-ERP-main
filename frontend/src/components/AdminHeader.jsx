@@ -26,7 +26,7 @@ const AdminHeader = ({ currentRole = 'admin' }) => {
         <div className="flex justify-between items-center py-4">
           <div className="flex items-center space-x-4">
             <Link to="/admin/dashboard" className="text-2xl font-bold text-sand-tan hover:text-white transition-colors font-oswald tracking-wide">
-              College ERP
+              Dr AITD
             </Link>
             <span className="text-sm text-gray-300 bg-night-blue-shadow px-2 py-1 rounded">Admin Panel</span>
           </div>

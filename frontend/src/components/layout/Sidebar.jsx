@@ -100,7 +100,7 @@ const Sidebar = ({ isOpen, onClose, userRole }) => {
                 <GraduationCap className="text-primary w-6 h-6" />
               </div>
               <div>
-                <span className="text-lg font-bold text-white block leading-none font-heading">College ERP</span>
+                <span className="text-lg font-bold text-white block leading-none font-heading">Dr AITD</span>
                 <span className="text-xs text-gray-400 font-medium">Management System</span>
               </div>
             </div>

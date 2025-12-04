@@ -15,7 +15,7 @@ const LandingPage = () => {
                         <div className="bg-primary p-2 rounded-lg">
                             <GraduationCap className="h-6 w-6 text-white" />
                         </div>
-                        <span className="text-xl font-bold text-secondary font-heading">College ERP</span>
+                        <span className="text-xl font-bold text-secondary font-heading">Dr AITD</span>
                     </div>
                     <div className="flex items-center space-x-4">
                         <Link to="/login">

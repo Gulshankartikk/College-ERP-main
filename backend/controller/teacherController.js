@@ -570,6 +570,9 @@ const addAssignment = async (req, res) => {
     res.status(201).json({ success: true, msg: 'Assignment added successfully', assignment });
   } catch (error) {
     console.error('addAssignment error:', error);
+    if (error.name === 'ValidationError') {
+      return res.status(400).json({ success: false, msg: error.message });
+    }
     res.status(500).json({ success: false, msg: error.message });
   }
 };
@@ -887,6 +890,9 @@ module.exports = {
       res.status(201).json({ success: true, msg: 'Resource added successfully', resource });
     } catch (error) {
       console.error('addResource error:', error);
+      if (error.name === 'ValidationError') {
+        return res.status(400).json({ success: false, msg: error.message });
+      }
       res.status(500).json({ success: false, msg: error.message });
     }
   },

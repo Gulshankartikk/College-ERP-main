@@ -179,7 +179,7 @@ const Login = () => {
               <GraduationCap className="h-8 w-8 text-white" />
             </div>
             <div>
-              <span className="text-2xl font-extrabold text-secondary tracking-tight font-heading">College ERP</span>
+              <span className="text-2xl font-extrabold text-secondary tracking-tight font-heading">Dr AITD</span>
               <p className="text-xs text-text-secondary font-medium uppercase tracking-wider">Management System</p>
             </div>
           </div>
