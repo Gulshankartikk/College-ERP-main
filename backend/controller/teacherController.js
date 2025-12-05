@@ -904,6 +904,10 @@ module.exports = {
         return res.status(400).json({ success: false, msg: 'Title, subject, and type are required' });
       }
 
+      if (req.fileValidationError) {
+        return res.status(400).json({ success: false, msg: req.fileValidationError });
+      }
+
       if (!mongoose.Types.ObjectId.isValid(subjectId)) {
         return res.status(400).json({ success: false, msg: 'Invalid subject ID' });
       }

@@ -8,7 +8,15 @@ const db = require("./database/db");
 const PORT = process.env.PORT || 4000;
 
 // Connecting database
+const fs = require('fs');
+
+// Connecting database
 db();
+
+// Ensure uploads directory exists
+if (!fs.existsSync('uploads')) {
+  fs.mkdirSync('uploads', { recursive: true });
+}
 
 const app = express();
 

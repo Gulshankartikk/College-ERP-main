@@ -13,9 +13,9 @@ class AuthService {
 
   async register(userData, role) {
     const endpoint = role === 'student' ? '/api/student/register' :
-                    role === 'teacher' ? '/api/teacher/register' :
-                    '/api/admin/register';
-    
+      role === 'teacher' ? '/api/teacher/register' :
+        '/api/admin/register';
+
     const response = await axios.post(`${BASE_URL}${endpoint}`, userData);
     return response.data;
   }
@@ -39,27 +39,29 @@ class AuthService {
   async resetPassword(userId, otp, newPassword, role) {
     // Backend expects userId, password, otp.
     const endpoint = `/api/${role}/resetPassword`;
-    const response = await axios.post(`${BASE_URL}${endpoint}`, { 
-      userId, 
-      otp, 
-      password: newPassword 
+    const response = await axios.post(`${BASE_URL}${endpoint}`, {
+      userId,
+      otp,
+      password: newPassword
     });
     return response.data;
   }
 
-  async updatePassword(currentPassword, newPassword, userId, role) {
+  async updatePassword(currentPassword, newPassword, userId, role, token = null) {
     // This route needs verification in backend. 
     // completeRoutes.js has:
     // router.post('/student/:studentId/change-password', verifyToken, studentController.changePassword);
     // router.post('/teacher/:teacherId/change-password', verifyToken, teacherController.changePassword);
-    
+
     const endpoint = `/api/${role}/${userId}/change-password`;
+    const authToken = token || localStorage.getItem('token');
+
     const response = await axios.post(`${BASE_URL}${endpoint}`, {
-      currentPassword,
+      oldPassword: currentPassword,
       newPassword
     }, {
       headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}` // Ensure token is sent
+        Authorization: `Bearer ${authToken}` // Ensure token is sent
       }
     });
     return response.data;

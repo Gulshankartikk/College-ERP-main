@@ -92,7 +92,7 @@ const Login = () => {
 
     try {
       setIsLoading(true);
-      await authService.updatePassword(password, newPassword, tempStudentId, 'student');
+      await authService.updatePassword(password, newPassword, tempStudentId, 'student', tempToken);
 
       toast.success("Password updated successfully!");
       setShowChangePassword(false);

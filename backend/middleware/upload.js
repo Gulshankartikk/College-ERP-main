@@ -17,7 +17,10 @@ const allowedExtensions = [
   ".jpeg", ".jpg", ".png", ".gif",
   ".pdf", ".doc", ".docx",
   ".ppt", ".pptx",
-  ".txt"
+  ".txt",
+  ".mp4", ".mkv", ".webm",
+  ".mp3", ".wav",
+  ".zip", ".rar"
 ];
 
 // File Filter --------------------------
@@ -35,7 +38,7 @@ const fileFilter = (req, file, cb) => {
 // Multer Instance ----------------------
 const upload = multer({
   storage,
-  limits: { fileSize: 100 * 1024 * 1024 }, // 100 MB
+  limits: { fileSize: 500 * 1024 * 1024 }, // 500 MB
   fileFilter
 });
 
